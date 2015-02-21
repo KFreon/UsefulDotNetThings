@@ -12,23 +12,37 @@ namespace UsefulThings.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value.GetType() != typeof(string))
-                throw new InvalidOperationException("Value must be a single character string");
+            object res = null;
+            if (parameter == null || (bool)parameter == true)
+            {
+                if (value.GetType() != typeof(string))
+                    throw new InvalidOperationException("Value must be a single character string");
 
-            string val = (string)value;
-            if (val.Length > 1)
-                throw new InvalidOperationException("Value must be a single character string");
+                string val = (string)value;
+                if (val.Length > 1)
+                    throw new InvalidOperationException("Value must be a single character string");
 
-            int res = -1;
-            if (!Int32.TryParse(val, out res))
-                throw new InvalidOperationException("Conversion failed.");
+                int temp = -1;
+                if (!Int32.TryParse(val, out temp))
+                    throw new InvalidOperationException("Conversion failed.");
+
+                res = temp;
+            }
+            else
+            {
+                res = ConvertBack(value, targetType, null, culture);
+            }
 
             return res;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value.GetType() != typeof(int))
+                throw new InvalidOperationException("Value must be an integer.");
+
+            int val = (int)value;
+            return "" + val;
         }
     }
 }

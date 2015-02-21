@@ -40,6 +40,19 @@ namespace UsefulThings
             }
         }
 
+        public static string GetFileSizeAsString(double size)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB" };
+            
+            int order = 0;
+            while (size >= 1024 && order + 1 < sizes.Length)
+            {
+                order++;
+                size = size / 1024;
+            }
+
+            return size.ToString("F1") + " " + sizes[order];
+        }
 
         /// <summary>
         /// Gets file extensions as filter string for SaveFileDialog and OpenFileDialog as a SINGLE filter entry.

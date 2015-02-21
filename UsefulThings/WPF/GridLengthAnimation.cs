@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,15 +83,17 @@ namespace UsefulThings.WPF
         public override object GetCurrentValue(object defaultOriginValue,
             object defaultDestinationValue, AnimationClock animationClock)
         {
+            GridUnitType fromUnitType = ((GridLength)GetValue(GridLengthAnimation.FromProperty)).GridUnitType;
+            GridUnitType toUnitType = ((GridLength)GetValue(GridLengthAnimation.ToProperty)).GridUnitType;
             double fromVal = ((GridLength)GetValue(GridLengthAnimation.FromProperty)).Value;
             double toVal = ((GridLength)GetValue(GridLengthAnimation.ToProperty)).Value;
 
             if (fromVal > toVal)
             {
-                return new GridLength((1 - ((IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty)).Ease(animationClock.CurrentProgress.Value)) * (fromVal - toVal) + toVal, GridUnitType.Star);
+                return new GridLength((1 - ((IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty)).Ease(animationClock.CurrentProgress.Value)) * (fromVal - toVal) + toVal, fromUnitType);
             }
             else
-                return new GridLength(((IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty)).Ease(animationClock.CurrentProgress.Value) * (toVal - fromVal) + fromVal, GridUnitType.Star);
+                return new GridLength(((IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty)).Ease(animationClock.CurrentProgress.Value) * (toVal - fromVal) + fromVal, toUnitType);
         }
     }
 }

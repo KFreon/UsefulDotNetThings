@@ -13,6 +13,7 @@ namespace UsefulThings.WPF
     /// Threadsafe ObservableCollection implementation. Not mine, but can't remember where its from.
     /// </summary>
     /// <typeparam name="T">Type of collection.</typeparam>
+    [Obsolete("Try MTObservableCollection if this breaks...")]
     public class FastObservableCollection<T> : ObservableCollection<T>
     {
         private readonly object locker = new object();
@@ -138,7 +139,7 @@ namespace UsefulThings.WPF
                         {
                             // Invoke handler in the target dispatcher's thread... 
                             // asynchronously for better responsiveness.
-                            dispatcherObject.Dispatcher.BeginInvoke
+                            dispatcherObject.Dispatcher.Invoke
                                   (DispatcherPriority.DataBind, handler, this, e);
                         }
                         else

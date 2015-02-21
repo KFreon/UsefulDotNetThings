@@ -29,6 +29,12 @@ namespace UsefulThings
             InvalidPathingChars.AddRange(Path.GetInvalidPathChars());
         }
 
+        public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> additions)
+        {
+            foreach (T item in additions)
+                collection.Add(item);
+        }
+
         public static string GetPathWithoutInvalids(this string str)
         {
             return new String(str.Except(InvalidPathingChars).ToArray());

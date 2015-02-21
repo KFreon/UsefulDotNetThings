@@ -66,12 +66,19 @@
     <Compile Include="WinForms\TextUpdater.cs" />
     <Compile Include="WinForms\WinForms.cs" />
     <Compile Include="WPF\BoolToVisibilityConverter.cs" />
+    <Compile Include="WPF\ByteSizeToStringConverter.cs" />
     <Compile Include="WPF\CommandHandler.cs" />
     <Compile Include="WPF\FastObservableCollection.cs" />
     <Compile Include="WPF\GridLengthAnimation.cs" />
+    <Compile Include="WPF\IntsEqualConverter.cs" />
     <Compile Include="WPF\InverseBooleanConverter.cs" />
+    <Compile Include="WPF\MTObservableCollection.cs" />
+    <Compile Include="WPF\MultiIntConverter.cs" />
     <Compile Include="WPF\StringToIntConverter.cs" />
+    <Compile Include="WPF\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />
+    <Compile Include="WPF\VirtualizingWrapPanel.cs" />
+    <Compile Include="WPF\VisibilitySourceNullConverter.cs" />
     <Compile Include="WPF\WPF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -237,7 +237,8 @@ namespace UsefulThings
         protected override void Dispose(bool disposing)
         {
             /* We do not currently use unmanaged resources */
-            blocks.Clear();
+            if (blocks != null)
+                blocks.Clear();
             blocks = null;
             base.Dispose(disposing);
         }
