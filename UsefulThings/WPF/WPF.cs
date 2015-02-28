@@ -29,15 +29,20 @@ namespace UsefulThings.WPF
         /// <summary>
         /// Creates a WPF style Bitmap (i.e. not using the System.Drawing.Bitmap)
         /// </summary>
-        /// <param name="source">MemoryStream containing bitmap data. NOTE fully formatted bitmap file, not just data.</param>
+        /// <param name="source">Stream containing bitmap data. NOTE fully formatted bitmap file, not just data.</param>
         /// <param name="cacheOption">Determines how/when image data is cached. Default is "Cache to memory on load."</param>
-        /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved. Default is original.</param>
+        /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved if only this set.</param>
+        /// <param name="decodeHeight">Specifies height to decode to. Aspect ratio preserved if only this set.</param>
         /// <returns>Bitmap from stream.</returns>
-        public static BitmapImage CreateWPFBitmap(Stream source, int decodeWidth = 0, BitmapCacheOption cacheOption = BitmapCacheOption.OnLoad)
+        public static BitmapImage CreateWPFBitmap(Stream source, int decodeWidth = 0, int decodeHeight = 0, BitmapCacheOption cacheOption = BitmapCacheOption.OnLoad)
         {
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
             bmp.DecodePixelWidth = decodeWidth;
+            bmp.DecodePixelHeight = decodeHeight;
+
+            // KFreon: Rewind stream to start
+            source.Seek(0, SeekOrigin.Begin);
             bmp.StreamSource = source;
             bmp.CacheOption = cacheOption;
             bmp.EndInit();
@@ -51,12 +56,13 @@ namespace UsefulThings.WPF
         /// Creates WPF Bitmap from byte array.
         /// </summary>
         /// <param name="source">Fully formatted bitmap in byte[]</param>
-        /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved. Default is original.</param>
+        /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved if only this set.</param>
+        /// <param name="decodeHeight">Specifies height to decode to. Aspect ratio preserved if only this set.</param>
         /// <returns>BitmapImage object.</returns>
-        public static BitmapImage CreateWPFBitmap(byte[] source, int decodeWidth = 0)
+        public static BitmapImage CreateWPFBitmap(byte[] source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            MemoryStream ms = new MemoryStream(source);
-            return CreateWPFBitmap(ms, decodeWidth);
+            MemoryTributary ms = new MemoryTributary(source);
+            return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
         }
 
 
@@ -64,12 +70,13 @@ namespace UsefulThings.WPF
         /// Creates WPF Bitmap from List of bytes.
         /// </summary>
         /// <param name="source">Fully formatted bitmap in List of bytes.</param>
-        /// <param name="decodeWidth">OPTIONAL: Specifies width to decode to. Aspect ratio preserved. Default is original.</param>
+        /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved if only this set.</param>
+        /// <param name="decodeHeight">Specifies height to decode to. Aspect ratio preserved if only this set.</param>
         /// <returns>BitmapImage of source data.</returns>
-        public static BitmapImage CreateWPFBitmap(List<byte> source, int decodeWidth = 0)
+        public static BitmapImage CreateWPFBitmap(List<byte> source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            byte[] newsource = source.ToArray();
-            return CreateWPFBitmap(newsource, decodeWidth);
+            byte[] newsource = source.ToArray(source.Count);
+            return CreateWPFBitmap(newsource, decodeWidth, decodeHeight);
         }
 
 
@@ -77,18 +84,30 @@ namespace UsefulThings.WPF
         /// Creates WPF Bitmap from a file.
         /// </summary>
         /// <param name="Filename">Path to file.</param>
-        /// <param name="decodeWidth">OPTIONAL: Specifies width to decode to. Aspect ratio preserved. Default is original.</param>
+        /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved if only this set.</param>
+        /// <param name="decodeHeight">Specifies height to decode to. Aspect ratio preserved if only this set.</param>
         /// <returns>BitmapImage based on file.</returns>
-        public static BitmapImage CreateWPFBitmap(string Filename, int decodeWidth = 0)
+        public static BitmapImage CreateWPFBitmap(string Filename, int decodeWidth = 0, int decodeHeight = 0)
         {
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
             bmp.DecodePixelWidth = decodeWidth;
+            bmp.DecodePixelHeight = decodeHeight;
             bmp.UriSource = new Uri(Filename);
             bmp.CacheOption = BitmapCacheOption.OnLoad;
             bmp.EndInit();
             bmp.Freeze();
             return bmp;
+        }
+
+
+        public static void SaveWPFBitmapToDiskAsJPG(BitmapImage img, string Destination)
+        {
+            BitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(img, null, null, null));
+
+            using (FileStream fs = new FileStream(Destination, FileMode.CreateNew))
+                encoder.Save(fs);
         }
         #endregion
     }

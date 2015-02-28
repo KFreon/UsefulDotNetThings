@@ -176,7 +176,11 @@ namespace UsefulThings
             {
                 // KFreon: Only bother if it is a file
                 if (filename.isFile() == true)
-                    Lines = File.ReadAllLines(filename).ToList();
+                {
+                    string[] lines = File.ReadAllLines(filename);
+                    Lines = lines.ToList(lines.Length);
+                }
+                    
                 else
                     err = "Not a file.";
             }

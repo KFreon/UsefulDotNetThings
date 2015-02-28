@@ -14,6 +14,7 @@ namespace UsefulThings.WinForms
     ///     Switch state changes between enabling and changing visibility.
     ///     A function can replace state changes. e.g. Instead of enabling, set some text or whatever.
     /// </summary>
+    [Obsolete("This is an old WinForms construct. Shouldn't be necessary anymore.")]
     public class Gooey
     {
         // KFreon: Base control for invoking on correct thread for controls

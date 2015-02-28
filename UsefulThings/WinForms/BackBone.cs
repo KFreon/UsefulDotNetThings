@@ -10,6 +10,7 @@ namespace UsefulThings.WinForms
     /// <summary>
     /// Backbone factory for queuing and running tasks threadsafely. Also allows things to be run before and after each job.
     /// </summary>
+    [Obsolete("Use Pipeline pattern instead.")]
     public class BackBone
     {
         Queue<Task<bool>> JobList = new Queue<Task<bool>>();    // KFreon: List of jobs

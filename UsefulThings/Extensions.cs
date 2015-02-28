@@ -292,5 +292,21 @@ namespace UsefulThings
             collection.Remove(item);
             return item;
         }
+
+        public static List<T> ToList<T>(this IEnumerable<T> enumerable, int size)
+        {
+            return new List<T>(enumerable);
+        }
+
+        public static T[] ToArray<T>(this IEnumerable<T> enumerable, int size)
+        {
+            T[] newarr = new T[size];
+            int count = 0;
+
+            foreach (T item in enumerable)
+                newarr[count++] = item;
+
+            return newarr;
+        }
     }
 }
