@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +8,26 @@ using System.Windows.Data;
 
 namespace UsefulThings.WPF
 {
-    public class StringToUriConverter : IValueConverter
+    public class EnumToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value.GetType() != typeof(string))
-                throw new InvalidCastException("Value must be a string.");
-
-            if (!File.Exists((string)value))
+            Type parameterType = (Type)parameter;
+            if (!parameterType.IsEnum)
                 return null;
 
-            return new Uri((string)value);
+            if (value.GetType() == parameterType)
+                return value.ToString();
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            Type parameterType = (Type)parameter;
+            if (value.GetType() == parameterType)
+                return Enum.Parse(parameterType, (string)value);
+
+            return null;
         }
     }
 }

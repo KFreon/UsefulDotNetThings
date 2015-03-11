@@ -108,7 +108,10 @@ namespace UsefulThings
 
         private int WrapIndex(int index)
         {
-            return index % UnderlyingCollection.Count;
+            if (UnderlyingCollection.Count != 0)
+                return index % UnderlyingCollection.Count;
+            else
+                return -1;
         }
     }
 }

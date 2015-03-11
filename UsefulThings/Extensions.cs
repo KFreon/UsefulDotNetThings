@@ -29,10 +29,9 @@ namespace UsefulThings
             InvalidPathingChars.AddRange(Path.GetInvalidPathChars());
         }
 
-        public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> additions)
+        public unsafe static int GetData(this IntPtr ptr)
         {
-            foreach (T item in additions)
-                collection.Add(item);
+            return *(int*)ptr.ToPointer();
         }
 
         public static string GetPathWithoutInvalids(this string str)

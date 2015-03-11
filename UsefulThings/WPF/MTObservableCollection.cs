@@ -34,5 +34,23 @@ namespace UsefulThings.WPF
                     nh.Invoke(this, e);
                 }
         }
+
+        public MTObservableCollection(IEnumerable<T> collection)
+            : base(collection)
+        {
+
+        }
+
+        public MTObservableCollection(List<T> list)
+            : base(list)
+        {
+
+        }
+
+        public MTObservableCollection()
+            : base()
+        {
+
+        }
     }
 }

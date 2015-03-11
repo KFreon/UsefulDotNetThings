@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -69,13 +70,15 @@
     <Compile Include="WPF\ByteSizeToStringConverter.cs" />
     <Compile Include="WPF\CommandHandler.cs" />
     <Compile Include="WPF\DebugConverter.cs" />
-    <Compile Include="WPF\FastObservableCollection.cs" />
+    <Compile Include="WPF\EnumToStringConverter.cs" />
     <Compile Include="WPF\GridLengthAnimation.cs" />
     <Compile Include="WPF\IntsEqualConverter.cs" />
     <Compile Include="WPF\InverseBooleanConverter.cs" />
     <Compile Include="WPF\MTObservableCollection.cs" />
+    <Compile Include="WPF\MTRangedObservableCollection.cs" />
     <Compile Include="WPF\MultiIntConverter.cs" />
     <Compile Include="WPF\IsNullableBoolConverter.cs" />
+    <Compile Include="WPF\RangedObservableCollection.cs" />
     <Compile Include="WPF\StringToIntConverter.cs" />
     <Compile Include="WPF\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,7 +13,49 @@ namespace UsefulThings
     /// KFreon: Things shared between WPF and WinForms
     /// </summary>
     public static class General
-    {
+    { 
+        public static MemoryTributary DecompressStream(Stream compressedStream)
+        {
+            MemoryTributary newStream = new MemoryTributary();
+            compressedStream.Seek(0, SeekOrigin.Begin);
+
+            GZipStream Decompressor = null;
+            try
+            {
+                Decompressor = new GZipStream(compressedStream, CompressionMode.Decompress, true);
+                Decompressor.CopyTo(newStream);
+            }
+            catch (InvalidDataException invdata)
+            {
+                return null;
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                if (Decompressor != null)
+                    Decompressor.Dispose();
+            }
+            
+        
+ 
+            return newStream;
+        }
+
+        public static MemoryTributary CompressStream(Stream DecompressedStream, CompressionLevel compressionLevel = CompressionLevel.Optimal)
+        {
+            MemoryTributary ms = new MemoryTributary();
+            using (GZipStream Compressor = new GZipStream(ms, compressionLevel, true))
+            {
+                DecompressedStream.Seek(0, SeekOrigin.Begin);
+                DecompressedStream.CopyTo(Compressor);
+            }
+
+            return ms;
+        }
+
         /// <summary>
         /// Does bit conversion from streams
         /// </summary>
