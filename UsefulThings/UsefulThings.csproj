@@ -79,6 +79,8 @@
     <Compile Include="WPF\MultiIntConverter.cs" />
     <Compile Include="WPF\IsNullableBoolConverter.cs" />
     <Compile Include="WPF\RangedObservableCollection.cs" />
+    <Compile Include="WPF\SearchEngine.cs" />
+    <Compile Include="WPF\SearchEngineViewModelBase.cs" />
     <Compile Include="WPF\StringToIntConverter.cs" />
     <Compile Include="WPF\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />
