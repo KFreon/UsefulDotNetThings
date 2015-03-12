@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace UsefulThings
 {
+    ///
+    /// This Collection wraps its index such that if length = 2, and the call is list[6], the collection would return the first element. 
+    /// Negative indicies are also supported (maybe)
+    ///
     public class WrappingCollection<T> : ICollection<T>, IList<T>
     {
         List<T> UnderlyingCollection = null;
@@ -106,6 +110,7 @@ namespace UsefulThings
             }
         }
 
+        // KFreon: Wraps the index using the mod operator to determine if the index is larger than the list.
         private int WrapIndex(int index)
         {
             if (UnderlyingCollection.Count != 0)
