@@ -15,11 +15,18 @@ namespace UsefulThings
     {
         #region Constructors
 
+        /// <summary>
+        /// Creates an empty MemoryStream-like instance which doesn't require contiguous memory.
+        /// </summary>
         public MemoryTributary()
         {
             Position = 0;
         }
 
+
+        /// <summary>
+        /// Creates a MemoryStream-like instance which doesn't require contiguous memory, based on a byte[] source.
+        /// </summary>
         public MemoryTributary(byte[] source)
         {
             this.Write(source, 0, source.Length);
@@ -27,6 +34,9 @@ namespace UsefulThings
         }
 
         /* length is ignored because capacity has no meaning unless we implement an artifical limit */
+        /// <summary>
+        /// Creates a MemoryStream-like instance which doesn't require contiguous memory, with length (ignored).
+        /// </summary>
         public MemoryTributary(int length)
         {
             SetLength(length);
@@ -116,6 +126,14 @@ namespace UsefulThings
         {
         }
 
+        /// <summary>
+        /// Copies bytes from this stream at the current position TO the buffer.
+        /// Doesn't reset stream position.
+        /// Returns number of bytes read from stream.
+        /// </summary>
+        /// <param name="buffer">Destination array.</param>
+        /// <param name="offset">Offset to begin writing at in buffer></param>
+        /// <param name="count">Number of bytes to read from stream></param>
         public override int Read(byte[] buffer, int offset, int count)
         {
             long lcount = (long)count;
@@ -156,6 +174,12 @@ namespace UsefulThings
 
         }
 
+        /// <summary>
+        /// Changes stream position to given offset based on given origin.
+        /// Returns new stream position.
+        /// </summary>
+        /// <param name="offset">Desired offset from origin.</param>
+        /// <param name="origin">Origin to base offset on.</param>
         public override long Seek(long offset, SeekOrigin origin)
         {
             switch (origin)
@@ -178,6 +202,14 @@ namespace UsefulThings
             length = value;
         }
 
+
+        /// <summary>
+        /// Writes data FROM buffer TO stream at current position. 
+        /// Doesn't reset stream position.
+        /// </summary>
+        /// <param name="buffer">Buffer containing data.</param>
+        /// <param name="offset">Offset to begin writing from in buffer.</param>
+        /// <param name="count">Number of bytes to write.</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             long initialPosition = Position;
@@ -205,6 +237,10 @@ namespace UsefulThings
             }
         }
 
+    
+        /// <summary>
+        /// Reads byte from stream at current position and advances stream.
+        /// </summary>
         public override int ReadByte()
         {
             if (Position >= length)
@@ -216,6 +252,11 @@ namespace UsefulThings
             return b;
         }
 
+
+        /// <summary>
+        /// Writes byte to stream at current position and advances stream.
+        /// </summary>
+        /// <param name="value">Byte to write to stream.</param>
         public override void WriteByte(byte value)
         {
             EnsureCapacity(Position + 1);
@@ -263,7 +304,7 @@ namespace UsefulThings
         }
 
         /// <summary>
-        /// Reads length bytes from source into the this instance at the current position.
+        /// Reads length bytes from source stream into the this instance at the current position.
         /// </summary>
         /// <param name="source">The stream containing the data to copy</param>
         /// <param name="length">The number of bytes to copy</param>
