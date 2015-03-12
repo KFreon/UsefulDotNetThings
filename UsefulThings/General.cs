@@ -10,10 +10,15 @@ using System.Threading.Tasks;
 namespace UsefulThings
 {
     /// <summary>
-    /// KFreon: Things shared between WPF and WinForms
+    /// KFreon: General C# helpers
     /// </summary>
     public static class General
     { 
+        /// <summary>
+        /// Decompresses stream using GZip. Returns decompressed Stream.
+        /// Returns null if stream isn't compressed.
+        /// </summary>
+        /// <param name="compressedStream">Stream compressed with GZip.</param>
         public static MemoryTributary DecompressStream(Stream compressedStream)
         {
             MemoryTributary newStream = new MemoryTributary();
@@ -44,6 +49,12 @@ namespace UsefulThings
             return newStream;
         }
 
+
+        /// <summary>
+        /// Compresses stream with GZip. Returns new compressed stream.
+        /// </summary>
+        /// <param name="DecompressedStream">Stream to compress.</param>
+        /// <param name="compressionLevel">Level of compression to use.</param>
         public static MemoryTributary CompressStream(Stream DecompressedStream, CompressionLevel compressionLevel = CompressionLevel.Optimal)
         {
             MemoryTributary ms = new MemoryTributary();
@@ -83,6 +94,11 @@ namespace UsefulThings
             }
         }
 
+
+        /// <summary>
+        /// Converts given double to filesize with appropriate suffix.
+        /// </summary>
+        /// <param name="size">Size in bytes.</param>
         public static string GetFileSizeAsString(double size)
         {
             string[] sizes = { "B", "KB", "MB", "GB" };
@@ -100,6 +116,8 @@ namespace UsefulThings
         /// <summary>
         /// Gets file extensions as filter string for SaveFileDialog and OpenFileDialog as a SINGLE filter entry.
         /// </summary>
+        /// <param name="exts">List of extensions to use.</param>
+        /// <param name="filterName">Name of filter entry. e.g. 'Images|*.jpg;*.bmp...', Images is the filter name</param>
         /// <returns>Filter string from extensions.</returns>
         public static string GetExtsAsFilter(List<string> exts, string filterName)
         {
