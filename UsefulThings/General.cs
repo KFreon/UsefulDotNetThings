@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -154,20 +155,28 @@ namespace UsefulThings
         /// Gets external image data as byte[] with some buffering i.e. retries if fails up to 20 times.
         /// </summary>
         /// <param name="file">File to get data from.</param>
+        /// <param name="OnFailureSleepTime">Time (in ms) between attempts for which to sleep.</param>
+        /// <param name="retries">Number of attempts to read.</param>
         /// <returns>byte[] of image.</returns>
-        public static byte[] GetExternalData(string file)
+        public static byte[] GetExternalData(string file, int retries = 20, int OnFailureSleepTime = 300)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < retries; i++)
             {
                 try
                 {
                     // KFreon: Try readng file to byte[]
                     return File.ReadAllBytes(file);
                 }
-                catch
+                catch (IOException e)
                 {
                     // KFreon: Sleep for a bit and try again
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(OnFailureSleepTime);
+                    Console.WriteLine(e.Message);
+                }
+                catch (Exception e)
+                {
+                    Debugger.Break();
+                    Console.WriteLine();
                 }
             }
             return null;

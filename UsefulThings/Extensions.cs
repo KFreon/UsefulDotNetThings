@@ -19,24 +19,35 @@ namespace UsefulThings
     /// </summary>
     public static class Extensions
     {
-        static readonly List<char> InvalidPathingChars;
+        static readonly char[] InvalidPathingChars;
 
         static Extensions()
         {
             // KFreon: Setup some constants
-            InvalidPathingChars = new List<char>();
-            InvalidPathingChars.AddRange(Path.GetInvalidFileNameChars());
-            InvalidPathingChars.AddRange(Path.GetInvalidPathChars());
+            List<char> vals = new List<char>();
+            vals.AddRange(Path.GetInvalidFileNameChars());
+            vals.AddRange(Path.GetInvalidPathChars());
+
+            InvalidPathingChars = vals.ToArray(vals.Count);
         }
 
-        public unsafe static int GetData(this IntPtr ptr)
+
+        /// <summary>
+        /// Compares strings with culture and case sensitivity.
+        /// </summary>
+        /// <param name="str">Main string to check in.</param>
+        /// <param name="toCheck">Substring to check for in Main String.</param>
+        /// <param name="CompareType">Type of comparison.</param>
+        /// <returns>True if toCheck found in str, false otherwise.</returns>
+        public static bool Contains(this String str, string toCheck, StringComparison CompareType)
         {
-            return *(int*)ptr.ToPointer();
+            return str.IndexOf(toCheck, CompareType) >= 0;
         }
+
 
         public static string GetPathWithoutInvalids(this string str)
         {
-            return new String(str.Except(InvalidPathingChars).ToArray());
+            return new String(str.Trim(InvalidPathingChars).ToArray());
         }
 
 

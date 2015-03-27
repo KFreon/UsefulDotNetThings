@@ -12,18 +12,24 @@ namespace UsefulThings.WPF
     /// </summary>
     public class CommandHandler : ICommand
     {
-        internal object _action { get; set; }
+        internal Action<Object> actionWArgs { get; set; }
+        internal Action actionWOArgs { get; set; }
         internal bool _canExecute { get; set; }
 
-        public CommandHandler()
+        public CommandHandler(bool canExecute)
         {
+            _canExecute = canExecute;
 
         }
 
-        public CommandHandler(Action action, bool canExecute)
+        public CommandHandler(Action action, bool canExecute) : this(canExecute)
         {
-            _action = action;
-            _canExecute = canExecute;
+            actionWOArgs = action;
+        }
+
+        public CommandHandler(Action<Object> action, bool canExecute) : this(canExecute)
+        {
+            actionWArgs = action;
         }
 
         public bool CanExecute(object parameter)
@@ -33,27 +39,13 @@ namespace UsefulThings.WPF
 
         public virtual void Execute(object parameter)
         {
-            ((Action)_action)();
+            // KFreon: Run designated action
+            if (actionWOArgs != null)
+                ((Action)actionWOArgs)();
+            else if (actionWArgs != null)
+                ((Action<object>)actionWArgs)(parameter);
         }
 
         public event EventHandler CanExecuteChanged;
-    }
-
-
-    /// <summary>
-    /// Creates Commands that take arguments in an easy way. This is mine, but clearly based on stuff that isn't mine.
-    /// </summary>
-    public class CommandHandlerWArgs : CommandHandler
-    {
-        public CommandHandlerWArgs(Action<object> action, bool canExecute) : base()
-        {
-            _canExecute = canExecute;
-            _action = action;
-        }
-
-        public override void Execute(object parameter)
-        {
-            ((Action<object>)_action)(parameter);
-        }
     }
 }
