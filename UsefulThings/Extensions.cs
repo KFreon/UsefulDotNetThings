@@ -31,6 +31,20 @@ namespace UsefulThings
             InvalidPathingChars = vals.ToArray(vals.Count);
         }
 
+        public static bool Contains<T>(this List<T> list, Predicate<T> equalityComparer)
+        {
+            return list.Find(t => equalityComparer(t)) != null;
+        }
+
+        public static bool Contains<T>(this IEnumerable<T> enumerable, Predicate<T> equalityComparer)
+        {
+            foreach (var item in enumerable)
+                if (equalityComparer(item))
+                    return true;
+
+            return false;
+        }
+
 
         /// <summary>
         /// Compares strings with culture and case sensitivity.

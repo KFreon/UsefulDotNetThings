@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -191,7 +192,7 @@ namespace UsefulThings
                     Position += offset;
                     break;
                 case SeekOrigin.End:
-                    Position = Length - offset;
+                    Position = Length - Math.Abs(offset);
                     break;
             }
             return Position;
