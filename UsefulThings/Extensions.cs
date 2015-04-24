@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -57,7 +58,6 @@ namespace UsefulThings
         {
             return str.IndexOf(toCheck, CompareType) >= 0;
         }
-
 
         public static string GetPathWithoutInvalids(this string str)
         {
@@ -141,6 +141,7 @@ namespace UsefulThings
 
         /// <summary>
         /// Determines if string is a Directory.
+        /// Returns True if directory, false otherwise, null not used.
         /// </summary>
         /// <param name="str">String to check.</param>
         /// <returns>True if is a directory, false if not, null isn't used right now.</returns>
@@ -158,9 +159,15 @@ namespace UsefulThings
                 return false;
         }
 
+        public static void AddRangeKinda<T>(this ConcurrentBag<T> collection, IEnumerable<T> additions)
+        {
+            foreach (var item in additions)
+                collection.Add(item);
+        }
 
         /// <summary>
         /// Determines if string is a file.
+        /// Returns True if file, false otherwise, null not used.
         /// </summary>
         /// <param name="str">String to check.</param>
         /// <returns>True if a file, false if not, null not used.</returns>

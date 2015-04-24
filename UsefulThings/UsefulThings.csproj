@@ -79,6 +79,7 @@
     <Compile Include="WPF\MTRangedObservableCollection.cs" />
     <Compile Include="WPF\MultiIntConverter.cs" />
     <Compile Include="WPF\IsNullableBoolConverter.cs" />
+    <Compile Include="WPF\MutuallyExclusiveCheckersConverter.cs" />
     <Compile Include="WPF\RangedObservableCollection.cs" />
     <Compile Include="WPF\SearchEngine.cs" />
     <Compile Include="WPF\SearchEngineViewModelBase.cs" />

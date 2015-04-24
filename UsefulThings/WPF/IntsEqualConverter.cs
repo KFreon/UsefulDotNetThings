@@ -14,7 +14,7 @@ namespace UsefulThings.WPF
             if (value.GetType() == typeof(int) && parameter.GetType() == typeof(int))
                 return (int)value == (int)parameter;
             else
-                return null;
+                throw new InvalidCastException("Requires value and parameter to be of type int.");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

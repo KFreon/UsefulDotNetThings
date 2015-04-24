@@ -23,6 +23,8 @@ namespace UsefulThings.WPF
                 val = (bool)value;
             else if (type == typeof(bool?))
                 val = (bool?)value;
+            else
+                throw new InvalidCastException("Value and parameter must be of type bool or bool?");
 
             // KFreon: Invert if required
             if (parameter != null && (bool)parameter)

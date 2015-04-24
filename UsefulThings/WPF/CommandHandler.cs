@@ -22,12 +22,12 @@ namespace UsefulThings.WPF
 
         }
 
-        public CommandHandler(Action action, bool canExecute) : this(canExecute)
+        public CommandHandler(Action action, bool canExecute = true) : this(canExecute)
         {
             actionWOArgs = action;
         }
 
-        public CommandHandler(Action<Object> action, bool canExecute) : this(canExecute)
+        public CommandHandler(Action<Object> action, bool canExecute = true) : this(canExecute)
         {
             actionWArgs = action;
         }
