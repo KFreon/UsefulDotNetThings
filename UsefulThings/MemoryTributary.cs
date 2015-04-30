@@ -123,6 +123,9 @@ namespace UsefulThings
 
         #region Public Stream Methods
 
+        /// <summary>
+        /// Does nothing for now.
+        /// </summary>
         public override void Flush()
         {
         }

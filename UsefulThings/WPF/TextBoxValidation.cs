@@ -9,7 +9,7 @@ using System.Windows.Controls;
 namespace UsefulThings.WPF
 {
     /// <summary>
-    /// Deals with simple path validation
+    /// Deals with simple path validation.
     /// </summary>
     public class TextBoxValidation : ValidationRule
     {
@@ -36,7 +36,7 @@ namespace UsefulThings.WPF
                     if (CheckIfExists)
                     {
                         // KFreon: Check if path exists
-                        if (val.isFile() == true && !File.Exists(val))
+                        if (val.isFile() && !File.Exists(val))
                             return new ValidationResult(false, "Specified file doesn't exist!");
                         else
                             if (!Directory.Exists(val))

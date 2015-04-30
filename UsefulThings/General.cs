@@ -217,7 +217,7 @@ namespace UsefulThings
             // Try to read file, but fail safely if necessary
             try
             {
-                if (filename.isFile() == true)
+                if (filename.isFile())
                     result = File.ReadAllText(filename);
                 else
                     err = "Not a file.";
@@ -245,7 +245,7 @@ namespace UsefulThings
             try
             {
                 // KFreon: Only bother if it is a file
-                if (filename.isFile() == true)
+                if (filename.isFile())
                 {
                     string[] lines = File.ReadAllLines(filename);
                     Lines = lines.ToList(lines.Length);

@@ -8,6 +8,9 @@ using System.Windows.Data;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Converts nullable item to visibility and back. If item is null, visibility is collapsed, otherwise visible.
+    /// </summary>
     public class VisibilitySourceNullConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

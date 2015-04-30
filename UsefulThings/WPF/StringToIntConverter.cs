@@ -7,11 +7,15 @@ using System.Windows.Data;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Converts between strings and integers.
+    /// </summary>
     [ValueConversion(typeof(string), typeof(int))]
     public class StringToIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            // Check if parameter exists. If parameter is true, method returns integers. Otherwise, returns string of value (value should be an integer then)
             object res = null;
             if (parameter == null || (bool)parameter == true)
             {
@@ -22,6 +26,7 @@ namespace UsefulThings.WPF
                 if (val.Length > 1)
                     throw new InvalidOperationException("Value must be a single character string");
 
+                // Try to get integer from value.
                 int temp = -1;
                 if (!Int32.TryParse(val, out temp))
                     throw new InvalidOperationException("Conversion failed.");
@@ -41,6 +46,7 @@ namespace UsefulThings.WPF
             if (value.GetType() != typeof(int))
                 throw new InvalidOperationException("Value must be an integer.");
 
+            // "Convert" to string.
             int val = (int)value;
             return "" + val;
         }

@@ -8,14 +8,18 @@ using System.Windows.Data;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Used for when two checkboxes are mutually exclusive, but can both be false.
+    /// So, when one goes true, the other goes false, but if both go false, nothing changes.
+    /// </summary>
     public class MutuallyExclusiveCheckersConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null)
                 return false;
 
+            // Checks type/s
             if (value.GetType() == typeof(bool))
             {
                 bool val = (bool)value;
@@ -33,6 +37,7 @@ namespace UsefulThings.WPF
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            /// Updates code value (not binding)
             if (value.GetType() == typeof(bool))
             {
                 bool val = (bool)value;

@@ -13,6 +13,9 @@ using System.Collections.ObjectModel;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Provides virtualising WrapPanel implementation. Not Mine (virtualisingwrappanel.codeplex or something), and has some issues.
+    /// </summary>
     public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
     {
 

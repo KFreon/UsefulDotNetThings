@@ -9,6 +9,10 @@ using System.Windows.Threading;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Multithreaded version of ObservableCollection. Not mine.
+    /// </summary>
+    /// <typeparam name="T">Type of content.</typeparam>
     public class MTObservableCollection<T> : ObservableCollection<T>
     {
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -35,18 +39,31 @@ namespace UsefulThings.WPF
                 }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="collection">Enumerable to initialise with.</param>
         public MTObservableCollection(IEnumerable<T> collection)
             : base(collection)
         {
 
         }
 
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="list">List to initialise with.</param>
         public MTObservableCollection(List<T> list)
             : base(list)
         {
 
         }
 
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public MTObservableCollection()
             : base()
         {

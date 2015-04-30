@@ -12,6 +12,7 @@ namespace UsefulThings.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            // KFreon: Pretty simple. Just breaks when binding is updated. For debugging.
             Debugger.Break();
             return value;
         }

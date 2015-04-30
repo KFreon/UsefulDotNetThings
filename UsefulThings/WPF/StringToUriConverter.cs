@@ -9,6 +9,9 @@ using System.Windows.Data;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Converts string to URI.
+    /// </summary>
     public class StringToUriConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -16,6 +19,7 @@ namespace UsefulThings.WPF
             if (value.GetType() != typeof(string))
                 throw new InvalidCastException("Value must be a string.");
 
+            // For now, only allow this if string points to a file on disk.
             if (!File.Exists((string)value))
                 return null;
 

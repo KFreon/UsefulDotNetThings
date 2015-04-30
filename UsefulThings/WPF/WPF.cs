@@ -101,6 +101,11 @@ namespace UsefulThings.WPF
         }
 
 
+        /// <summary>
+        /// Saves WPF bitmap to disk as a JPG.
+        /// </summary>
+        /// <param name="img">Image to save.</param>
+        /// <param name="Destination">Path to save to.</param>
         public static void SaveWPFBitmapToDiskAsJPG(BitmapImage img, string Destination)
         {
             BitmapEncoder encoder = new JpegBitmapEncoder();

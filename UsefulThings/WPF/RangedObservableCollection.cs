@@ -7,26 +7,48 @@ using System.Threading.Tasks;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Adaptation of ObservableCollection to allow ranged operations.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RangedObservableCollection<T> : ObservableCollection<T>
     {
+        /// <summary>
+        /// Base Constructor.
+        /// </summary>
         public RangedObservableCollection()
             : base()
         {
 
         }
 
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="collection">Enumerable to initialise with.</param>
         public RangedObservableCollection(IEnumerable<T> collection)
             : base(collection)
         {
 
         }
 
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="list">List to initialise with.</param>
         public RangedObservableCollection(List<T> list)
             : base(list)
         {
 
         }
 
+
+        /// <summary>
+        /// Adds range of elements.
+        /// </summary>
+        /// <param name="enumerable">Elements to add.</param>
         public void AddRange(IEnumerable<T> enumerable)
         {
             foreach (T item in enumerable)
@@ -35,6 +57,12 @@ namespace UsefulThings.WPF
             NotifyRangeChange();
         }
 
+
+        /// <summary>
+        /// Inserts elements at given index.
+        /// </summary>
+        /// <param name="index">Index to add at.</param>
+        /// <param name="enumerable">Elements to add.</param>
         public void InsertRange(int index, IEnumerable<T> enumerable)
         {
             foreach (T item in enumerable)
@@ -43,6 +71,10 @@ namespace UsefulThings.WPF
             NotifyRangeChange();
         }
 
+
+        /// <summary>
+        /// Notifications of property changes.
+        /// </summary>
         private void NotifyRangeChange()
         {
             this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
@@ -50,6 +82,11 @@ namespace UsefulThings.WPF
             this.OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
         }
 
+
+        /// <summary>
+        /// Clears collection and adds elements from enumerable.
+        /// </summary>
+        /// <param name="enumerable"></param>
         public void Reset(IEnumerable<T> enumerable)
         {
             this.Items.Clear();

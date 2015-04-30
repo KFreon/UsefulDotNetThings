@@ -12,6 +12,7 @@ namespace UsefulThings.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            // KFreon: Returns inverse of given boolean
             if (targetType != typeof(bool))
                 throw new InvalidCastException("The target must be a boolean");
 

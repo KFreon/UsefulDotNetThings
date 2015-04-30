@@ -20,8 +20,11 @@ namespace UsefulThings
     /// </summary>
     public static class Extensions
     {
-        static readonly char[] InvalidPathingChars;
+        static readonly char[] InvalidPathingChars;  // Characters disallowed in paths.
 
+        /// <summary>
+        /// Static constructor.
+        /// </summary>
         static Extensions()
         {
             // KFreon: Setup some constants
@@ -32,11 +35,27 @@ namespace UsefulThings
             InvalidPathingChars = vals.ToArray(vals.Count);
         }
 
+
+        /// <summary>
+        /// Checks if anything matches given predicate in List. e.g. Check if text files in list:  predicate = t => t.EndsWith(".txt")
+        /// </summary>
+        /// <typeparam name="T">Type of contents in list.</typeparam>
+        /// <param name="list">List to check in.</param>
+        /// <param name="equalityComparer">Predicate to determine if item is in list.</param>
+        /// <returns>True if item found in List.</returns>
         public static bool Contains<T>(this List<T> list, Predicate<T> equalityComparer)
         {
             return list.Find(t => equalityComparer(t)) != null;
         }
 
+
+        /// <summary>
+        /// Checks if anything matches given predicate in enumerable. e.g. Check if text files in list:  predicate = t => t.EndsWith(".txt")
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="equalityComparer"></param>
+        /// <returns></returns>
         public static bool Contains<T>(this IEnumerable<T> enumerable, Predicate<T> equalityComparer)
         {
             foreach (var item in enumerable)
@@ -59,9 +78,19 @@ namespace UsefulThings
             return str.IndexOf(toCheck, CompareType) >= 0;
         }
 
+
+        /// <summary>
+        /// Removes invalid characters from path.
+        /// </summary>
+        /// <param name="str">String to remove chars from.</param>
+        /// <returns>New string containing no invalid characters.</returns>
         public static string GetPathWithoutInvalids(this string str)
         {
-            return new String(str.Trim(InvalidPathingChars).ToArray());
+            StringBuilder newstr = new StringBuilder(str);
+            foreach (char c in InvalidPathingChars)
+                newstr.Replace(c + "", "");
+
+            return newstr.ToString();
         }
 
 
@@ -141,11 +170,11 @@ namespace UsefulThings
 
         /// <summary>
         /// Determines if string is a Directory.
-        /// Returns True if directory, false otherwise, null not used.
+        /// Returns True if directory, false otherwise.
         /// </summary>
         /// <param name="str">String to check.</param>
-        /// <returns>True if is a directory, false if not, null isn't used right now.</returns>
-        public static bool? isDirectory(this string str)
+        /// <returns>True if is a directory, false if not.</returns>
+        public static bool isDirectory(this string str)
         {
             // KFreon: Check if things exist first
             if (str == null || !File.Exists(str) && !Directory.Exists(str))
@@ -159,6 +188,13 @@ namespace UsefulThings
                 return false;
         }
 
+
+        /// <summary>
+        /// Add range of elements to given collection.
+        /// </summary>
+        /// <typeparam name="T">Type of items in collection.</typeparam>
+        /// <param name="collection">Collection to add to.</param>
+        /// <param name="additions">Elements to add.</param>
         public static void AddRangeKinda<T>(this ConcurrentBag<T> collection, IEnumerable<T> additions)
         {
             foreach (var item in additions)
@@ -167,11 +203,11 @@ namespace UsefulThings
 
         /// <summary>
         /// Determines if string is a file.
-        /// Returns True if file, false otherwise, null not used.
+        /// Returns True if file, false otherwise.
         /// </summary>
         /// <param name="str">String to check.</param>
-        /// <returns>True if a file, false if not, null not used.</returns>
-        public static bool? isFile(this string str)
+        /// <returns>True if a file, false if not</returns>
+        public static bool isFile(this string str)
         {
             return !str.isDirectory();
         }
@@ -304,6 +340,13 @@ namespace UsefulThings
         }
 
 
+        /// <summary>
+        /// Begins adjustable animation for a GridlengthAnimation. 
+        /// Holds animation end value without Holding it. i.e. Allows it to change after animation without resetting it. Should be possible in WPF...maybe it is.
+        /// </summary>
+        /// <param name="element">Element to start animation on.</param>
+        /// <param name="dp">Property to animate.</param>
+        /// <param name="anim">Animation to perform. GridLengthAnimation only for now.</param>
         public static void BeginAdjustableAnimation(this ContentElement element, DependencyProperty dp, GridLengthAnimation anim)
         {
             element.BeginAdjustableAnimation(dp, anim, anim.To);
@@ -324,11 +367,27 @@ namespace UsefulThings
             return item;
         }
 
+
+        /// <summary>
+        /// Converts enumerable to List in a more memory efficient way by providing size of list.
+        /// </summary>
+        /// <typeparam name="T">Type of elements in lists.</typeparam>
+        /// <param name="enumerable">Enumerable to convert to list.</param>
+        /// <param name="size">Size of list.</param>
+        /// <returns>List containing enumerable contents.</returns>
         public static List<T> ToList<T>(this IEnumerable<T> enumerable, int size)
         {
             return new List<T>(enumerable);
         }
 
+
+        /// <summary>
+        /// Converts enumerable to array in a more memory efficient way by providing size of list.
+        /// </summary>
+        /// <typeparam name="T">Type of elements in list.</typeparam>
+        /// <param name="enumerable">Enumerable to convert to array.</param>
+        /// <param name="size">Size of lists.</param>
+        /// <returns>Array containing enumerable elements.</returns>
         public static T[] ToArray<T>(this IEnumerable<T> enumerable, int size)
         {
             T[] newarr = new T[size];
