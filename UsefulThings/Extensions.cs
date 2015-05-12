@@ -107,8 +107,7 @@ namespace UsefulThings
             try
             {
                 // Strip directory separators before starting or getdirname will say that C:\users is the parent of c:\users\
-                string workingString = str.Trim(Path.GetDirSeperator());
-                
+                string workingString = str.Trim(Path.DirectorySeparatorChar);                
                 retval = Path.GetDirectoryName(workingString);
 
                 for (int i = 1; i < depth; i++)

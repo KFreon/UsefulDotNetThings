@@ -11,10 +11,11 @@ namespace UsefulThings.WPF
     /// View model for searching.
     /// </summary>
     /// <typeparam name="T">Type of items being searched.</typeparam>
-    public class SearchViewModelBase<T> : ViewModelBase where T : new()
+    public class SearchViewModelBase<T> : ViewModelBase
     {
 	    protected SearchEngine<T> searchEngine { get; set; }
         public RangedObservableCollection<T> Results { get; set; }
+        public bool SearchInParallel = false;
 
         // Default search box
         string searchbox1 = null;
@@ -27,7 +28,7 @@ namespace UsefulThings.WPF
 		    set 
 		    {
 			    SetProperty(ref searchbox1, value);
-                Search(value);
+                Search(value, SearchInParallel: SearchInParallel);
 		    }
 	    }
 
@@ -51,10 +52,10 @@ namespace UsefulThings.WPF
         /// <param name="val">String to search for.</param>
         /// <param name="Searcher">Name of search method to use.</param>
         /// <param name="collection">Collection to search in.</param>
-        public virtual void Search(string val, string Searcher = null, ICollection<T> collection = null)  // incremental?
+        public virtual void Search(string val, string Searcher = null, bool SearchInParallel = false, ICollection<T> collection = null)  // incremental?
         {
             Results.Clear();
-            Results.AddRange(searchEngine.Search(val, Searcher, collection));
+            Results.AddRange(searchEngine.Search(val, Searcher, SearchInParallel, collection));
         }
     }
 }

@@ -100,9 +100,13 @@ namespace UsefulThings
         /// Converts given double to filesize with appropriate suffix.
         /// </summary>
         /// <param name="size">Size in bytes.</param>
-        public static string GetFileSizeAsString(double size)
+        public static string GetFileSizeAsString(double size, bool FullSuffix = false)
         {
-            string[] sizes = { "B", "KB", "MB", "GB" };
+            string[] sizes = null;
+            if (FullSuffix)
+                sizes = new string[] { "Bytes", "Kilobytes", "Megabytes", "Gigabytes" };
+            else
+                sizes = new string[] { "B", "KB", "MB", "GB" };
             
             int order = 0;
             while (size >= 1024 && order + 1 < sizes.Length)
