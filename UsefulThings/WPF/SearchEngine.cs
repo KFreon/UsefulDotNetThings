@@ -42,7 +42,7 @@ namespace UsefulThings.WPF
         /// <param name="searchMethodKey">Name of search method to use.</param>
         /// <param name="collection">Collection to search in.</param>
         /// <returns>List of results containing searchString using search method called searchMethodKey.</returns>
-        public IEnumerable<T> Search(string searchString, string searchMethodKey = null, bool SearchInParallel = false, ICollection<T> collection = null)
+        public List<T> Search(string searchString, string searchMethodKey = null, bool SearchInParallel = false, ICollection<T> collection = null)
         {
             var searcher = searchMethodKey == null ? SearchMethods.First().Value : SearchMethods[searchMethodKey];  // Default search method is first one.
             return Search(searchString, searcher, SearchInParallel, collection);
@@ -56,7 +56,7 @@ namespace UsefulThings.WPF
         /// <param name="Searcher">Function defining how to search.</param>
         /// <param name="collection">Collection to search in.</param>
         /// <returns>List of results containing searchString using Searcher.</returns>
-        public IEnumerable<T> Search(string searchString, Func<T, string, bool> Searcher, bool SearchInParallel = false, ICollection<T> collection = null)
+        public List<T> Search(string searchString, Func<T, string, bool> Searcher, bool SearchInParallel = false, ICollection<T> collection = null)
         {
             if (String.IsNullOrEmpty(searchString))
                 return new List<T>();
@@ -83,7 +83,7 @@ namespace UsefulThings.WPF
             }
 
 
-            return results;
+            return results.ToList(results.Count);
         }
     }
 }

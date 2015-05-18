@@ -14,7 +14,7 @@ namespace UsefulThings.WPF
     public class SearchViewModelBase<T> : ViewModelBase
     {
 	    protected SearchEngine<T> searchEngine { get; set; }
-        public RangedObservableCollection<T> Results { get; set; }
+        public MTRangedObservableCollection<T> Results { get; set; }
         public bool SearchInParallel = false;
 
         // Default search box
@@ -42,7 +42,7 @@ namespace UsefulThings.WPF
             : base()
 	    {
 		    searchEngine = new SearchEngine<T>(searchingCollection, Searchers);
-            Results = new RangedObservableCollection<T>();
+            Results = new MTRangedObservableCollection<T>();
 	    }
 
 

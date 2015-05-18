@@ -14,7 +14,22 @@ namespace UsefulThings
     /// KFreon: General C# helpers
     /// </summary>
     public static class General
-    { 
+    {
+        public static string ExtractString(string str, string left, string right)
+        {
+            int startIndex = str.IndexOf(left) + left.Length;
+            int endIndex = str.IndexOf(right, startIndex);
+            return str.Substring(startIndex, endIndex - startIndex);
+        }
+
+
+        public static string ExtractString(string str, string enclosingElement)
+        {
+            return ExtractString(str, enclosingElement, enclosingElement);
+        }
+
+
+
         /// <summary>
         /// Decompresses stream using GZip. Returns decompressed Stream.
         /// Returns null if stream isn't compressed.
