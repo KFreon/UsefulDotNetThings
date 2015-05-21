@@ -15,7 +15,7 @@ namespace UsefulThings.WPF
     {
         public bool CheckIfExists { get; set; }  // KFreon: If True, checks if entered path actually exists
         public bool isNumbers { get; set; }  // KFreon: True = not a path, but numbers
-add more/better validators
+
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
             if (String.IsNullOrEmpty(value as string))
