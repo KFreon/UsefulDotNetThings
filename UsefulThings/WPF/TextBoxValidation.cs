@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,44 +13,53 @@ namespace UsefulThings.WPF
     /// </summary>
     public class TextBoxValidation : ValidationRule
     {
-        public bool CheckIfExists { get; set; }  // KFreon: If True, checks if entered path actually exists
-        public bool isNumbers { get; set; }  // KFreon: True = not a path, but numbers
+        public bool RequireExistence { get; set; }  // KFreon: If True, checks if entered path actually exists
+        public bool IsNumber { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
 
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
             if (String.IsNullOrEmpty(value as string))
                 return new ValidationResult(false, "Value can't be empty.");
-            else
-            {
+
                 string val = (string)value;
 
-                if (isNumbers)
+            ValidationResult result = ValidationResult.ValidResult;
+
+            if (IsNumber)
                 {
-                    // KFreon: Should be a number so trys to parse number
+                // KFreon: Should be a number so try to parse number, and check bounds
                     int num = -1;
                     if (!Int32.TryParse(val, out num))
-                        return new ValidationResult(false, "Not a valid number");
+                    result = ValidationResult(false, "Not a valid number");
+                    
+                if (Min != Max) // KFreon: One is set to something
+                {
+                    if (num > Max)
+                        result = ValidationResult(false, "Must be smaller than " + Max);
+                    else if (num < Min)
+                        result = ValidationResult(false, "Must be larger than " + Min);
+                }
                 }
                 else
                 {
-                    if (CheckIfExists)
+                if (val.Length < 3) 
+                    return ValidationResult(false); just needs to be red. no message
+                
+                if (!Regex.IsMatch(val, "^([a-zA-Z]:|\e)\e"))
+                    return ValidationResult(false, "Path should be <letter>:\"); 
+                        
+                if (RequireExistence)
                     {
                         // KFreon: Check if path exists
                         if (val.isFile() && !File.Exists(val))
-                            return new ValidationResult(false, "Specified file doesn't exist!");
-                        else
-                            if (!Directory.Exists(val))
-                                return new ValidationResult(false, "Specified directory doesn't exist!");
-                    }
-                    else
-                    {
-                        // KFreon: Valid path = letter:\
-                        if (val.Length < 3 || !(val[0].isLetter() && val[1] == ':' && val[2] == '\\'))
-                            return new ValidationResult(false, "Path is in invalid format.");
-                    }
+                        result = ValidationResult(false, "Specified file doesn't exist!");
+                    else if (!Directory.Exists(val))
+                        result = ValidationResult(false, "Specified directory doesn't exist!");
                 }
             }
-            return ValidationResult.ValidResult;
+            return result;
         }
     }
 }
