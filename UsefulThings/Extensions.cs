@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,6 +33,49 @@ namespace UsefulThings
             vals.AddRange(Path.GetInvalidPathChars());
 
             InvalidPathingChars = vals.ToArray(vals.Count);
+        }
+
+
+
+        public static string ReadStringFromStream(this Stream stream, bool HasLengthWritten = false,  bool LengthIncludesNull = false)
+        {
+            if (stream == null || !stream.CanRead)
+                throw new IOException("Stream cannot be read.");
+                
+            int length = -1;
+            List<char> chars = null;
+            if (HasLengthWritten)
+            {
+                length = stream.ReadInt32();
+                for (int i=0;i<length;i++)   also clear out warnings
+                    chars.Add(stream.ReadByte());
+                    
+                if (!LengthIncludesNull)
+                    chars.Add('\0');
+            }
+            else
+            {
+                char c = 'a';
+                while (c != '\0')
+                {
+                    c = stream.ReadByte();
+                    chars.Add(c);
+                }
+            }
+            
+            return new String(chars);
+        }
+        
+        
+        public static string WriteStringToStream(this Stream stream, string str, bool WriteLength = false)
+        {
+            if (WriteLength)
+                stream.WriteInt32(str.Length);
+                
+            foreach (char c in str)
+                stream.WriteByte(c);
+                
+            stream.WriteByte('\0');
         }
 
 
