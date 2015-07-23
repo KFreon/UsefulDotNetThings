@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -32,31 +33,31 @@ namespace UsefulThings.WPF
                 // KFreon: Should be a number so try to parse number, and check bounds
                     int num = -1;
                     if (!Int32.TryParse(val, out num))
-                    result = ValidationResult(false, "Not a valid number");
+                    result = new ValidationResult(false, "Not a valid number");
                     
                 if (Min != Max) // KFreon: One is set to something
                 {
                     if (num > Max)
-                        result = ValidationResult(false, "Must be smaller than " + Max);
+                        result = new ValidationResult(false, "Must be smaller than " + Max);
                     else if (num < Min)
-                        result = ValidationResult(false, "Must be larger than " + Min);
+                        result = new ValidationResult(false, "Must be larger than " + Min);
                 }
                 }
                 else
                 {
                 if (val.Length < 3) 
-                    return ValidationResult(false); just needs to be red. no message
+                    return new ValidationResult(false, "Need more characters"); // KFreon: Just needs to be red. No message
                 
-                if (!Regex.IsMatch(val, "^([a-zA-Z]:|\e)\e"))
-                    return ValidationResult(false, "Path should be <letter>:\"); 
+                if (!Regex.IsMatch(val, @"^([a-zA-Z]:|\e)\e"))
+                    return new ValidationResult(false, "Path should be <letter>:\\"); 
                         
                 if (RequireExistence)
                     {
                         // KFreon: Check if path exists
                         if (val.isFile() && !File.Exists(val))
-                        result = ValidationResult(false, "Specified file doesn't exist!");
+                        result = new ValidationResult(false, "Specified file doesn't exist!");
                     else if (!Directory.Exists(val))
-                        result = ValidationResult(false, "Specified directory doesn't exist!");
+                        result = new ValidationResult(false, "Specified directory doesn't exist!");
                 }
             }
             return result;

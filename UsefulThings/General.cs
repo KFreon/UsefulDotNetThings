@@ -15,6 +15,16 @@ namespace UsefulThings
     /// </summary>
     public static class General
     {
+        public static bool IsPowerOfTwo(int number)
+        {
+            return (number & (number - 1)) == 0;
+        }
+
+        public static bool IsPowerOfTwo(long number)
+        {
+            return (number & (number - 1)) == 0;
+        }
+
         public static string ExtractString(string str, string left, string right)
         {
             int startIndex = str.IndexOf(left) + left.Length;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,46 +36,82 @@ namespace UsefulThings
         }
 
 
+        public static string[] Split(this string str, StringSplitOptions options, params string[] splitStrings)
+        {
+            return str.Split(splitStrings, options);
+        }
 
-        public static string ReadStringFromStream(this Stream stream, bool HasLengthWritten = false,  bool LengthIncludesNull = false)
+
+        public static int ReadInt32FromStream(this Stream stream)
+        {
+            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                return br.ReadInt32();
+        }
+
+        public static byte[] ReadBytesFromStream(this Stream stream, int Length)
+        {
+            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                return br.ReadBytes(Length);
+        }
+
+        public static long ReadInt64FromStream(this Stream stream)
+        {
+            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                return br.ReadInt64();
+        }
+
+
+        public static void WriteInt32ToStream(this Stream stream, int value)
+        {
+            using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Default, true))
+                bw.Write(value);
+        }
+
+        public static string ReadStringFromStream(this Stream stream, bool HasLengthWritten = false)
         {
             if (stream == null || !stream.CanRead)
                 throw new IOException("Stream cannot be read.");
                 
             int length = -1;
-            List<char> chars = null;
+            List<char> chars = new List<char>();
             if (HasLengthWritten)
             {
-                length = stream.ReadInt32();
-                for (int i=0;i<length;i++)   also clear out warnings
-                    chars.Add(stream.ReadByte());
-                    
-                if (!LengthIncludesNull)
-                    chars.Add('\0');
+                length = stream.ReadInt32FromStream();
+                for (int i=0;i<length;i++)
+                    chars.Add((char)stream.ReadByte());
             }
             else
             {
                 char c = 'a';
-                while (c != '\0')
+                while ((c = (char)stream.ReadByte()) != '\0')
                 {
-                    c = stream.ReadByte();
                     chars.Add(c);
                 }
             }
             
-            return new String(chars);
+            return new String(chars.ToArray(chars.Count));
         }
         
         
-        public static string WriteStringToStream(this Stream stream, string str, bool WriteLength = false)
+        public static void WriteStringToStream(this Stream stream, string str, bool WriteLength = false)
         {
             if (WriteLength)
-                stream.WriteInt32(str.Length);
+                stream.WriteInt32ToStream(str.Length);
                 
             foreach (char c in str)
-                stream.WriteByte(c);
+                stream.WriteByte((byte)c);
                 
-            stream.WriteByte('\0');
+            stream.WriteByte((byte)'\0');
+        }
+
+
+        public static void AddRange<T, U>(this Dictionary<T, U> mainDictionary, Dictionary<T, U> newAdditions)
+        {
+            if (newAdditions == null)
+                throw new ArgumentNullException();
+
+            foreach (var item in newAdditions)
+                mainDictionary.Add(item.Key, item.Value);
         }
 
 
@@ -241,6 +277,12 @@ namespace UsefulThings
         /// <param name="collection">Collection to add to.</param>
         /// <param name="additions">Elements to add.</param>
         public static void AddRangeKinda<T>(this ConcurrentBag<T> collection, IEnumerable<T> additions)
+        {
+            foreach (var item in additions)
+                collection.Add(item);
+        }
+
+        public static void AddRangeKinda<T>(this ICollection<T> collection, IEnumerable<T> additions)
         {
             foreach (var item in additions)
                 collection.Add(item);

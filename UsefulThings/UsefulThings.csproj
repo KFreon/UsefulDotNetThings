@@ -50,6 +50,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="General.cs" />
     <Compile Include="MemoryTributary.cs" />
+    <Compile Include="NaturalSortComparer.cs" />
     <Compile Include="WinForms\BackBone.cs" />
     <Compile Include="WinForms\Gooey.cs" />
     <Compile Include="WinForms\UsefulForms\KFreonMessageBox.cs">
@@ -80,8 +81,6 @@
     <Compile Include="WPF\MultiIntConverter.cs" />
     <Compile Include="WPF\MutuallyExclusiveCheckersConverter.cs" />
     <Compile Include="WPF\RangedObservableCollection.cs" />
-    <Compile Include="WPF\SearchEngine.cs" />
-    <Compile Include="WPF\SearchEngineViewModelBase.cs" />
     <Compile Include="WPF\StringToIntConverter.cs" />
     <Compile Include="WPF\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />
