@@ -41,6 +41,17 @@ namespace UsefulThings
             return str.Split(splitStrings, options);
         }
 
+        public static T[] GetRange<T>(this T[] oldArray, int offset, int length)
+        {
+            T[] newArray = new T[length - offset];
+            Array.Copy(oldArray, offset, newArray, 0, length);
+            return newArray;
+        }
+
+        public static T[] GetRange<T>(this T[] oldArray, int offset)
+        {
+            return oldArray.GetRange(offset, oldArray.Length - offset);
+        }
 
         public static int ReadInt32FromStream(this Stream stream)
         {
