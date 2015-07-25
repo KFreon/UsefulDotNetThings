@@ -34,7 +34,7 @@ namespace UsefulThings.WPF
         /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved if only this set.</param>
         /// <param name="decodeHeight">Specifies height to decode to. Aspect ratio preserved if only this set.</param>
         /// <returns>Bitmap from stream.</returns>
-        public static BitmapImage CreateWPFBitmap(Stream source, int decodeWidth = 0, int decodeHeight = 0, BitmapCacheOption cacheOption = BitmapCacheOption.OnLoad)
+        public static BitmapImage CreateWPFBitmap(Stream source, int decodeWidth = 0, int decodeHeight = 0, BitmapCacheOption cacheOption = BitmapCacheOption.OnLoad, bool DisposeStream = false)
         {
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
@@ -47,6 +47,9 @@ namespace UsefulThings.WPF
             bmp.CacheOption = cacheOption;
             bmp.EndInit();
             bmp.Freeze();  // Allows use across threads somehow (seals memory I'd guess)
+
+            if (DisposeStream)
+                source.Dispose();
 
             return bmp;
         }
@@ -101,6 +104,17 @@ namespace UsefulThings.WPF
         }
 
 
+        public static BitmapImage CreateWPFBitmap(BitmapSource source, int decodeWidth = 0, int decodeHeight = 0)
+        {
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            MemoryStream ms = new MemoryStream();
+
+            encoder.Frames.Add(BitmapFrame.Create(source));
+            encoder.Save(ms);
+
+            return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
+        }
+
         /// <summary>
         /// Saves WPF bitmap to disk as a JPG.
         /// </summary>
@@ -108,11 +122,15 @@ namespace UsefulThings.WPF
         /// <param name="Destination">Path to save to.</param>
         public static void SaveWPFBitmapToDiskAsJPG(BitmapImage img, string Destination)
         {
+            using (FileStream fs = new FileStream(Destination, FileMode.CreateNew))
+                SaveWPFBitmapToStreamAsJPG(img, fs);
+        }
+
+        public static void SaveWPFBitmapToStreamAsJPG(BitmapImage img, Stream stream)
+        {
             BitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(img, null, null, null));
-
-            using (FileStream fs = new FileStream(Destination, FileMode.CreateNew))
-                encoder.Save(fs);
+            encoder.Save(stream);
         }
         #endregion
     }
