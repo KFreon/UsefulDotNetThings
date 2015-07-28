@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -26,6 +26,7 @@ namespace UsefulThings.WPF
     public static class Images
     {
         #region Bitmaps
+        #region Creation
         /// <summary>
         /// Creates a WPF style Bitmap (i.e. not using the System.Drawing.Bitmap)
         /// </summary>
@@ -114,7 +115,9 @@ namespace UsefulThings.WPF
 
             return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
         }
+        #endregion
 
+        
         /// <summary>
         /// Saves WPF bitmap to disk as a JPG.
         /// </summary>
