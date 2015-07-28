@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,6 +16,9 @@ namespace UsefulThings.WPF
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (values == null)
+                return null;
+            
             // Checks type of all arguments.
             foreach (object value in values)
                 if (value.GetType() != typeof(int))

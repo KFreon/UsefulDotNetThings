@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,6 +16,9 @@ namespace UsefulThings.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null)
+                return null;
+                
             if (value.GetType() != typeof(string))
                 throw new InvalidCastException("Value must be a string.");
 

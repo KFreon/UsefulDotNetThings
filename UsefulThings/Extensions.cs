@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -71,7 +71,10 @@ namespace UsefulThings
         {
             return oldArray.GetRange(offset, oldArray.Length - offset);
         }
+        #endregion Arrays
 
+        
+        #region Stream IO 
         public static int ReadInt32FromStream(this Stream stream)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
@@ -134,7 +137,61 @@ namespace UsefulThings
             stream.WriteByte((byte)'\0');
         }
 
+        /// <summary>
+        /// KFreon: Borrowed this from the DevIL C# Wrapper found here: https://code.google.com/p/devil-net/
+        /// 
+        /// Reads a stream until the end is reached into a byte array. Based on
+        /// <a href="http://www.yoda.arachsys.com/csharp/readbinary.html">Jon Skeet's implementation</a>.
+        /// It is up to the caller to dispose of the stream.
+        /// </summary>
+        /// <param name="stream">Stream to read all bytes from</param>
+        /// <param name="initialLength">Initial buffer length, default is 32K</param>
+        /// <returns>The byte array containing all the bytes from the stream</returns>
+        public static byte[] ReadStreamFully(this Stream stream, int initialLength = 32768)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+            if (initialLength < 1)
+            {
+                initialLength = 32768; //Init to 32K if not a valid initial length
+            }
 
+            byte[] buffer = new byte[initialLength];
+            int position = 0;
+            int chunk;
+
+            while ((chunk = stream.Read(buffer, position, buffer.Length - position)) > 0)
+            {
+                position += chunk;
+
+                //If we reached the end of the buffer check to see if there's more info
+                if (position == buffer.Length)
+                {
+                    int nextByte = stream.ReadByte();
+
+                    //If -1 we reached the end of the stream
+                    if (nextByte == -1)
+                    {
+                        return buffer;
+                    }
+
+                    //Not at the end, need to resize the buffer
+                    byte[] newBuffer = new byte[buffer.Length * 2];
+                    Array.Copy(buffer, newBuffer, buffer.Length);
+                    newBuffer[position] = (byte)nextByte;
+                    buffer = newBuffer;
+                    position++;
+                }
+            }
+
+            //Trim the buffer before returning
+            byte[] toReturn = new byte[position];
+            Array.Copy(buffer, toReturn, position);
+            return toReturn;
+        }
+        #endregion Stream IO
+        
+       
+        #region All Collections e.g. List, Dictionary
         public static void AddRange<T, U>(this Dictionary<T, U> mainDictionary, Dictionary<T, U> newAdditions)
         {
             if (newAdditions == null)
@@ -174,6 +231,78 @@ namespace UsefulThings
             return false;
         }
 
+        /// <summary>
+        /// Add range of elements to given collection.
+        /// </summary>
+        /// <typeparam name="T">Type of items in collection.</typeparam>
+        /// <param name="collection">Collection to add to.</param>
+        /// <param name="additions">Elements to add.</param>
+        public static void AddRangeKinda<T>(this ConcurrentBag<T> collection, IEnumerable<T> additions)
+        {
+            foreach (var item in additions)
+                collection.Add(item);
+        }
+
+        public static void AddRangeKinda<T>(this ICollection<T> collection, IEnumerable<T> additions)
+        {
+            foreach (var item in additions)
+                collection.Add(item);
+        }
+        
+        /// <summary>
+        /// Removes element from collection at index.
+        /// </summary>
+        /// <typeparam name="T">Type of objects in collection.</typeparam>
+        /// <param name="collection">Collection to remove from.</param>
+        /// <param name="index">Index to remove from.</param>
+        /// <returns>Removed element.</returns>
+        public static T Pop<T>(this ICollection<T> collection, int index)
+        {
+            T item = collection.ElementAt(index);
+            collection.Remove(item);
+            return item;
+        }
+
+
+        /// <summary>
+        /// Converts enumerable to List in a more memory efficient way by providing size of list.
+        /// </summary>
+        /// <typeparam name="T">Type of elements in lists.</typeparam>
+        /// <param name="enumerable">Enumerable to convert to list.</param>
+        /// <param name="size">Size of list.</param>
+        /// <returns>List containing enumerable contents.</returns>
+        public static List<T> ToList<T>(this IEnumerable<T> enumerable, int size)
+        {
+            return new List<T>(enumerable);
+        }
+
+
+        /// <summary>
+        /// Converts enumerable to array in a more memory efficient way by providing size of list.
+        /// </summary>
+        /// <typeparam name="T">Type of elements in list.</typeparam>
+        /// <param name="enumerable">Enumerable to convert to array.</param>
+        /// <param name="size">Size of lists.</param>
+        /// <returns>Array containing enumerable elements.</returns>
+        public static T[] ToArray<T>(this IEnumerable<T> enumerable, int size)
+        {
+            T[] newarr = new T[size];
+            int count = 0;
+
+            foreach (T item in enumerable)
+                newarr[count++] = item;
+
+            return newarr;
+        }
+        #endregion All Collections e.g. List, Dictionary
+
+
+        #region Strings
+        public static string[] Split(this string str, StringSplitOptions options, params string[] splitStrings)
+        {
+            return str.Split(splitStrings, options);
+        }
+        
 
         /// <summary>
         /// Compares strings with culture and case sensitivity.
@@ -230,55 +359,6 @@ namespace UsefulThings
             return retval;
         }
 
-
-        /// <summary>
-        /// Determines if character is a number.
-        /// </summary>
-        /// <param name="c">Character to check.</param>
-        /// <returns>True if c is a number.</returns>
-        public static bool isDigit(this char c)
-        {
-            return ("" + c).isDigit();
-        }
-
-
-        /// <summary>
-        /// Determines if character is a letter.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static bool isLetter(this char c)
-        {
-            return !c.isDigit();
-        }
-
-
-        /// <summary>
-        /// Determines if string is a number.
-        /// </summary>
-        /// <param name="str">String to check.</param>
-        /// <returns>True if string is a number.</returns>
-        public static bool isDigit(this string str)
-        {
-            int res = -1;
-            return Int32.TryParse(str, out res);
-        }
-
-
-        /// <summary>
-        /// Determines if string is a letter.
-        /// </summary>
-        /// <param name="str">String to check.</param>
-        /// <returns>True if str is a letter.</returns>
-        public static bool isLetter(this string str)
-        {
-            if (str.Length == 1)
-                return !str.isDigit();
-
-            return false;
-        }
-
-
         /// <summary>
         /// Determines if string is a Directory.
         /// Returns True if directory, false otherwise.
@@ -299,25 +379,6 @@ namespace UsefulThings
                 return false;
         }
 
-
-        /// <summary>
-        /// Add range of elements to given collection.
-        /// </summary>
-        /// <typeparam name="T">Type of items in collection.</typeparam>
-        /// <param name="collection">Collection to add to.</param>
-        /// <param name="additions">Elements to add.</param>
-        public static void AddRangeKinda<T>(this ConcurrentBag<T> collection, IEnumerable<T> additions)
-        {
-            foreach (var item in additions)
-                collection.Add(item);
-        }
-
-        public static void AddRangeKinda<T>(this ICollection<T> collection, IEnumerable<T> additions)
-        {
-            foreach (var item in additions)
-                collection.Add(item);
-        }
-
         /// <summary>
         /// Determines if string is a file.
         /// Returns True if file, false otherwise.
@@ -328,61 +389,63 @@ namespace UsefulThings
         {
             return !str.isDirectory();
         }
+        #endregion Strings
+
+
+
+        #region Digit or letter determination
+        /// <summary>
+        /// Determines if string is a number.
+        /// </summary>
+        /// <param name="str">String to check.</param>
+        /// <returns>True if string is a number.</returns>
+        public static bool isDigit(this string str)
+        {
+            int res = -1;
+            return Int32.TryParse(str, out res);
+        }
+        
+        /// <summary>
+        /// Determines if character is a number.
+        /// </summary>
+        /// <param name="c">Character to check.</param>
+        /// <returns>True if c is a number.</returns>
+        public static bool isDigit(this char c)
+            {
+            return ("" + c).isDigit();
+            }
 
 
         /// <summary>
-        /// KFreon: Borrowed this from the DevIL C# Wrapper found here: https://code.google.com/p/devil-net/
-        /// 
-        /// Reads a stream until the end is reached into a byte array. Based on
-        /// <a href="http://www.yoda.arachsys.com/csharp/readbinary.html">Jon Skeet's implementation</a>.
-        /// It is up to the caller to dispose of the stream.
+        /// Determines if character is a letter.
         /// </summary>
-        /// <param name="stream">Stream to read all bytes from</param>
-        /// <param name="initialLength">Initial buffer length, default is 32K</param>
-        /// <returns>The byte array containing all the bytes from the stream</returns>
-        public static byte[] ReadStreamFully(this Stream stream, int initialLength = 32768)
-        {
-            stream.Seek(0, SeekOrigin.Begin);
-            if (initialLength < 1)
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static bool isLetter(this char c)
             {
-                initialLength = 32768; //Init to 32K if not a valid initial length
-            }
+            return !c.isDigit();
+        }      
 
-            byte[] buffer = new byte[initialLength];
-            int position = 0;
-            int chunk;
 
-            while ((chunk = stream.Read(buffer, position, buffer.Length - position)) > 0)
-            {
-                position += chunk;
-
-                //If we reached the end of the buffer check to see if there's more info
-                if (position == buffer.Length)
+        /// <summary>
+        /// Determines if string is a letter.
+        /// </summary>
+        /// <param name="str">String to check.</param>
+        /// <returns>True if str is a letter.</returns>
+        public static bool isLetter(this string str)
                 {
-                    int nextByte = stream.ReadByte();
+            if (str.Length == 1)
+                return !str.isDigit();
 
-                    //If -1 we reached the end of the stream
-                    if (nextByte == -1)
-                    {
-                        return buffer;
+            return false;
                     }
-
-                    //Not at the end, need to resize the buffer
-                    byte[] newBuffer = new byte[buffer.Length * 2];
-                    Array.Copy(buffer, newBuffer, buffer.Length);
-                    newBuffer[position] = (byte)nextByte;
-                    buffer = newBuffer;
-                    position++;
-                }
-            }
-
-            //Trim the buffer before returning
-            byte[] toReturn = new byte[position];
-            Array.Copy(buffer, toReturn, position);
-            return toReturn;
-        }
+        #endregion Digit or letter determination
+        
 
 
+
+
+        #region WPF Documents
         /// <summary>
         /// Adds text to a FixedPage.
         /// </summary>
@@ -421,21 +484,10 @@ namespace UsefulThings
             document.Pages.Add(page);
             return retval;
         }
+        #endregion WPF Documents
 
 
-        /// <summary>
-        /// Adds item to WPF collection from the UI thread. Probably doesn't work for collections created off the UI.
-        /// </summary>
-        /// <typeparam name="T">Generic collection types.</typeparam>
-        /// <param name="collection">Collection to add to.</param>
-        /// <param name="item">Item to add to collection.</param>
-        public static void AddOnUI<T>(this ICollection<T> collection, T item)
-        {
-            Action<T> addMethod = collection.Add;
-            Application.Current.Dispatcher.BeginInvoke(addMethod, item);
-        }
-
-
+        #region Misc
         /// <summary>
         /// Begins an animation that automatically sets final value to be held. Used with FillType.Stop rather than default FillType.Hold.
         /// </summary>
@@ -468,52 +520,6 @@ namespace UsefulThings
         {
             element.BeginAdjustableAnimation(dp, anim, anim.To);
         }
-
-
-        /// <summary>
-        /// Removes element from collection at index.
-        /// </summary>
-        /// <typeparam name="T">Type of objects in collection.</typeparam>
-        /// <param name="collection">Collection to remove from.</param>
-        /// <param name="index">Index to remove from.</param>
-        /// <returns>Removed element.</returns>
-        public static T Pop<T>(this ICollection<T> collection, int index)
-        {
-            T item = collection.ElementAt(index);
-            collection.Remove(item);
-            return item;
-        }
-
-
-        /// <summary>
-        /// Converts enumerable to List in a more memory efficient way by providing size of list.
-        /// </summary>
-        /// <typeparam name="T">Type of elements in lists.</typeparam>
-        /// <param name="enumerable">Enumerable to convert to list.</param>
-        /// <param name="size">Size of list.</param>
-        /// <returns>List containing enumerable contents.</returns>
-        public static List<T> ToList<T>(this IEnumerable<T> enumerable, int size)
-        {
-            return new List<T>(enumerable);
-        }
-
-
-        /// <summary>
-        /// Converts enumerable to array in a more memory efficient way by providing size of list.
-        /// </summary>
-        /// <typeparam name="T">Type of elements in list.</typeparam>
-        /// <param name="enumerable">Enumerable to convert to array.</param>
-        /// <param name="size">Size of lists.</param>
-        /// <returns>Array containing enumerable elements.</returns>
-        public static T[] ToArray<T>(this IEnumerable<T> enumerable, int size)
-        {
-            T[] newarr = new T[size];
-            int count = 0;
-
-            foreach (T item in enumerable)
-                newarr[count++] = item;
-
-            return newarr;
-        }
+        #endregion Misc
     }
 }

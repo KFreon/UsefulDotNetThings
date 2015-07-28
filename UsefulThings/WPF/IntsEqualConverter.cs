@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,10 @@ namespace UsefulThings.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            // Checks if a pair of integers are equal. Parameter required. 
+            if (value == null || parameter == null)
+                return null;
+            
+            // KFreon: Checks if a pair of integers are equal. Parameter required. 
             if (value.GetType() == typeof(int) && parameter.GetType() == typeof(int))
                 return (int)value == (int)parameter;
             else

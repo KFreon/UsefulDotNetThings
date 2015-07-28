@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,6 +15,34 @@ namespace UsefulThings
     /// </summary>
     public static class General
     {
+        /// <summary>
+        /// Does bit conversion from streams
+        /// </summary>
+        public static class StreamBitConverter
+        {
+            /// <summary>
+            /// Reads a UInt32 from a stream at given offset.
+            /// </summary>
+            /// <param name="stream">Stream to read from.</param>
+            /// <param name="offset">Offset to start reading from in stream.</param>
+            /// <returns>Number read from stream.</returns>
+            public static UInt32 ToUInt32(Stream stream, int offset)
+            {
+                // KFreon: Seek to specified offset
+                byte[] fourBytes = new byte[4];
+                stream.Seek(offset, SeekOrigin.Begin);
+
+                // KFreon: Read 4 bytes from stream at offset and convert to UInt32
+                stream.Read(fourBytes, 0, 4);
+                UInt32 retval = BitConverter.ToUInt32(fourBytes, 0);
+
+                // KFreon: Clear array and reset stream position
+                fourBytes = null;
+                return retval;
+            }
+        }
+        
+        
         public static bool IsPowerOfTwo(int number)
         {
             return (number & (number - 1)) == 0;
@@ -39,7 +67,7 @@ namespace UsefulThings
         }
 
 
-
+        #region Stream Compression/Decompression
         /// <summary>
         /// Decompresses stream using GZip. Returns decompressed Stream.
         /// Returns null if stream isn't compressed.
@@ -70,8 +98,6 @@ namespace UsefulThings
                     Decompressor.Dispose();
             }
             
-        
- 
             return newStream;
         }
 
@@ -92,33 +118,8 @@ namespace UsefulThings
 
             return ms;
         }
-
-        /// <summary>
-        /// Does bit conversion from streams
-        /// </summary>
-        public static class StreamBitConverter
-        {
-            /// <summary>
-            /// Reads a UInt32 from a stream at given offset.
-            /// </summary>
-            /// <param name="stream">Stream to read from.</param>
-            /// <param name="offset">Offset to start reading from in stream.</param>
-            /// <returns>Number read from stream.</returns>
-            public static UInt32 ToUInt32(Stream stream, int offset)
-            {
-                // KFreon: Seek to specified offset
-                byte[] fourBytes = new byte[4];
-                stream.Seek(offset, SeekOrigin.Begin);
-
-                // KFreon: Read 4 bytes from stream at offset and convert to UInt32
-                stream.Read(fourBytes, 0, 4);
-                UInt32 retval = BitConverter.ToUInt32(fourBytes, 0);
-
-                // KFreon: Clear array and reset stream position
-                fourBytes = null;
-                return retval;
-            }
-        }
+        #endregion Stream Compression/Decompression
+        
 
 
         /// <summary>
@@ -180,36 +181,7 @@ namespace UsefulThings
         }
 
 
-        /// <summary>
-        /// Gets external image data as byte[] with some buffering i.e. retries if fails up to 20 times.
-        /// </summary>
-        /// <param name="file">File to get data from.</param>
-        /// <param name="OnFailureSleepTime">Time (in ms) between attempts for which to sleep.</param>
-        /// <param name="retries">Number of attempts to read.</param>
-        /// <returns>byte[] of image.</returns>
-        public static byte[] GetExternalData(string file, int retries = 20, int OnFailureSleepTime = 300)
-        {
-            for (int i = 0; i < retries; i++)
-            {
-                try
-                {
-                    // KFreon: Try readng file to byte[]
-                    return File.ReadAllBytes(file);
-                }
-                catch (IOException e)
-                {
-                    // KFreon: Sleep for a bit and try again
-                    System.Threading.Thread.Sleep(OnFailureSleepTime);
-                    Console.WriteLine(e.Message);
-                }
-                catch (Exception e)
-                {
-                    Debugger.Break();
-                    Console.WriteLine();
-                }
-            }
-            return null;
-        }
+       
 
 
         /// <summary>
@@ -232,6 +204,7 @@ namespace UsefulThings
         }
 
 
+        #region File IO
         /// <summary>
         /// Read text from file as single string.
         /// </summary>
@@ -290,5 +263,37 @@ namespace UsefulThings
 
             return err;
         }
+        
+         /// <summary>
+        /// Gets external image data as byte[] with some buffering i.e. retries if fails up to 20 times.
+        /// </summary>
+        /// <param name="file">File to get data from.</param>
+        /// <param name="OnFailureSleepTime">Time (in ms) between attempts for which to sleep.</param>
+        /// <param name="retries">Number of attempts to read.</param>
+        /// <returns>byte[] of image.</returns>
+        public static byte[] GetExternalData(string file, int retries = 20, int OnFailureSleepTime = 300)
+        {
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    // KFreon: Try readng file to byte[]
+                    return File.ReadAllBytes(file);
+                }
+                catch (IOException e)
+                {
+                    // KFreon: Sleep for a bit and try again
+                    System.Threading.Thread.Sleep(OnFailureSleepTime);
+                    Console.WriteLine(e.Message);
+                }
+                catch (Exception e)
+                {
+                    Debugger.Break();
+                    Console.WriteLine();
+                }
+            }
+            return null;
+        }
+        #endregion File IO
     }
 }

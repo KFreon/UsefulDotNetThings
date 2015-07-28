@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace UsefulThings.WPF
             else
                 throw new InvalidCastException("Value and parameter must be of type bool or bool?");
 
-            // KFreon: Invert if required
+            // KFreon: Invert if asked to (can't invert null)
             if (parameter != null && (bool)parameter)
                 val = !val;
 

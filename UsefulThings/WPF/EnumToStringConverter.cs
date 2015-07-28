@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +12,9 @@ namespace UsefulThings.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if(parameter == null || value == null)
+                return null;
+            
             // KFreon: Try to convert the value of an enum to a string.
             Type parameterType = (Type)parameter;
             if (!parameterType.IsEnum)
@@ -24,6 +27,9 @@ namespace UsefulThings.WPF
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null || parameter == null)
+                return null;
+            
             // KFreon: Try to convert string to enum.
             Type parameterType = (Type)parameter;
             if (value.GetType() == parameterType)
