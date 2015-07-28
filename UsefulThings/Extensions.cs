@@ -6,11 +6,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using UsefulThings.WPF;
 
 namespace UsefulThings
@@ -39,6 +41,23 @@ namespace UsefulThings
         public static string[] Split(this string str, StringSplitOptions options, params string[] splitStrings)
         {
             return str.Split(splitStrings, options);
+        }
+
+        /// <summary>
+        /// A simple WPF threading extension method, to invoke a delegate
+        /// on the correct thread if it is not currently on the correct thread
+        /// Which can be used with DispatcherObject types
+        /// </summary>
+        /// <param name="disp">The Dispatcher object on which to do the Invoke</param>
+        /// <param name="dotIt">The delegate to run</param>
+        /// <param name="priority">The DispatcherPriority</param>
+        public static void InvokeIfRequired(this Dispatcher disp,
+            Action dotIt, DispatcherPriority priority)
+        {
+            if (disp.Thread != Thread.CurrentThread)
+                disp.Invoke(priority, dotIt);
+            else
+                dotIt();
         }
 
         public static T[] GetRange<T>(this T[] oldArray, int offset, int length)
