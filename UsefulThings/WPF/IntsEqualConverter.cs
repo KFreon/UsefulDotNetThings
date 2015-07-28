@@ -12,7 +12,7 @@ namespace UsefulThings.WPF
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null || parameter == null)
-                throw new ArgumentNullException("Both parameter and value must be specified.");
+                return null;
             
             // KFreon: Checks if a pair of integers are equal. Parameter required. 
             if (value.GetType() == typeof(int) && parameter.GetType() == typeof(int))
