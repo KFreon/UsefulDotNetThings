@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace UsefulThings.WPF
     /// Adaptation of ObservableCollection to allow ranged operations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RangedObservableCollection<T> : ObservableCollection<T>
+    public class RangedObservableCollection<T> : ObservableCollection<T>, IRangedCollection
     {
         /// <summary>
         /// Base Constructor.
