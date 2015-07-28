@@ -17,7 +17,7 @@ namespace UsefulThings.WPF
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (values == null)
-                throw new ArgumentNullException("Array of values must be specified.");
+                return null;
             
             // Checks type of all arguments.
             foreach (object value in values)
