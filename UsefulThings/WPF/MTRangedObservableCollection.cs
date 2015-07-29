@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UsefulThings.WPF;
 
 namespace UsefulThings.WPF
 {
@@ -10,7 +11,7 @@ namespace UsefulThings.WPF
     /// Adaptation of Multithreaded ObservableCollection to allow range operations.
     /// </summary>
     /// <typeparam name="T">Type of content.</typeparam>
-    public class MTRangedObservableCollection<T> : MTObservableCollection<T>, IRangedCollection
+    public class MTRangedObservableCollection<T> : MTObservableCollection<T>, IRangedCollection<T>
     {
         /// <summary>
         /// Default constructor.

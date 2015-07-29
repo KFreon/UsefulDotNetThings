@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,10 +38,7 @@ namespace UsefulThings
         }
 
 
-        public static string[] Split(this string str, StringSplitOptions options, params string[] splitStrings)
-        {
-            return str.Split(splitStrings, options);
-        }
+        
 
         /// <summary>
         /// A simple WPF threading extension method, to invoke a delegate
@@ -60,6 +57,7 @@ namespace UsefulThings
                 dotIt();
         }
 
+        #region Arrays
         public static T[] GetRange<T>(this T[] oldArray, int offset, int length)
         {
             T[] newArray = new T[length - offset];
