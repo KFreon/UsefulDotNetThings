@@ -12,7 +12,7 @@ namespace UsefulThings.WPF
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // KFreon: Yeah...an entire class file for this. A little frustration for WPF.
-            double size = (double)value;
+            double size = (double)((long)value);
             return General.GetFileSizeAsString(size);
         }
 

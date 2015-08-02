@@ -201,35 +201,6 @@ namespace UsefulThings
 
 
         /// <summary>
-        /// Checks if anything matches given predicate in List. e.g. Check if text files in list:  predicate = t => t.EndsWith(".txt")
-        /// </summary>
-        /// <typeparam name="T">Type of contents in list.</typeparam>
-        /// <param name="list">List to check in.</param>
-        /// <param name="equalityComparer">Predicate to determine if item is in list.</param>
-        /// <returns>True if item found in List.</returns>
-        public static bool Contains<T>(this List<T> list, Predicate<T> equalityComparer)
-        {
-            return list.Find(t => equalityComparer(t)) != null;
-        }
-
-
-        /// <summary>
-        /// Checks if anything matches given predicate in enumerable. e.g. Check if text files in list:  predicate = t => t.EndsWith(".txt")
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerable"></param>
-        /// <param name="equalityComparer"></param>
-        /// <returns></returns>
-        public static bool Contains<T>(this IEnumerable<T> enumerable, Predicate<T> equalityComparer)
-        {
-            foreach (var item in enumerable)
-                if (equalityComparer(item))
-                    return true;
-
-            return false;
-        }
-
-        /// <summary>
         /// Add range of elements to given collection.
         /// </summary>
         /// <typeparam name="T">Type of items in collection.</typeparam>
