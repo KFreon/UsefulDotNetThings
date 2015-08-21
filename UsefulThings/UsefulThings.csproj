@@ -78,11 +78,13 @@
     <Compile Include="WPF\IntsEqualConverter.cs" />
     <Compile Include="WPF\InverseBooleanConverter.cs" />
     <Compile Include="WPF\IRangedCollection.cs" />
+    <Compile Include="WPF\ITreeSeekable.cs" />
     <Compile Include="WPF\MTObservableCollection.cs" />
     <Compile Include="WPF\MTRangedObservableCollection.cs" />
     <Compile Include="WPF\MultiIntConverter.cs" />
     <Compile Include="WPF\MutuallyExclusiveCheckersConverter.cs" />
     <Compile Include="WPF\RangedObservableCollection.cs" />
+    <Compile Include="WPF\SeekableVirtualTreeView.cs" />
     <Compile Include="WPF\StringToIntConverter.cs" />
     <Compile Include="WPF\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />
