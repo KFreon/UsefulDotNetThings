@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,6 +72,33 @@ namespace UsefulThings.WinForms
                 g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
             }
             return (Image)b;
+        }
+
+
+        /// <summary>
+        /// Extracts all raw pixels from bitmap.
+        /// </summary>
+        /// <param name="bmp">Bitmap to extract data from.</param>
+        /// <returns>Raw pixels.</returns>
+        public static byte[] GetPixelDataFromBitmap(Bitmap bmp)
+        {
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            BitmapData bmpData =
+                bmp.LockBits(rect, ImageLockMode.ReadOnly,
+                bmp.PixelFormat);
+
+            // Declare an array to hold the bytes of the bitmap. 
+            int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(bmpData.Scan0, rgbValues, 0, bytes);
+
+            // Unlock the bits.
+            bmp.UnlockBits(bmpData);
+
+            return rgbValues;
         }
     }
 }

@@ -42,7 +42,6 @@ namespace UsefulThings
             }
         }
         
-        
         public static bool IsPowerOfTwo(int number)
         {
             return (number & (number - 1)) == 0;

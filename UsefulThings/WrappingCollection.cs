@@ -148,7 +148,10 @@ namespace UsefulThings
         /// <param name="item">Item to insert.</param>
         public void Insert(int index, T item)
         {
-            UnderlyingCollection.Insert(WrapIndex(index), item);
+            if (UnderlyingCollection.Count == 0)
+                Add(item);
+            else
+                UnderlyingCollection.Insert(WrapIndex(index), item);
         }
 
 

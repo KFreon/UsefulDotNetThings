@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -117,6 +118,38 @@ namespace UsefulThings.WPF
         }
         #endregion
 
+
+        public static BitmapImage ResizeImage(BitmapImage img, int NewWidth, int NewHeight)
+        {
+            var rect = new Rect(0, 0, NewWidth, NewHeight);
+
+            var group = new DrawingGroup();
+            RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
+            group.Children.Add(new ImageDrawing(img, rect));
+
+            var drawingVisual = new DrawingVisual();
+            using (var drawingContext = drawingVisual.RenderOpen())
+                drawingContext.DrawDrawing(group);
+
+            var resizedImage = new RenderTargetBitmap(
+                NewWidth, NewHeight,         // Resized dimensions
+                96, 96,                // Default DPI values
+                PixelFormats.Default); // Default pixel format
+            resizedImage.Render(drawingVisual);
+
+            return CreateWPFBitmap(resizedImage);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="scale">Magnitude of scaling i.e. 2 would double size 0.5 would halve.</param>
+        /// <returns></returns>
+        public static BitmapImage ScaleImage(BitmapImage img, double scale)
+        {
+            return ResizeImage(img, (int)(img.Width * scale), (int)(img.Height * scale));
+        }
         
         /// <summary>
         /// Saves WPF bitmap to disk as a JPG.
