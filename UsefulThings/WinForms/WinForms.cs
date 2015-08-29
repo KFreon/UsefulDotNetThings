@@ -15,6 +15,24 @@ namespace UsefulThings.WinForms
     public static class Misc
     {
         /// <summary>
+        /// Creates Bitmap from pixels.
+        /// </summary>
+        /// <param name="pixels">Array of pixels.</param>
+        /// <param name="Width">Width of image.</param>
+        /// <param name="Height">Height of image.</param>
+        /// <returns>Bitmap containing pixels.</returns>
+        public static Bitmap CreateBitmap(byte[] pixels, int Width, int Height)
+        {
+            var rect = new Rectangle(0, 0, Width, Height);
+            Bitmap bmp = new Bitmap(Width, Height);
+            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            Marshal.Copy(pixels, 0, data.Scan0, pixels.Length);
+            bmp.UnlockBits(data);
+
+            return bmp;
+        }
+
+        /// <summary>
         /// Saves given image to file.
         /// </summary>
         /// <param name="image">Image to save.</param>
@@ -82,23 +100,20 @@ namespace UsefulThings.WinForms
         /// <returns>Raw pixels.</returns>
         public static byte[] GetPixelDataFromBitmap(Bitmap bmp)
         {
-            // Lock the bitmap's bits.  
-            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            BitmapData bmpData =
-                bmp.LockBits(rect, ImageLockMode.ReadOnly,
-                bmp.PixelFormat);
-
-            // Declare an array to hold the bytes of the bitmap. 
-            int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            Marshal.Copy(bmpData.Scan0, rgbValues, 0, bytes);
-
-            // Unlock the bits.
-            bmp.UnlockBits(bmpData);
-
-            return rgbValues;
+            byte[] data = new byte[4 * bmp.Width * bmp.Height];
+            int count = 0;
+            for (int y=0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color colour = bmp.GetPixel(x, y);
+                    data[count] = colour.B;
+                    data[count + 1] = colour.G;
+                    data[count + 2 ] = colour.R;
+                    count += 4;
+                }
+            }
+            return data;
         }
     }
 }

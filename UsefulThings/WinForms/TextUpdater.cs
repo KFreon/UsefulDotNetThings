@@ -17,7 +17,8 @@ namespace UsefulThings.WinForms
         ToolStripItem item = null;
 
         /// <summary>
-        /// Constructor using a Control like a TextBox. Unused for now.
+        /// Provides multi-threaded access to Text Controls.
+        /// Allows changing of the Text property on a given Control.
         /// </summary>
         /// <param name="givenControl">Control to alter.</param>
         public TextUpdater(Control givenControl)
@@ -27,7 +28,8 @@ namespace UsefulThings.WinForms
 
 
         /// <summary>
-        /// Constructor for given ToolStripItem.
+        /// Provides multi-threaded access to ToolStrip Text Controls.
+        /// Allows changing of the Text property on a given Control.
         /// </summary>
         /// <param name="givenControl">Control to monitor.</param>
         /// <param name="givenStrip">Base strip to correctly invoke with.</param>

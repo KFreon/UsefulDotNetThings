@@ -17,7 +17,7 @@ namespace UsefulThings.WPF
         internal bool _canExecute { get; set; }
 
         /// <summary>
-        /// Constructor.
+        /// Presents WPF Commands in an easy to use wrapper.
         /// </summary>
         /// <param name="canExecute">If true, can perform command/action.</param>
         public CommandHandler(bool canExecute)
@@ -28,7 +28,7 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Presents WPF Commands in an easy to use wrapper.
         /// </summary>
         /// <param name="action">Action to perform WITHOUT arguments.</param>
         /// <param name="canExecute">true = command can be performed.</param>
@@ -39,7 +39,7 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Presents WPF Commands in an easy to use wrapper.
         /// </summary>
         /// <param name="action">Action to perform WITH arguments.</param>
         /// <param name="canExecute">true = command can be performed.</param>

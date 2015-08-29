@@ -199,7 +199,7 @@ namespace UsefulThings
         /// <returns>Path to location.</returns>
         public static string GetExecutingLoc()
         {
-            return Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location);
+            return Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         }
 
 

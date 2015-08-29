@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using UsefulThings.WPF;
 
@@ -490,5 +491,79 @@ namespace UsefulThings
             element.BeginAdjustableAnimation(dp, anim, anim.To);
         }
         #endregion Misc
+
+
+        /// <summary>
+        /// Returns index of minimum value based on comparer.
+        /// </summary>
+        /// <param name="enumerable">Collection to search.</param>
+        /// <param name="comparer">Comparer to use. e.g. item => item - x</param>
+        /// <returns>Index of minimum value in enumerable based on comparer.</returns>
+        public static int IndexOfMin(this IEnumerable<int> enumerable, Func<int, int> comparer)
+        {
+            int min = int.MaxValue;
+            int index = 0;
+            int minIndex = 0;
+            foreach (int item in enumerable)
+            {
+                int check = comparer(item);
+                if (check < min)
+                {
+                    min = check;
+                    minIndex = index;
+                }
+
+                index++;
+            }
+            return minIndex;
+        }
+
+
+        /// <summary>
+        /// Returns index of minimum value based on comparer.
+        /// </summary>
+        /// <param name="enumerable">Collection to search.</param>
+        /// <param name="comparer">Comparer to use. e.g. item => item - x</param>
+        /// <returns>Index of minimum value in enumerable based on comparer.</returns>
+        public static int IndexOfMin(this IEnumerable<byte> enumerable, Func<byte, int> comparer)
+        {
+            byte min = byte.MaxValue;
+            int index = 0;
+            int minIndex = 0;
+            foreach (byte item in enumerable)
+            {
+                int check = comparer(item);
+                if (check < min)
+                {
+                    min = (byte)check;
+                    minIndex = index;
+                }
+
+                index++;
+            }
+            return minIndex;
+        }
+
+
+        /// <summary>
+        /// Returns pixels of image as RGBA channels in a stream. (R, G, B, A). 1 byte each.
+        /// </summary>
+        /// <param name="bmp">Image to extract pixels from.</param>
+        /// <param name="Width">Width of image.</param>
+        /// <param name="Height">Height of image.</param>
+        /// <returns>RGBA channels as stream.</returns>
+        public static MemoryTributary GetPixelsAsStream(this BitmapImage bmp, int Width, int Height)
+        {
+            // KFreon: Read pixel data from image.
+            MemoryTributary pixelData = new MemoryTributary();
+
+            int size = (int)(4 * Width * Height);
+            byte[] pixels = new byte[size];
+            int stride = (int)Width * 4;
+
+            bmp.CopyPixels(pixels, stride, 0);
+            pixelData.Write(pixels, 0, pixels.Length);
+            return pixelData;
+        }
     }
 }

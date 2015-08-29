@@ -14,7 +14,8 @@ namespace UsefulThings.WPF
     public class MTRangedObservableCollection<T> : MTObservableCollection<T>, IRangedCollection<T>
     {
         /// <summary>
-        /// Default constructor.
+        /// Creates a multi-threaded ObservableCollection with range modification capabilities.
+        /// Allows changes from other threads, and provides AddRange functionality.
         /// </summary>
         public MTRangedObservableCollection()
             : base()
@@ -24,7 +25,8 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates a multi-threaded ObservableCollection with range modification capabilities.
+        /// Allows changes from other threads, and provides AddRange functionality.
         /// </summary>
         /// <param name="collection">Enumerable to initialise with.</param>
         public MTRangedObservableCollection(IEnumerable<T> collection)
@@ -35,7 +37,8 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates a multi-threaded ObservableCollection with range modification capabilities.
+        /// Allows changes from other threads, and provides AddRange functionality.
         /// </summary>
         /// <param name="list">List to initialise with.</param>
         public MTRangedObservableCollection(List<T> list)

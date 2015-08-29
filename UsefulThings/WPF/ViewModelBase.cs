@@ -14,7 +14,7 @@ namespace UsefulThings.WPF
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         /// <summary>
-        /// Constructor.
+        /// Provides standard WPF INotifyPropertyChanged functionality.
         /// </summary>
         protected ViewModelBase()
         {

@@ -20,7 +20,8 @@ namespace UsefulThings.WinForms
 
 
         /// <summary>
-        /// Constructor for backbone. 
+        /// Provides queue like functionality for jobs.
+        /// Can add jobs (as delegates) from any thread to be executed in sequence.
         /// </summary>
         /// <param name="First">Function to be run before each job.</param>
         /// <param name="Last">Function to be run after each job.</param>

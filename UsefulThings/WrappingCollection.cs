@@ -33,7 +33,7 @@ namespace UsefulThings
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates a collection whose index wraps back to the start when exceeded.
         /// </summary>
         public WrappingCollection()
         {
@@ -42,7 +42,7 @@ namespace UsefulThings
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates a collection whose index wraps back to the start when exceeded.
         /// </summary>
         /// <param name="enumerable">Enumerable to initialise with.</param>
         public WrappingCollection(IEnumerable<T> enumerable) : this()
@@ -51,7 +51,7 @@ namespace UsefulThings
         }
 
         /// <summary>
-        /// Constructor.
+        /// Creates a collection whose index wraps back to the start when exceeded.
         /// </summary>
         /// <param name="collection">Collection to initialise with.</param>
         public WrappingCollection(ICollection<T> collection) : this()

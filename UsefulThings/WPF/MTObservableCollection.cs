@@ -40,7 +40,8 @@ namespace UsefulThings.WPF
         }
 
         /// <summary>
-        /// Constructor.
+        /// Creates a multi-threaded ObservableCollection. 
+        /// Enables adding/removing etc from other threads.
         /// </summary>
         /// <param name="collection">Enumerable to initialise with.</param>
         public MTObservableCollection(IEnumerable<T> collection)
@@ -51,7 +52,8 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates a multi-threaded ObservableCollection. 
+        /// Enables adding/removing etc from other threads.
         /// </summary>
         /// <param name="list">List to initialise with.</param>
         public MTObservableCollection(List<T> list)
@@ -62,7 +64,8 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Default Constructor
+        /// Creates a multi-threaded ObservableCollection. 
+        /// Enables adding/removing etc from other threads.
         /// </summary>
         public MTObservableCollection()
             : base()

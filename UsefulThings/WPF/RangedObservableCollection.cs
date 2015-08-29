@@ -15,7 +15,7 @@ namespace UsefulThings.WPF
     public class RangedObservableCollection<T> : ObservableCollection<T>, IRangedCollection<T>
     {
         /// <summary>
-        /// Base Constructor.
+        /// Creates an ObservableCollection that exposes AddRange functionality.
         /// </summary>
         public RangedObservableCollection()
             : base()
@@ -25,7 +25,7 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates an ObservableCollection that exposes AddRange functionality.
         /// </summary>
         /// <param name="collection">Enumerable to initialise with.</param>
         public RangedObservableCollection(IEnumerable<T> collection)
@@ -36,7 +36,7 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
-        /// Constructor.
+        /// Creates an ObservableCollection that exposes AddRange functionality.
         /// </summary>
         /// <param name="list">List to initialise with.</param>
         public RangedObservableCollection(List<T> list)
