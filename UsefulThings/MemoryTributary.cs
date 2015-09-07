@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace UsefulThings
 {
     /// <summary>
-    /// MemoryTributary is a re-implementation of MemoryStream that uses a dynamic list of byte arrays as a backing store, instead of a single byte array, the allocation
+    /// MemoryTributary is a re-implementation of MemoryTributary that uses a dynamic list of byte arrays as a backing store, instead of a single byte array, the allocation
     /// of which will fail for relatively small streams as it requires contiguous memory.
     /// </summary>
     public class MemoryTributary : Stream       /* http://msdn.microsoft.com/en-us/library/system.io.stream.aspx */
@@ -17,7 +17,7 @@ namespace UsefulThings
         #region Constructors
 
         /// <summary>
-        /// Creates an empty MemoryStream-like instance which doesn't require contiguous memory.
+        /// Creates an empty MemoryTributary-like instance which doesn't require contiguous memory.
         /// </summary>
         public MemoryTributary()
         {
@@ -26,7 +26,7 @@ namespace UsefulThings
 
 
         /// <summary>
-        /// Creates a MemoryStream-like instance which doesn't require contiguous memory, based on a byte[] source.
+        /// Creates a MemoryTributary-like instance which doesn't require contiguous memory, based on a byte[] source.
         /// </summary>
         public MemoryTributary(byte[] source)
         {
@@ -36,7 +36,7 @@ namespace UsefulThings
 
         /* length is ignored because capacity has no meaning unless we implement an artifical limit */
         /// <summary>
-        /// Creates a MemoryStream-like instance which doesn't require contiguous memory, with length (ignored).
+        /// Creates a MemoryTributary-like instance which doesn't require contiguous memory, with length (ignored).
         /// </summary>
         public MemoryTributary(int length)
         {

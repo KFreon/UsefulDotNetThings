@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IO;
 
 namespace UsefulThings
 {
@@ -50,6 +51,19 @@ namespace UsefulThings
         public static bool IsPowerOfTwo(long number)
         {
             return (number & (number - 1)) == 0;
+        }
+
+        public static int RoundToNearestPowerOfTwo(int number)
+        {
+            number--;
+            number |= number >> 1;
+            number |= number >> 2;
+            number |= number >> 4;
+            number |= number >> 8;
+            number |= number >> 16;
+            number++;
+
+            return number;
         }
 
         public static string ExtractString(string str, string left, string right)

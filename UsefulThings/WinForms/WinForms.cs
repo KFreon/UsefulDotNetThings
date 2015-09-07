@@ -100,20 +100,28 @@ namespace UsefulThings.WinForms
         /// <returns>Raw pixels.</returns>
         public static byte[] GetPixelDataFromBitmap(Bitmap bmp)
         {
-            byte[] data = new byte[4 * bmp.Width * bmp.Height];
+            /*byte[] data = new byte[4 * bmp.Width * bmp.Height];
             int count = 0;
             for (int y=0; y < bmp.Height; y++)
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
                     Color colour = bmp.GetPixel(x, y);
-                    data[count] = colour.B;
-                    data[count + 1] = colour.G;
-                    data[count + 2 ] = colour.R;
-                    count += 4;
+                    data[count++] = colour.B;
+                    data[count++] = colour.G;
+                    data[count++] = colour.R;
+                    count++;
                 }
             }
-            return data;
+            return data;*/
+
+            var data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            var length = data.Stride * data.Height;
+            byte[] bytes = new byte[length];
+            Marshal.Copy(data.Scan0, bytes, 0, length);
+            bmp.UnlockBits(data);
+
+            return bytes;
         }
     }
 }

@@ -39,6 +39,30 @@ namespace UsefulThings
         }
 
 
+        /// <summary>
+        /// Write data to this stream at the current position from another stream at it's current position.
+        /// </summary>
+        /// <param name="TargetStream">Stream to copy from.</param>
+        /// <param name="SourceStream">Stream to copy to.</param>
+        /// <param name="Length">Number of bytes to read.</param>
+        /// <param name="bufferSize">Size of buffer to use while copying.</param>
+        /// <returns>Number of bytes read.</returns>
+        public static int ReadFrom(this Stream TargetStream, Stream SourceStream, int Length, int bufferSize = 4096)
+        {
+            byte[] buffer = new byte[bufferSize];
+            int read;
+            int numRead = 0;
+            do
+            {
+                read = SourceStream.Read(buffer, 0, (int)Math.Min(bufferSize, Length));
+                Length -= read;
+                TargetStream.Write(buffer, 0, read);
+                numRead += read;
+
+            } while (Length > 0);
+
+            return numRead;
+        }
         
 
         /// <summary>
@@ -58,7 +82,16 @@ namespace UsefulThings
                 dotIt();
         }
 
+
         #region Arrays
+        /// <summary>
+        /// Extracts a sub array from another array with a specified number of elements.
+        /// </summary>
+        /// <typeparam name="T">Content of array.</typeparam>
+        /// <param name="oldArray">Current array.</param>
+        /// <param name="offset">Start index in oldArray.</param>
+        /// <param name="length">Length to extract.</param>
+        /// <returns>New array containing elements within the specified range.</returns>
         public static T[] GetRange<T>(this T[] oldArray, int offset, int length)
         {
             T[] newArray = new T[length - offset];
@@ -66,6 +99,14 @@ namespace UsefulThings
             return newArray;
         }
 
+
+        /// <summary>
+        /// Extracts a sub array from another array starting at offset and reading to end.
+        /// </summary>
+        /// <typeparam name="T">Content of array.</typeparam>
+        /// <param name="oldArray">Current array.</param>
+        /// <param name="offset">Start index in oldArray.</param>
+        /// <returns>New array containing elements within the specified range.</returns>
         public static T[] GetRange<T>(this T[] oldArray, int offset)
         {
             return oldArray.GetRange(offset, oldArray.Length - offset);
@@ -74,6 +115,11 @@ namespace UsefulThings
 
         
         #region Stream IO 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public static int ReadInt32FromStream(this Stream stream)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
@@ -552,12 +598,12 @@ namespace UsefulThings
         /// <param name="Width">Width of image.</param>
         /// <param name="Height">Height of image.</param>
         /// <returns>RGBA channels as stream.</returns>
-        public static MemoryTributary GetPixelsAsStream(this BitmapImage bmp, int Width, int Height)
+        public static MemoryStream GetPixelsAsStream(this BitmapSource bmp, int Width, int Height)
         {
             // KFreon: Read pixel data from image.
-            MemoryTributary pixelData = new MemoryTributary();
-
             int size = (int)(4 * Width * Height);
+            MemoryStream pixelData = RecyclableMemoryManager.GetStream(size);
+
             byte[] pixels = new byte[size];
             int stride = (int)Width * 4;
 
