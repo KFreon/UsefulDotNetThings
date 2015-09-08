@@ -59,6 +59,27 @@
     <Compile Include="RecyclableMemoryManager.cs" />
     <Compile Include="WinForms\BackBone.cs" />
     <Compile Include="WinForms\Gooey.cs" />
+    <Compile Include="WinForms\Transitions\IManagedType.cs" />
+    <Compile Include="WinForms\Transitions\ITransitionType.cs" />
+    <Compile Include="WinForms\Transitions\ManagedType_Color.cs" />
+    <Compile Include="WinForms\Transitions\ManagedType_Double.cs" />
+    <Compile Include="WinForms\Transitions\ManagedType_Float.cs" />
+    <Compile Include="WinForms\Transitions\ManagedType_Int.cs" />
+    <Compile Include="WinForms\Transitions\ManagedType_String.cs" />
+    <Compile Include="WinForms\Transitions\Transition.cs" />
+    <Compile Include="WinForms\Transitions\TransitionChain.cs" />
+    <Compile Include="WinForms\Transitions\TransitionElement.cs" />
+    <Compile Include="WinForms\Transitions\TransitionManager.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_Acceleration.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_Bounce.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_CriticalDamping.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_Deceleration.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_EaseInEaseOut.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_Flash.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_Linear.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_ThrowAndCatch.cs" />
+    <Compile Include="WinForms\Transitions\TransitionType_UserDefined.cs" />
+    <Compile Include="WinForms\Transitions\Utility.cs" />
     <Compile Include="WinForms\UsefulForms\KFreonMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
