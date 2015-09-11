@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// Provides TreeView searching functionality.
+    /// </summary>
     public interface ITreeSeekable
     {
         bool IsExpanded { get; set; }

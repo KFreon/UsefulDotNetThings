@@ -14,7 +14,10 @@ namespace UsefulThings
     public class WrappingCollection<T> : ICollection<T>, IList<T>
     {
         List<T> UnderlyingCollection = null;
-
+        
+        /// <summary>
+        /// Number of elements in collection.
+        /// </summary>
         public int Count
         {
             get
@@ -23,6 +26,9 @@ namespace UsefulThings
             }
         }
 
+        /// <summary>
+        /// This is always false.
+        /// </summary>
         public bool IsReadOnly
         {
             get

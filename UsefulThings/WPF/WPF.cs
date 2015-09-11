@@ -35,6 +35,7 @@ namespace UsefulThings.WPF
         /// <param name="cacheOption">Determines how/when image data is cached. Default is "Cache to memory on load."</param>
         /// <param name="decodeWidth">Specifies width to decode to. Aspect ratio preserved if only this set.</param>
         /// <param name="decodeHeight">Specifies height to decode to. Aspect ratio preserved if only this set.</param>
+        /// <param name="DisposeStream">True = dispose of parent stream.</param>
         /// <returns>Bitmap from stream.</returns>
         public static BitmapImage CreateWPFBitmap(Stream source, int decodeWidth = 0, int decodeHeight = 0, BitmapCacheOption cacheOption = BitmapCacheOption.OnLoad, bool DisposeStream = false)
         {
@@ -66,7 +67,7 @@ namespace UsefulThings.WPF
         /// <returns>BitmapImage object.</returns>
         public static BitmapImage CreateWPFBitmap(byte[] source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            MemoryTributary ms = new MemoryTributary(source);
+            MemoryStream ms = RecyclableMemoryManager.GetStream(source);
             return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
         }
 
@@ -106,10 +107,17 @@ namespace UsefulThings.WPF
         }
 
 
+        /// <summary>
+        /// Creates a WPF bitmap from another BitmapSource.
+        /// </summary>
+        /// <param name="source">Image source to create from.</param>
+        /// <param name="decodeWidth">Width to decode to.</param>
+        /// <param name="decodeHeight">Height to decode to.</param>
+        /// <returns>BitmapImage of source</returns>
         public static BitmapImage CreateWPFBitmap(BitmapSource source, int decodeWidth = 0, int decodeHeight = 0)
         {
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = RecyclableMemoryManager.GetStream();
 
             encoder.Frames.Add(BitmapFrame.Create(source));
             encoder.Save(ms);
@@ -119,10 +127,21 @@ namespace UsefulThings.WPF
         #endregion
 
 
+        /// <summary>
+        /// Resizes image to different dimensions.
+        /// </summary>
+        /// <param name="img">Image to resize.</param>
+        /// <param name="NewWidth">Width of resized image.</param>
+        /// <param name="NewHeight">Height of resized image.</param>
+        /// <returns>Resized image.</returns>
         public static BitmapImage ResizeImage(BitmapImage img, int NewWidth, int NewHeight)
         {
-            var rect = new Rect(0, 0, NewWidth, NewHeight);
+            if (NewWidth <= 0 || NewHeight <= 0)
+                Debugger.Break();
 
+            /*var rect = new Rect(0, 0, NewWidth, NewHeight);
+
+            
             var group = new DrawingGroup();
             RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
             group.Children.Add(new ImageDrawing(img, rect));
@@ -135,20 +154,28 @@ namespace UsefulThings.WPF
                 NewWidth, NewHeight,         // Resized dimensions
                 96, 96,                // Default DPI values
                 PixelFormats.Default); // Default pixel format
-            resizedImage.Render(drawingVisual);
-
-            return CreateWPFBitmap(resizedImage);
+            resizedImage.Render(drawingVisual);*/
+            return CreateWPFBitmap(img, NewWidth, NewHeight);
         }
 
         /// <summary>
-        /// 
+        /// Scales image by specified scalar.
         /// </summary>
-        /// <param name="img"></param>
+        /// <param name="img">Image to scale.</param>
         /// <param name="scale">Magnitude of scaling i.e. 2 would double size 0.5 would halve.</param>
-        /// <returns></returns>
+        /// <returns>Scaled image.</returns>
         public static BitmapImage ScaleImage(BitmapImage img, double scale)
         {
-            return ResizeImage(img, (int)(img.Width * scale), (int)(img.Height * scale));
+            int scaledWidth = (int)(img.Width * scale);
+            int scaledHeight = (int)(img.Height * scale);
+
+            if (scaledWidth <= 1)
+                scaledWidth = 1;
+
+            if (scaledHeight <= 1)
+                scaledHeight = 1;
+
+            return ResizeImage(img, scaledWidth, scaledHeight);
         }
         
         /// <summary>
@@ -162,6 +189,12 @@ namespace UsefulThings.WPF
                 SaveWPFBitmapToStreamAsJPG(img, fs);
         }
 
+
+        /// <summary>
+        /// Saves image as JPG to stream.
+        /// </summary>
+        /// <param name="img">Image to save.</param>
+        /// <param name="stream">Destination stream.</param>
         public static void SaveWPFBitmapToStreamAsJPG(BitmapImage img, Stream stream)
         {
             BitmapEncoder encoder = new JpegBitmapEncoder();
@@ -284,7 +317,7 @@ namespace UsefulThings.WPF
         /// Builds FlowDocument from text.
         /// </summary>
         /// <param name="text"></param>
-        /// <returns></returns>
+        /// <returns>FlowDocument of text.</returns>
         public static FlowDocument GenerateFlowDocumentFromText(string text)
         {
             Paragraph par = new Paragraph();

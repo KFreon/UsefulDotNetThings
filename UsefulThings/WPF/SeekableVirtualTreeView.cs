@@ -8,6 +8,9 @@ using System.Windows.Controls;
 
 namespace UsefulThings.WPF
 {
+    /// <summary>
+    /// TreeView supporting virtualisation that can be searched through and have the view moved to any element.
+    /// </summary>
     public class SeekableVirtualTreeView : TreeView
     {
         ScrollViewer scroller = null;
@@ -32,6 +35,12 @@ namespace UsefulThings.WPF
             return count;
         }
 
+
+        /// <summary>
+        /// Actually brings specified element into the center of the view.
+        /// Not like the Microsoft one that can't handle virtualisation...
+        /// </summary>
+        /// <param name="item">Item in TreeView to bring into view.</param>
         public void BringItemIntoView(object item)
         {
             if (ItemsSource == null)
@@ -57,9 +66,6 @@ namespace UsefulThings.WPF
 
             if (scroller == null)
                 scroller = this.Template.FindName("_tv_scrollviewer_", this) as ScrollViewer;
-
-            
-
 
             if (scroller != null)
             {

@@ -25,7 +25,7 @@ namespace UsefulThings.WinForms
         {
             var rect = new Rectangle(0, 0, Width, Height);
             Bitmap bmp = new Bitmap(Width, Height);
-            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
             Marshal.Copy(pixels, 0, data.Scan0, pixels.Length);
             bmp.UnlockBits(data);
 

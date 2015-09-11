@@ -13,7 +13,13 @@ namespace UsefulThings
     /// </summary>
     public static class RecyclableMemoryManager
     {
-        static RecyclableMemoryStreamManager RecyclableStreamManager = new RecyclableMemoryStreamManager();
+        static RecyclableMemoryStreamManager RecyclableStreamManager = new RecyclableMemoryStreamManager(RecyclableMemoryStreamManager.DefaultBlockSize, RecyclableMemoryStreamManager.DefaultLargeBufferMultiple, 64*1024*1024);
+
+        static RecyclableMemoryManager()
+        {
+            //RecyclableStreamManager.MaximumFreeLargePoolBytes = 400*1024*1024; // ~400mb
+            //RecyclableStreamManager.MaximumFreeSmallPoolBytes = 200*1024*1024; // ~200mb
+        }
 
         /// <summary>
         /// Gets an empty RecyclableMemoryStream from pool. Not necessarily an unallocated stream.

@@ -43,16 +43,34 @@ namespace UsefulThings
             }
         }
         
+
+        /// <summary>
+        /// Determines if number is a power of 2. 
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <returns>True if number is a power of 2.</returns>
         public static bool IsPowerOfTwo(int number)
         {
             return (number & (number - 1)) == 0;
         }
 
+
+        /// <summary>
+        /// Determines if number is a power of 2. 
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <returns>True if number is a power of 2.</returns>
         public static bool IsPowerOfTwo(long number)
         {
             return (number & (number - 1)) == 0;
         }
 
+
+        /// <summary>
+        /// Rounds number to the nearest power of 2. Doesn't use Math. Uses bitshifting (not my method).
+        /// </summary>
+        /// <param name="number">Number to round.</param>
+        /// <returns>Nearest power of 2.</returns>
         public static int RoundToNearestPowerOfTwo(int number)
         {
             number--;
@@ -66,6 +84,14 @@ namespace UsefulThings
             return number;
         }
 
+
+        /// <summary>
+        /// Extends on substring functionality to extract string between two other strings. e.g. ExtractString("indigo", "in", "go") == "di"
+        /// </summary>
+        /// <param name="str">String to extract from.</param>
+        /// <param name="left">Extraction starts after this string.</param>
+        /// <param name="right">Extraction ends before this string.</param>
+        /// <returns>String between left and right strings.</returns>
         public static string ExtractString(string str, string left, string right)
         {
             int startIndex = str.IndexOf(left) + left.Length;
@@ -74,6 +100,12 @@ namespace UsefulThings
         }
 
 
+        /// <summary>
+        /// Extends on substring functionality to extract string between a delimiter. e.g. ExtractString("I like #snuffles# and things", "#") == "snuffles"
+        /// </summary>
+        /// <param name="str">String to extract from.</param>
+        /// <param name="enclosingElement">Element to extract between. Must be present twice in str.</param>
+        /// <returns>String between two enclosingElements.</returns>
         public static string ExtractString(string str, string enclosingElement)
         {
             return ExtractString(str, enclosingElement, enclosingElement);
@@ -86,9 +118,9 @@ namespace UsefulThings
         /// Returns null if stream isn't compressed.
         /// </summary>
         /// <param name="compressedStream">Stream compressed with GZip.</param>
-        public static MemoryTributary DecompressStream(Stream compressedStream)
+        public static MemoryStream DecompressStream(Stream compressedStream)
         {
-            MemoryTributary newStream = new MemoryTributary();
+            MemoryStream newStream = RecyclableMemoryManager.GetStream();
             compressedStream.Seek(0, SeekOrigin.Begin);
 
             GZipStream Decompressor = null;
@@ -120,9 +152,9 @@ namespace UsefulThings
         /// </summary>
         /// <param name="DecompressedStream">Stream to compress.</param>
         /// <param name="compressionLevel">Level of compression to use.</param>
-        public static MemoryTributary CompressStream(Stream DecompressedStream, CompressionLevel compressionLevel = CompressionLevel.Optimal)
+        public static MemoryStream CompressStream(Stream DecompressedStream, CompressionLevel compressionLevel = CompressionLevel.Optimal)
         {
-            MemoryTributary ms = new MemoryTributary();
+            MemoryStream ms = RecyclableMemoryManager.GetStream();
             using (GZipStream Compressor = new GZipStream(ms, compressionLevel, true))
             {
                 DecompressedStream.Seek(0, SeekOrigin.Begin);
@@ -139,6 +171,7 @@ namespace UsefulThings
         /// Converts given double to filesize with appropriate suffix.
         /// </summary>
         /// <param name="size">Size in bytes.</param>
+        /// <param name="FullSuffix">True = Bytes, KiloBytes, etc. False = B, KB, etc</param>
         public static string GetFileSizeAsString(double size, bool FullSuffix = false)
         {
             string[] sizes = null;
@@ -156,6 +189,7 @@ namespace UsefulThings
 
             return size.ToString("F1") + " " + sizes[order];
         }
+
 
         /// <summary>
         /// Gets file extensions as filter string for SaveFileDialog and OpenFileDialog as a SINGLE filter entry.
@@ -194,16 +228,23 @@ namespace UsefulThings
         }
 
 
-       
-
-
         /// <summary>
         /// Gets version of assembly calling this function.
         /// </summary>
         /// <returns>String of assembly version.</returns>
-        public static string GetVersion()
+        public static string GetCallingVersion()
         {
             return Assembly.GetCallingAssembly().GetName().Version.ToString();
+        }
+
+
+        /// <summary>
+        /// Gets version of main assembly that started this process.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetStartingVersion()
+        {
+            return Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
 
 

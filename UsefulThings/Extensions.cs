@@ -39,49 +39,6 @@ namespace UsefulThings
         }
 
 
-        /// <summary>
-        /// Write data to this stream at the current position from another stream at it's current position.
-        /// </summary>
-        /// <param name="TargetStream">Stream to copy from.</param>
-        /// <param name="SourceStream">Stream to copy to.</param>
-        /// <param name="Length">Number of bytes to read.</param>
-        /// <param name="bufferSize">Size of buffer to use while copying.</param>
-        /// <returns>Number of bytes read.</returns>
-        public static int ReadFrom(this Stream TargetStream, Stream SourceStream, int Length, int bufferSize = 4096)
-        {
-            byte[] buffer = new byte[bufferSize];
-            int read;
-            int numRead = 0;
-            do
-            {
-                read = SourceStream.Read(buffer, 0, (int)Math.Min(bufferSize, Length));
-                Length -= read;
-                TargetStream.Write(buffer, 0, read);
-                numRead += read;
-
-            } while (Length > 0);
-
-            return numRead;
-        }
-        
-
-        /// <summary>
-        /// A simple WPF threading extension method, to invoke a delegate
-        /// on the correct thread if it is not currently on the correct thread
-        /// Which can be used with DispatcherObject types
-        /// </summary>
-        /// <param name="disp">The Dispatcher object on which to do the Invoke</param>
-        /// <param name="dotIt">The delegate to run</param>
-        /// <param name="priority">The DispatcherPriority</param>
-        public static void InvokeIfRequired(this Dispatcher disp,
-            Action dotIt, DispatcherPriority priority)
-        {
-            if (disp.Thread != Thread.CurrentThread)
-                disp.Invoke(priority, dotIt);
-            else
-                dotIt();
-        }
-
 
         #region Arrays
         /// <summary>
@@ -113,25 +70,65 @@ namespace UsefulThings
         }
         #endregion Arrays
 
-        
+
         #region Stream IO 
+        #region Reading
         /// <summary>
-        /// 
+        /// Write data to this stream at the current position from another stream at it's current position.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+        /// <param name="TargetStream">Stream to copy from.</param>
+        /// <param name="SourceStream">Stream to copy to.</param>
+        /// <param name="Length">Number of bytes to read.</param>
+        /// <param name="bufferSize">Size of buffer to use while copying.</param>
+        /// <returns>Number of bytes read.</returns>
+        public static int ReadFrom(this Stream TargetStream, Stream SourceStream, int Length, int bufferSize = 4096)
+        {
+            byte[] buffer = new byte[bufferSize];
+            int read;
+            int numRead = 0;
+            do
+            {
+                read = SourceStream.Read(buffer, 0, (int)Math.Min(bufferSize, Length));
+                Length -= read;
+                TargetStream.Write(buffer, 0, read);
+                numRead += read;
+
+            } while (Length > 0);
+
+            return numRead;
+        }
+
+
+        /// <summary>
+        /// Reads an int from stream at the current position and advances 4 bytes.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <returns>Integer read from stream.</returns>
         public static int ReadInt32FromStream(this Stream stream)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
                 return br.ReadInt32();
         }
 
+
+        /// <summary>
+        /// Reads a number of bytes from stream at the current position and advances that number of bytes.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="Length">Number of bytes to read.</param>
+        /// <returns>Bytes read from stream.</returns>
         public static byte[] ReadBytesFromStream(this Stream stream, int Length)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
                 return br.ReadBytes(Length);
         }
 
+        
+        /// <summary>
+        /// Reads a long from stream at the current position.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <returns>Long read from stream.</returns>
         public static long ReadInt64FromStream(this Stream stream)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
@@ -139,23 +136,23 @@ namespace UsefulThings
         }
 
 
-        public static void WriteInt32ToStream(this Stream stream, int value)
-        {
-            using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Default, true))
-                bw.Write(value);
-        }
-
+        /// <summary>
+        /// Reads a string from a stream. Must be null terminated or have the length written at the start (Pascal strings or something?)
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="HasLengthWritten">True = Attempt to read string length from stream first.</param>
+        /// <returns>String read from stream.</returns>
         public static string ReadStringFromStream(this Stream stream, bool HasLengthWritten = false)
         {
             if (stream == null || !stream.CanRead)
                 throw new IOException("Stream cannot be read.");
-                
+
             int length = -1;
             List<char> chars = new List<char>();
             if (HasLengthWritten)
             {
                 length = stream.ReadInt32FromStream();
-                for (int i=0;i<length;i++)
+                for (int i = 0; i < length; i++)
                     chars.Add((char)stream.ReadByte());
             }
             else
@@ -166,21 +163,10 @@ namespace UsefulThings
                     chars.Add(c);
                 }
             }
-            
+
             return new String(chars.ToArray(chars.Count));
         }
-        
-        
-        public static void WriteStringToStream(this Stream stream, string str, bool WriteLength = false)
-        {
-            if (WriteLength)
-                stream.WriteInt32ToStream(str.Length);
-                
-            foreach (char c in str)
-                stream.WriteByte((byte)c);
-                
-            stream.WriteByte((byte)'\0');
-        }
+
 
         /// <summary>
         /// KFreon: Borrowed this from the DevIL C# Wrapper found here: https://code.google.com/p/devil-net/
@@ -233,10 +219,101 @@ namespace UsefulThings
             Array.Copy(buffer, toReturn, position);
             return toReturn;
         }
-        #endregion Stream IO
+        #endregion Reading
+
+        #region Writing
+        /// <summary>
+        /// Writes an int to stream at the current position.
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="value">Integer to write.</param>
+        public static void WriteInt32ToStream(this Stream stream, int value)
+        {
+            using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Default, true))
+                bw.Write(value);
+        }
         
-       
+        
+        /// <summary>
+        /// Writes string to stream. Terminated by a null char, and optionally writes string length at start of string. (Pascal strings?)
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="str">String to write.</param>
+        /// <param name="WriteLength">True = Writes str length before writing string.</param>
+        public static void WriteStringToStream(this Stream stream, string str, bool WriteLength = false)
+        {
+            if (WriteLength)
+                stream.WriteInt32ToStream(str.Length);
+                
+            foreach (char c in str)
+                stream.WriteByte((byte)c);
+                
+            stream.WriteByte((byte)'\0');
+        }
+        #endregion Writing
+        #endregion Stream IO
+
+
         #region All Collections e.g. List, Dictionary
+        /// <summary>
+        /// Returns index of minimum value based on comparer.
+        /// </summary>
+        /// <param name="enumerable">Collection to search.</param>
+        /// <param name="comparer">Comparer to use. e.g. item => item - x</param>
+        /// <returns>Index of minimum value in enumerable based on comparer.</returns>
+        public static int IndexOfMin(this IEnumerable<int> enumerable, Func<int, int> comparer)
+        {
+            int min = int.MaxValue;
+            int index = 0;
+            int minIndex = 0;
+            foreach (int item in enumerable)
+            {
+                int check = comparer(item);
+                if (check < min)
+                {
+                    min = check;
+                    minIndex = index;
+                }
+
+                index++;
+            }
+            return minIndex;
+        }
+
+
+        /// <summary>
+        /// Returns index of minimum value based on comparer.
+        /// </summary>
+        /// <param name="enumerable">Collection to search.</param>
+        /// <param name="comparer">Comparer to use. e.g. item => item - x</param>
+        /// <returns>Index of minimum value in enumerable based on comparer.</returns>
+        public static int IndexOfMin(this IEnumerable<byte> enumerable, Func<byte, int> comparer)
+        {
+            byte min = byte.MaxValue;
+            int index = 0;
+            int minIndex = 0;
+            foreach (byte item in enumerable)
+            {
+                int check = comparer(item);
+                if (check < min)
+                {
+                    min = (byte)check;
+                    minIndex = index;
+                }
+
+                index++;
+            }
+            return minIndex;
+        }
+
+
+        /// <summary>
+        /// Adds elements of a Dictionary to another Dictionary. No checking for duplicates.
+        /// </summary>
+        /// <typeparam name="T">Key.</typeparam>
+        /// <typeparam name="U">Value.</typeparam>
+        /// <param name="mainDictionary">Dictionary to add to.</param>
+        /// <param name="newAdditions">Dictionary of elements to be added.</param>
         public static void AddRange<T, U>(this Dictionary<T, U> mainDictionary, Dictionary<T, U> newAdditions)
         {
             if (newAdditions == null)
@@ -259,6 +336,13 @@ namespace UsefulThings
                 collection.Add(item);
         }
 
+
+        /// <summary>
+        /// Add range of elements to given collection.
+        /// </summary>
+        /// <typeparam name="T">Type of items in collection.</typeparam>
+        /// <param name="collection">Collection to add to.</param>
+        /// <param name="additions">Elements to add.</param>
         public static void AddRangeKinda<T>(this ICollection<T> collection, IEnumerable<T> additions)
         {
             foreach (var item in additions)
@@ -314,6 +398,13 @@ namespace UsefulThings
 
 
         #region Strings
+        /// <summary>
+        /// Splits string on (possibly) multiple elements.
+        /// </summary>
+        /// <param name="str">String to split.</param>
+        /// <param name="options">Options to use while splitting.</param>
+        /// <param name="splitStrings">Elements to split string on. (Delimiters)</param>
+        /// <returns></returns>
         public static string[] Split(this string str, StringSplitOptions options, params string[] splitStrings)
         {
             return str.Split(splitStrings, options);
@@ -408,7 +499,6 @@ namespace UsefulThings
         #endregion Strings
 
 
-
         #region Digit or letter determination
         /// <summary>
         /// Determines if string is a number.
@@ -458,9 +548,6 @@ namespace UsefulThings
         #endregion Digit or letter determination
         
 
-
-
-
         #region WPF Documents
         /// <summary>
         /// Adds text to a FixedPage.
@@ -505,6 +592,50 @@ namespace UsefulThings
 
         #region Misc
         /// <summary>
+        /// A simple WPF threading extension method, to invoke a delegate
+        /// on the correct thread if it is not currently on the correct thread
+        /// Which can be used with DispatcherObject types
+        /// </summary>
+        /// <param name="disp">The Dispatcher object on which to do the Invoke</param>
+        /// <param name="dotIt">The delegate to run</param>
+        /// <param name="priority">The DispatcherPriority</param>
+        public static void InvokeIfRequired(this Dispatcher disp,
+            Action dotIt, DispatcherPriority priority)
+        {
+            if (disp.Thread != Thread.CurrentThread)
+                disp.Invoke(priority, dotIt);
+            else
+                dotIt();
+        }
+
+        /// <summary>
+        /// Returns pixels of image as RGBA channels in a stream. (R, G, B, A). 1 byte each.
+        /// </summary>
+        /// <param name="bmp">Image to extract pixels from.</param>
+        /// <param name="Width">Width of image.</param>
+        /// <param name="Height">Height of image.</param>
+        /// <returns>RGBA channels as stream.</returns>
+        public static MemoryStream GetPixelsAsStream(this BitmapSource bmp, int Width, int Height)
+        {
+            byte[] pixels = bmp.GetPixels(Width, Height);
+            MemoryStream pixelData = RecyclableMemoryManager.GetStream(pixels.Length);
+            pixelData.Write(pixels, 0, pixels.Length);
+
+            return pixelData;
+        }
+
+        public static byte[] GetPixels(this BitmapSource bmp, int Width, int Height)
+        {
+            // KFreon: Read pixel data from image.
+            int size = (int)(4 * Width * Height);
+            byte[] pixels = new byte[size];
+            int stride = (int)Width * 4;
+            bmp.CopyPixels(pixels, stride, 0);
+            return pixels;
+        }
+
+
+        /// <summary>
         /// Begins an animation that automatically sets final value to be held. Used with FillType.Stop rather than default FillType.Hold.
         /// </summary>
         /// <param name="element">Content Element to animate.</param>
@@ -537,79 +668,5 @@ namespace UsefulThings
             element.BeginAdjustableAnimation(dp, anim, anim.To);
         }
         #endregion Misc
-
-
-        /// <summary>
-        /// Returns index of minimum value based on comparer.
-        /// </summary>
-        /// <param name="enumerable">Collection to search.</param>
-        /// <param name="comparer">Comparer to use. e.g. item => item - x</param>
-        /// <returns>Index of minimum value in enumerable based on comparer.</returns>
-        public static int IndexOfMin(this IEnumerable<int> enumerable, Func<int, int> comparer)
-        {
-            int min = int.MaxValue;
-            int index = 0;
-            int minIndex = 0;
-            foreach (int item in enumerable)
-            {
-                int check = comparer(item);
-                if (check < min)
-                {
-                    min = check;
-                    minIndex = index;
-                }
-
-                index++;
-            }
-            return minIndex;
-        }
-
-
-        /// <summary>
-        /// Returns index of minimum value based on comparer.
-        /// </summary>
-        /// <param name="enumerable">Collection to search.</param>
-        /// <param name="comparer">Comparer to use. e.g. item => item - x</param>
-        /// <returns>Index of minimum value in enumerable based on comparer.</returns>
-        public static int IndexOfMin(this IEnumerable<byte> enumerable, Func<byte, int> comparer)
-        {
-            byte min = byte.MaxValue;
-            int index = 0;
-            int minIndex = 0;
-            foreach (byte item in enumerable)
-            {
-                int check = comparer(item);
-                if (check < min)
-                {
-                    min = (byte)check;
-                    minIndex = index;
-                }
-
-                index++;
-            }
-            return minIndex;
-        }
-
-
-        /// <summary>
-        /// Returns pixels of image as RGBA channels in a stream. (R, G, B, A). 1 byte each.
-        /// </summary>
-        /// <param name="bmp">Image to extract pixels from.</param>
-        /// <param name="Width">Width of image.</param>
-        /// <param name="Height">Height of image.</param>
-        /// <returns>RGBA channels as stream.</returns>
-        public static MemoryStream GetPixelsAsStream(this BitmapSource bmp, int Width, int Height)
-        {
-            // KFreon: Read pixel data from image.
-            int size = (int)(4 * Width * Height);
-            MemoryStream pixelData = RecyclableMemoryManager.GetStream(size);
-
-            byte[] pixels = new byte[size];
-            int stride = (int)Width * 4;
-
-            bmp.CopyPixels(pixels, stride, 0);
-            pixelData.Write(pixels, 0, pixels.Length);
-            return pixelData;
-        }
     }
 }
