@@ -37,7 +37,7 @@ namespace UsefulThings.WPF
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            /// Updates code value (not binding)
+            // Updates code value (not binding)
             if (value.GetType() == typeof(bool))
             {
                 bool val = (bool)value;

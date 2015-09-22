@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DocumentationFile>bin\Debug\UsefulThings.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\UsefulThings.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -56,6 +57,7 @@
     <Compile Include="General.cs" />
     <Compile Include="MemoryTributary.cs" />
     <Compile Include="NaturalSortComparer.cs" />
+    <Compile Include="MTStreamThing.cs" />
     <Compile Include="RecyclableMemoryManager.cs" />
     <Compile Include="WinForms\BackBone.cs" />
     <Compile Include="WinForms\Gooey.cs" />
@@ -94,7 +96,7 @@
       <DependentUpon>SelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\TextUpdater.cs" />
-    <Compile Include="WinForms\WinForms.cs" />
+    <Compile Include="WinForms\Imaging.cs" />
     <Compile Include="WPF\BoolToVisibilityConverter.cs" />
     <Compile Include="WPF\ByteSizeToStringConverter.cs" />
     <Compile Include="WPF\CommandHandler.cs" />

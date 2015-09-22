@@ -18,13 +18,19 @@ namespace UsefulThings.WPF
             bool? val = null;
 
             // KFreon: Cast from correct type. I'm sure there's a better way to do this, but I can't figure it out.
-            Type type = value.GetType();
-            if (type == typeof(bool))
-                val = (bool)value;
-            else if (type == typeof(bool?))
-                val = (bool?)value;
+            if (value == null)
+                val = (bool?)null;
             else
-                throw new InvalidCastException("Value and parameter must be of type bool or bool?");
+            {
+                Type type = value.GetType();
+                if (type == typeof(bool))
+                    val = (bool)value;
+                else if (type == typeof(bool?))
+                    val = (bool?)value;
+                else
+                    throw new InvalidCastException("Value and parameter must be of type bool or bool?");
+            }
+            
 
             // KFreon: Invert if asked to (can't invert null)
             if (parameter != null && (bool)parameter)

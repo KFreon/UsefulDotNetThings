@@ -43,6 +43,17 @@ namespace UsefulThings
             }
         }
         
+        /// <summary>
+        /// Changes a filename in a full filepath string.
+        /// </summary>
+        /// <param name="fullPath">Original full filepath.</param>
+        /// <param name="newFilenameWithoutExt">New filename to use.</param>
+        /// <returns>Filepath with changed filename.</returns>
+        public static string ChangeFilename(string fullPath, string newFilenameWithoutExt)
+        {
+            return fullPath.Replace(Path.GetFileNameWithoutExtension(fullPath), newFilenameWithoutExt);
+        }
+
 
         /// <summary>
         /// Determines if number is a power of 2. 

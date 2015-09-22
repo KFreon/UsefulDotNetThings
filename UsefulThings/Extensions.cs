@@ -624,6 +624,14 @@ namespace UsefulThings
             return pixelData;
         }
 
+
+        /// <summary>
+        /// Gets pixels of image as byte[].
+        /// </summary>
+        /// <param name="bmp">Image to extract pixels from.</param>
+        /// <param name="Width">Width of image.</param>
+        /// <param name="Height">Height of image.</param>
+        /// <returns>Pixels of image.</returns>
         public static byte[] GetPixels(this BitmapSource bmp, int Width, int Height)
         {
             // KFreon: Read pixel data from image.
