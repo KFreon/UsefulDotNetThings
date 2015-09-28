@@ -89,6 +89,8 @@ namespace UsefulThings
             do
             {
                 read = SourceStream.Read(buffer, 0, (int)Math.Min(bufferSize, Length));
+                if (read == 0)
+                    break;
                 Length -= read;
                 TargetStream.Write(buffer, 0, read);
                 numRead += read;
@@ -618,7 +620,7 @@ namespace UsefulThings
         public static MemoryStream GetPixelsAsStream(this BitmapSource bmp, int Width, int Height)
         {
             byte[] pixels = bmp.GetPixels(Width, Height);
-            MemoryStream pixelData = RecyclableMemoryManager.GetStream(pixels.Length);
+            MemoryStream pixelData = new MemoryStream(pixels.Length);
             pixelData.Write(pixels, 0, pixels.Length);
 
             return pixelData;

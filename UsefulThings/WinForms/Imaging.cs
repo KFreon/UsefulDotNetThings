@@ -86,6 +86,12 @@ namespace UsefulThings.WinForms
             int destWidth = (int)(sourceWidth * nPercent);
             int destHeight = (int)(sourceHeight * nPercent);
 
+            if (destHeight == 0)
+                destHeight = 1;
+
+            if (destWidth == 0)
+                destWidth = 1;
+
             Bitmap b = new Bitmap(destWidth, destHeight);
             using (Graphics g = Graphics.FromImage((Image)b))
             {

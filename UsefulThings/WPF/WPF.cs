@@ -67,7 +67,7 @@ namespace UsefulThings.WPF
         /// <returns>BitmapImage object.</returns>
         public static BitmapImage CreateWPFBitmap(byte[] source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            MemoryStream ms = RecyclableMemoryManager.GetStream(source);
+            MemoryStream ms = new MemoryStream(source);
             return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
         }
 
@@ -117,7 +117,7 @@ namespace UsefulThings.WPF
         public static BitmapImage CreateWPFBitmap(BitmapSource source, int decodeWidth = 0, int decodeHeight = 0)
         {
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            MemoryStream ms = RecyclableMemoryManager.GetStream();
+            MemoryStream ms = new MemoryStream();
 
             encoder.Frames.Add(BitmapFrame.Create(source));
             encoder.Save(ms);
@@ -134,7 +134,7 @@ namespace UsefulThings.WPF
         /// <param name="NewWidth">Width of resized image.</param>
         /// <param name="NewHeight">Height of resized image.</param>
         /// <returns>Resized image.</returns>
-        public static BitmapImage ResizeImage(BitmapImage img, int NewWidth, int NewHeight)
+        public static BitmapSource ResizeImage(BitmapSource img, int NewWidth, int NewHeight)
         {
             if (NewWidth <= 0 || NewHeight <= 0)
                 Debugger.Break();
@@ -164,7 +164,7 @@ namespace UsefulThings.WPF
         /// <param name="img">Image to scale.</param>
         /// <param name="scale">Magnitude of scaling i.e. 2 would double size 0.5 would halve.</param>
         /// <returns>Scaled image.</returns>
-        public static BitmapImage ScaleImage(BitmapImage img, double scale)
+        public static BitmapSource ScaleImage(BitmapSource img, double scale)
         {
             int scaledWidth = (int)(img.Width * scale);
             int scaledHeight = (int)(img.Height * scale);

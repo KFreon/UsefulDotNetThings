@@ -131,7 +131,7 @@ namespace UsefulThings
         /// <param name="compressedStream">Stream compressed with GZip.</param>
         public static MemoryStream DecompressStream(Stream compressedStream)
         {
-            MemoryStream newStream = RecyclableMemoryManager.GetStream();
+            MemoryStream newStream = new MemoryStream();
             compressedStream.Seek(0, SeekOrigin.Begin);
 
             GZipStream Decompressor = null;
@@ -165,7 +165,7 @@ namespace UsefulThings
         /// <param name="compressionLevel">Level of compression to use.</param>
         public static MemoryStream CompressStream(Stream DecompressedStream, CompressionLevel compressionLevel = CompressionLevel.Optimal)
         {
-            MemoryStream ms = RecyclableMemoryManager.GetStream();
+            MemoryStream ms = new MemoryStream();
             using (GZipStream Compressor = new GZipStream(ms, compressionLevel, true))
             {
                 DecompressedStream.Seek(0, SeekOrigin.Begin);
