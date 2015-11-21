@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,38 @@ namespace UsefulThings.WinForms
     /// </summary>
     public static class Imaging
     {
+        public static Bitmap PadImageToSquare(string filename, int maxDimension)
+        {
+            Image bmp = Image.FromFile(filename);
+            return PadImageToSquare(bmp, maxDimension);
+        }
+
+        public static Bitmap PadImageToSquare(Image image, int maxDimension)
+        {
+            int tw, th, tx, ty;
+            int w = image.Width;
+            int h = image.Height;
+            double whRatio = (double)w / h;
+            if (image.Width >= image.Height)
+            {
+                tw = maxDimension;
+                th = (int)(tw / whRatio);
+            }
+            else
+            {
+                th = maxDimension;
+                tw = (int)(th * whRatio);
+            }
+            tx = (maxDimension - tw) / 2;
+            ty = (maxDimension - th) / 2;
+            Bitmap thumb = new Bitmap(maxDimension, maxDimension, PixelFormat.Format24bppRgb);
+            Graphics g = Graphics.FromImage(thumb);
+            g.Clear(Color.White);
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            g.DrawImage(image, new Rectangle(tx, ty, tw, th), new Rectangle(0, 0, w, h), GraphicsUnit.Pixel);
+            return thumb;
+        }
+
         /// <summary>
         /// Creates Bitmap from pixels.
         /// </summary>
