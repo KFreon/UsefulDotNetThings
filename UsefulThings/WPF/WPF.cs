@@ -116,8 +116,9 @@ namespace UsefulThings.WPF
         /// <returns>BitmapImage of source</returns>
         public static BitmapImage CreateWPFBitmap(BitmapSource source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.QualityLevel = 98;
+            /*JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.QualityLevel = 98;*/
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
             MemoryStream ms = new MemoryStream();
 
             encoder.Frames.Add(BitmapFrame.Create(source));
