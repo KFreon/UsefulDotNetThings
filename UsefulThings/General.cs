@@ -84,15 +84,18 @@ namespace UsefulThings
         /// <returns>Nearest power of 2.</returns>
         public static int RoundToNearestPowerOfTwo(int number)
         {
-            number--;
-            number |= number >> 1;
-            number |= number >> 2;
-            number |= number >> 4;
-            number |= number >> 8;
-            number |= number >> 16;
-            number++;
+            // KFreon: Gets next Highest power
+            int next = number - 1;
+            next |= next >> 1;
+            next |= next >> 2;
+            next |= next >> 4;
+            next |= next >> 8;
+            next |= next >> 16;
+            next++;
 
-            return number;
+            // KFreon: Compare previous and next for the closest
+            int prev = next >> 1;
+            return number - prev > next - number ? next : prev;
         }
 
 

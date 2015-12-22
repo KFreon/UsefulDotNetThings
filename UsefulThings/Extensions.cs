@@ -614,12 +614,10 @@ namespace UsefulThings
         /// Returns pixels of image as RGBA channels in a stream. (R, G, B, A). 1 byte each.
         /// </summary>
         /// <param name="bmp">Image to extract pixels from.</param>
-        /// <param name="Width">Width of image.</param>
-        /// <param name="Height">Height of image.</param>
         /// <returns>RGBA channels as stream.</returns>
-        public static MemoryStream GetPixelsAsStream(this BitmapSource bmp, int Width, int Height)
+        public static MemoryStream GetPixelsAsStream(this BitmapSource bmp)
         {
-            byte[] pixels = bmp.GetPixels(Width, Height);
+            byte[] pixels = bmp.GetPixels();
             MemoryStream pixelData = new MemoryStream(pixels.Length);
             pixelData.Write(pixels, 0, pixels.Length);
 
@@ -631,15 +629,13 @@ namespace UsefulThings
         /// Gets pixels of image as byte[].
         /// </summary>
         /// <param name="bmp">Image to extract pixels from.</param>
-        /// <param name="Width">Width of image.</param>
-        /// <param name="Height">Height of image.</param>
         /// <returns>Pixels of image.</returns>
-        public static byte[] GetPixels(this BitmapSource bmp, int Width, int Height)
+        public static byte[] GetPixels(this BitmapSource bmp)
         {
             // KFreon: Read pixel data from image.
-            int size = (int)(4 * Width * Height);
+            int size = (int)(4 * bmp.PixelWidth * bmp.PixelHeight);
             byte[] pixels = new byte[size];
-            int stride = (int)Width * 4;
+            int stride = (int)bmp.PixelWidth * 4;
             bmp.CopyPixels(pixels, stride, 0);
             return pixels;
         }
