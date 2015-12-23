@@ -73,7 +73,7 @@ namespace UsefulThings.WinForms
             var rect = new Rectangle(0, 0, img.PixelWidth, img.PixelHeight);
             Bitmap bmp = new Bitmap(img.PixelWidth, img.PixelHeight);
             var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            img.CopyPixels(new System.Windows.Int32Rect(0, 0, img.PixelWidth, img.PixelHeight), data.Scan0, 4 * img.PixelWidth * img.PixelHeight, 0);
+            img.CopyPixels(new System.Windows.Int32Rect(0, 0, img.PixelWidth, img.PixelHeight), data.Scan0, 4 * img.PixelWidth * img.PixelHeight, 4 * img.PixelWidth);
             bmp.UnlockBits(data);
 
             return bmp;
