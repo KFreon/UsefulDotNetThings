@@ -29,6 +29,21 @@ namespace UsefulThings.WPF
         #region Bitmaps
         #region Creation
         /// <summary>
+        /// Creates a WriteableBitmap from an array of pixels.
+        /// </summary>
+        /// <param name="pixels">Pixel data</param>
+        /// <param name="width">Width of image</param>
+        /// <param name="height">Height of image</param>
+        /// <returns>WriteableBitmap containing pixels</returns>
+        public static WriteableBitmap CreateWriteableBitmap(Array pixels, int width, int height)
+        {
+            WriteableBitmap wb = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
+            wb.WritePixels(new Int32Rect(0, 0, width, height), pixels, 4 * width, 0);
+            return wb;
+        }
+
+
+        /// <summary>
         /// Creates a WPF style Bitmap (i.e. not using the System.Drawing.Bitmap)
         /// </summary>
         /// <param name="source">Stream containing bitmap data. NOTE fully formatted bitmap file, not just data.</param>
@@ -116,8 +131,6 @@ namespace UsefulThings.WPF
         /// <returns>BitmapImage of source</returns>
         public static BitmapImage CreateWPFBitmap(BitmapSource source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            /*JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.QualityLevel = 98;*/
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             MemoryStream ms = new MemoryStream();
 
@@ -141,22 +154,6 @@ namespace UsefulThings.WPF
             if (NewWidth <= 0 || NewHeight <= 0)
                 Debugger.Break();
 
-            /*var rect = new Rect(0, 0, NewWidth, NewHeight);
-
-            
-            var group = new DrawingGroup();
-            RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
-            group.Children.Add(new ImageDrawing(img, rect));
-
-            var drawingVisual = new DrawingVisual();
-            using (var drawingContext = drawingVisual.RenderOpen())
-                drawingContext.DrawDrawing(group);
-
-            var resizedImage = new RenderTargetBitmap(
-                NewWidth, NewHeight,         // Resized dimensions
-                96, 96,                // Default DPI values
-                PixelFormats.Default); // Default pixel format
-            resizedImage.Render(drawingVisual);*/
             return CreateWPFBitmap(img, NewWidth, NewHeight);
         }
 
@@ -168,16 +165,8 @@ namespace UsefulThings.WPF
         /// <returns>Scaled image.</returns>
         public static BitmapSource ScaleImage(BitmapSource img, double scale)
         {
-            int scaledWidth = (int)(img.Width * scale);
-            int scaledHeight = (int)(img.Height * scale);
-
-            if (scaledWidth <= 1)
-                scaledWidth = 1;
-
-            if (scaledHeight <= 1)
-                scaledHeight = 1;
-
-            return ResizeImage(img, scaledWidth, scaledHeight);
+            var scalar = new ScaleTransform(scale, scale);
+            return new TransformedBitmap(img, scalar);
         }
         
         /// <summary>

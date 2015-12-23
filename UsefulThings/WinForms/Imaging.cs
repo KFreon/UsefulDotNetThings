@@ -61,8 +61,19 @@ namespace UsefulThings.WinForms
         {
             var rect = new Rectangle(0, 0, Width, Height);
             Bitmap bmp = new Bitmap(Width, Height);
-            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
+            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             Marshal.Copy(pixels, 0, data.Scan0, pixels.Length);
+            bmp.UnlockBits(data);
+
+            return bmp;
+        }
+
+        public static Bitmap CreateBitmap(System.Windows.Media.Imaging.BitmapSource img)
+        {
+            var rect = new Rectangle(0, 0, img.PixelWidth, img.PixelHeight);
+            Bitmap bmp = new Bitmap(img.PixelWidth, img.PixelHeight);
+            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            img.CopyPixels(new System.Windows.Int32Rect(0, 0, img.PixelWidth, img.PixelHeight), data.Scan0, 4 * img.PixelWidth * img.PixelHeight, 0);
             bmp.UnlockBits(data);
 
             return bmp;

@@ -291,7 +291,7 @@ namespace UsefulThings
         /// <returns>Index of minimum value in enumerable based on comparer.</returns>
         public static int IndexOfMin(this IEnumerable<byte> enumerable, Func<byte, int> comparer)
         {
-            byte min = byte.MaxValue;
+            int min = int.MaxValue;
             int index = 0;
             int minIndex = 0;
             foreach (byte item in enumerable)
@@ -299,7 +299,7 @@ namespace UsefulThings
                 int check = comparer(item);
                 if (check < min)
                 {
-                    min = (byte)check;
+                    min = check;
                     minIndex = index;
                 }
 

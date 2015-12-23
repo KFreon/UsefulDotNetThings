@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/KFreon/Useful-C-Sharp-Collection</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Collection of useful C#, WinForms, and WPF functions and extensions.</description>
-    <releaseNotes>Fixed transparency.</releaseNotes>
+    <releaseNotes>Fixed scaling and resizing.</releaseNotes>
     <copyright>Copyright KFreon 2015</copyright>
     <tags></tags>
   </metadata>
