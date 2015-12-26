@@ -18,12 +18,25 @@ namespace UsefulThings.WinForms
     /// </summary>
     public static class Imaging
     {
+        /// <summary>
+        /// Pads a non-square image by adding whitespace where necessary.
+        /// </summary>
+        /// <param name="filename">Image location.</param>
+        /// <param name="maxDimension">Largest size to display.</param>
+        /// <returns>Square bitmap.</returns>
         public static Bitmap PadImageToSquare(string filename, int maxDimension)
         {
             Image bmp = Image.FromFile(filename);
             return PadImageToSquare(bmp, maxDimension);
         }
 
+
+        /// <summary>
+        /// Pads a non-square image by adding whitespace where necessary.
+        /// </summary>
+        /// <param name="image">Image to make square.</param>
+        /// <param name="maxDimension">Largest size to display.</param>
+        /// <returns>Square bitmap.</returns>
         public static Bitmap PadImageToSquare(Image image, int maxDimension)
         {
             int tw, th, tx, ty;
@@ -68,11 +81,24 @@ namespace UsefulThings.WinForms
             return bmp;
         }
 
-        public static Bitmap CreateBitmap(System.Windows.Media.Imaging.BitmapSource img)
+
+        /// <summary>
+        /// Creates a GDI bitmap from a WPF bitmap.
+        /// </summary>
+        /// <param name="img">WPF bitmap source.</param>
+        /// <param name="ignoreAlpha">True = creates a bitmap without alpha.</param>
+        /// <returns>GDI bitmap.</returns>
+        public static Bitmap CreateBitmap(System.Windows.Media.Imaging.BitmapSource img, bool ignoreAlpha)
         {
             var rect = new Rectangle(0, 0, img.PixelWidth, img.PixelHeight);
             Bitmap bmp = new Bitmap(img.PixelWidth, img.PixelHeight);
-            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            BitmapData data;
+            if (ignoreAlpha)
+                data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
+            else
+                data = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
             img.CopyPixels(new System.Windows.Int32Rect(0, 0, img.PixelWidth, img.PixelHeight), data.Scan0, 4 * img.PixelWidth * img.PixelHeight, 4 * img.PixelWidth);
             bmp.UnlockBits(data);
 
