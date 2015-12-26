@@ -55,7 +55,7 @@ namespace UsefulThings.WinForms
             }
             tx = (maxDimension - tw) / 2;
             ty = (maxDimension - th) / 2;
-            Bitmap thumb = new Bitmap(maxDimension, maxDimension, PixelFormat.Format24bppRgb);
+            Bitmap thumb = new Bitmap(maxDimension, maxDimension, PixelFormat.Format32bppRgb);
             Graphics g = Graphics.FromImage(thumb);
             g.Clear(Color.White);
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
@@ -91,7 +91,7 @@ namespace UsefulThings.WinForms
         public static Bitmap CreateBitmap(System.Windows.Media.Imaging.BitmapSource img, bool ignoreAlpha)
         {
             var rect = new Rectangle(0, 0, img.PixelWidth, img.PixelHeight);
-            Bitmap bmp = new Bitmap(img.PixelWidth, img.PixelHeight);
+            Bitmap bmp = new Bitmap(img.PixelWidth, img.PixelHeight, ignoreAlpha ? PixelFormat.Format32bppRgb : PixelFormat.Format32bppArgb);
 
             BitmapData data;
             if (ignoreAlpha)

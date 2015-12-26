@@ -136,8 +136,20 @@ namespace UsefulThings.WPF
 
             encoder.Frames.Add(BitmapFrame.Create(source));
             encoder.Save(ms);
+            File.WriteAllBytes("R:\\first.png", ms.ToArray());
 
-            return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
+
+            var t = CreateWPFBitmap(ms, decodeWidth, decodeHeight);
+
+            JpegBitmapEncoder encoder2 = new JpegBitmapEncoder();
+            encoder2.QualityLevel = 100;
+            MemoryStream ms2 = new MemoryStream();
+
+            encoder2.Frames.Add(BitmapFrame.Create(t));
+            encoder2.Save(ms2);
+            File.WriteAllBytes("R:\\second.jpg", ms2.ToArray());
+
+            return t;
         }
         #endregion
 
@@ -165,8 +177,139 @@ namespace UsefulThings.WPF
         /// <returns>Scaled image.</returns>
         public static BitmapSource ScaleImage(BitmapSource img, double scale)
         {
-            var scalar = new ScaleTransform(scale, scale);
-            return new TransformedBitmap(img, scalar);
+            // KFreon: Obvious scaling method doesn't seem to work at all...so manual scaling method.
+            /*var scalar = new ScaleTransform(scale, scale);
+            var bmp = new TransformedBitmap(img, scalar);
+            bmp.Freeze();
+            return bmp;*/
+
+            // KFreon: This doesn't work either
+            //return CreateWPFBitmap(img, (int)(img.Width * scale), (int)(img.Height * scale));
+
+            // KFreon: New method
+            int[] newPixels = null;
+            WriteableBitmap bmp = img as WriteableBitmap;  // KFreon: Needs to be a WriteableBitmap
+            if (bmp == null)
+                bmp = new WriteableBitmap(img);
+
+
+            int newHeight = (int)(img.PixelHeight * scale);
+            int newWidth = (int)(img.PixelWidth * scale);
+            newPixels = WriteableBitmapExScale(bmp, newWidth, newHeight);
+
+            WriteableBitmap resized = new WriteableBitmap(newWidth, newHeight, 96, 96, PixelFormats.Bgra32, null);
+            resized.WritePixels(new Int32Rect(0, 0, newWidth, newHeight), newPixels, newWidth * 4, 0);
+            return resized;
+        }
+
+
+        /// <summary>
+        /// Resizes WriteableBitmap preserving alpha channel.
+        /// From: https://github.com/teichgraf/WriteableBitmapEx/blob/master/Source/WriteableBitmapEx/WriteableBitmapTransformationExtensions.cs 
+        /// All credit to them.
+        /// </summary>
+        /// <param name="bmp">Bitmap to resize.</param>
+        /// <param name="destWidth">Desired Width.</param>
+        /// <param name="destHeight">Desired Height</param>
+        /// <returns>Resized pixels.</returns>
+        public unsafe static int[] WriteableBitmapExScale(WriteableBitmap bmp, int destWidth, int destHeight)
+        {
+            int heightSource = bmp.PixelHeight;
+            int widthSource = bmp.PixelWidth;
+            int* pixels = (int*)bmp.BackBuffer.ToPointer();
+            var pd = new int[destWidth * destHeight];
+            var xs = (float)widthSource / destWidth;
+            var ys = (float)heightSource / destHeight;
+
+            float fracx, fracy, ifracx, ifracy, sx, sy, l0, l1, rf, gf, bf;
+            int c, x0, x1, y0, y1;
+            byte c1a, c1r, c1g, c1b, c2a, c2r, c2g, c2b, c3a, c3r, c3g, c3b, c4a, c4r, c4g, c4b;
+            byte a, r, g, b;
+
+            var srcIdx = 0;
+            for (var y = 0; y < destHeight; y++)
+            {
+                for (var x = 0; x < destWidth; x++)
+                {
+                    sx = x * xs;
+                    sy = y * ys;
+                    x0 = (int)sx;
+                    y0 = (int)sy;
+
+                    // Calculate coordinates of the 4 interpolation points
+                    fracx = sx - x0;
+                    fracy = sy - y0;
+                    ifracx = 1f - fracx;
+                    ifracy = 1f - fracy;
+                    x1 = x0 + 1;
+                    if (x1 >= widthSource)
+                    {
+                        x1 = x0;
+                    }
+                    y1 = y0 + 1;
+                    if (y1 >= heightSource)
+                    {
+                        y1 = y0;
+                    }
+
+
+                    // Read source color
+                    c = pixels[y0 * widthSource + x0];
+                    c1a = (byte)(c >> 24);
+                    c1r = (byte)(c >> 16);
+                    c1g = (byte)(c >> 8);
+                    c1b = (byte)(c);
+
+                    c = pixels[y0 * widthSource + x1];
+                    c2a = (byte)(c >> 24);
+                    c2r = (byte)(c >> 16);
+                    c2g = (byte)(c >> 8);
+                    c2b = (byte)(c);
+
+                    c = pixels[y1 * widthSource + x0];
+                    c3a = (byte)(c >> 24);
+                    c3r = (byte)(c >> 16);
+                    c3g = (byte)(c >> 8);
+                    c3b = (byte)(c);
+
+                    c = pixels[y1 * widthSource + x1];
+                    c4a = (byte)(c >> 24);
+                    c4r = (byte)(c >> 16);
+                    c4g = (byte)(c >> 8);
+                    c4b = (byte)(c);
+
+
+                    // Calculate colors
+                    // Alpha
+                    l0 = ifracx * c1a + fracx * c2a;
+                    l1 = ifracx * c3a + fracx * c4a;
+                    a = (byte)(ifracy * l0 + fracy * l1);
+
+                    // Red
+                    l0 = ifracx * c1r + fracx * c2r;
+                    l1 = ifracx * c3r + fracx * c4r;
+                    rf = ifracy * l0 + fracy * l1;
+
+                    // Green
+                    l0 = ifracx * c1g + fracx * c2g;
+                    l1 = ifracx * c3g + fracx * c4g;
+                    gf = ifracy * l0 + fracy * l1;
+
+                    // Blue
+                    l0 = ifracx * c1b + fracx * c2b;
+                    l1 = ifracx * c3b + fracx * c4b;
+                    bf = ifracy * l0 + fracy * l1;
+
+                    // Cast to byte
+                    r = (byte)rf;
+                    g = (byte)gf;
+                    b = (byte)bf;
+
+                    // Write destination
+                    pd[srcIdx++] = (a << 24) | (r << 16) | (g << 8) | b;
+                }
+            }
+            return pd;
         }
         
         /// <summary>
