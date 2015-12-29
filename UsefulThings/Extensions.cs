@@ -51,7 +51,7 @@ namespace UsefulThings
         /// <returns>New array containing elements within the specified range.</returns>
         public static T[] GetRange<T>(this T[] oldArray, int offset, int length)
         {
-            T[] newArray = new T[length - offset];
+            T[] newArray = new T[length];
             Array.Copy(oldArray, offset, newArray, 0, length);
             return newArray;
         }
