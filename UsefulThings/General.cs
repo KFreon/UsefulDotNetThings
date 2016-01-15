@@ -7,7 +7,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using Microsoft.IO;
+using Microsoft.Win32;
 
 namespace UsefulThings
 {
@@ -43,6 +46,32 @@ namespace UsefulThings
             }
         }
         
+
+        /// <summary>
+        /// Gets DPI scaling factor for main monitor from registry keys. 
+        /// Returns 1 if key is unavailable.
+        /// </summary>
+        /// <returns>Returns scale or 1 if not found.</returns>
+        public static double GetDPIScalingFactorFROM_REGISTRY()
+        {
+            var currentDPI = (int)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop\\WindowMetrics", "AppliedDPI", 96);
+            return currentDPI / 96.0;
+        }
+
+
+        /// <summary>
+        /// Gets DPI Scaling factor for monitor app is currently on.
+        /// </summary>
+        /// <param name="current">Main window to get DPI for.</param>
+        /// <returns>DPI scaling factor.</returns>
+        public static double GetDPIScalingFactorFOR_CURRENT_MONITOR(Window current)
+        {
+            PresentationSource source = PresentationSource.FromVisual(current);
+            Matrix m = source.CompositionTarget.TransformToDevice;
+            return m.M11;
+        }
+
+
         /// <summary>
         /// Changes a filename in a full filepath string.
         /// </summary>
@@ -54,6 +83,22 @@ namespace UsefulThings
             return fullPath.Replace(Path.GetFileNameWithoutExtension(fullPath), newFilenameWithoutExt);
         }
 
+
+        /// <summary>
+        /// Ensures the first character of a string is in Upper Case
+        /// </summary>
+        /// <param name="s">String to convert first to upper case.</param>
+        /// <returns>New string with upper case start</returns>
+        public static string UpperCaseFirst(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            char[] a = s.ToCharArray();
+            a[0] = char.ToUpper(a[0]);
+            return new string(a);
+        }
 
         /// <summary>
         /// Determines if number is a power of 2. 
