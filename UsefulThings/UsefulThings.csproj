@@ -101,6 +101,7 @@
     <Compile Include="WPF\ByteSizeToStringConverter.cs" />
     <Compile Include="WPF\CommandHandler.cs" />
     <Compile Include="WPF\DebugConverter.cs" />
+    <Compile Include="WPF\EnumToCombo.cs" />
     <Compile Include="WPF\EnumToStringConverter.cs" />
     <Compile Include="WPF\GridLengthAnimation.cs" />
     <Compile Include="WPF\IntsEqualConverter.cs" />

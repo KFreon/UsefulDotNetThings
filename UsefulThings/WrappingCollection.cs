@@ -196,7 +196,13 @@ namespace UsefulThings
         private int WrapIndex(int index)
         {
             if (UnderlyingCollection.Count != 0)
-                return index % UnderlyingCollection.Count;
+            {
+                int retval = index % UnderlyingCollection.Count;
+                if (index < 0)
+                    retval = UnderlyingCollection.Count + index % UnderlyingCollection.Count;
+
+                return retval;
+            }
             else
                 return -1;
         }

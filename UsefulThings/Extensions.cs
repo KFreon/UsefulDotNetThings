@@ -112,17 +112,22 @@ namespace UsefulThings
                 return br.ReadInt32();
         }
 
-
         /// <summary>
-        /// Reads a number of bytes from stream at the current position and advances that number of bytes.
+        /// Reads an uint from stream at the current position and advances 4 bytes.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
-        /// <param name="Length">Number of bytes to read.</param>
-        /// <returns>Bytes read from stream.</returns>
-        public static byte[] ReadBytesFromStream(this Stream stream, int Length)
+        /// <returns>Integer read from stream.</returns>
+        public static uint ReadUInt32FromStream(this Stream stream)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
-                return br.ReadBytes(Length);
+                return br.ReadUInt32();
+        }
+
+        
+        public static void WriteInt64ToStream(this Stream stream, long value)
+        {
+            using (BinaryWriter br = new BinaryWriter(stream, Encoding.Default, true))
+                br.Write(value);
         }
 
         
@@ -135,6 +140,18 @@ namespace UsefulThings
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
                 return br.ReadInt64();
+        }
+
+        /// <summary>
+        /// Reads a number of bytes from stream at the current position and advances that number of bytes.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="Length">Number of bytes to read.</param>
+        /// <returns>Bytes read from stream.</returns>
+        public static byte[] ReadBytesFromStream(this Stream stream, int Length)
+        {
+            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                return br.ReadBytes(Length);
         }
 
 
@@ -225,6 +242,7 @@ namespace UsefulThings
 
         #region Writing
         /// <summary>
+        /// FROM GIBBED.
         /// Writes an int to stream at the current position.
         /// </summary>
         /// <param name="stream">Stream to write to.</param>

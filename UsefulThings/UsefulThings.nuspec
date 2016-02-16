@@ -2,15 +2,15 @@
 <package >
   <metadata>
     <id>UsefulCSharpThings</id>
-    <version>$version$</version>
+    <version>1.5.4.0</version>
     <title>Useful C# Things</title>
     <authors>KFreon</authors>
     <owners>KFreon</owners>
     <projectUrl>https://github.com/KFreon/Useful-C-Sharp-Collection</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Collection of useful C#, WinForms, and WPF functions and extensions.</description>
-    <releaseNotes>Fixed scaling and resizing.</releaseNotes>
+    <releaseNotes>Added Markup Extension for Enums</releaseNotes>
     <copyright>Copyright KFreon 2015</copyright>
-    <tags></tags>
+    <tags>C#, WPF</tags>
   </metadata>
-</package>
+</package >
