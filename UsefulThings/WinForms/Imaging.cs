@@ -26,8 +26,8 @@ namespace UsefulThings.WinForms
         /// <returns>Square bitmap.</returns>
         public static Bitmap PadImageToSquare(string filename, int maxDimension)
         {
-            Image bmp = Image.FromFile(filename);
-            return PadImageToSquare(bmp, maxDimension);
+            using (Image bmp = Image.FromFile(filename))
+                return PadImageToSquare(bmp, maxDimension);
         }
 
 
@@ -60,6 +60,7 @@ namespace UsefulThings.WinForms
             g.Clear(Color.White);
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
             g.DrawImage(image, new Rectangle(tx, ty, tw, th), new Rectangle(0, 0, w, h), GraphicsUnit.Pixel);
+            g.Dispose();
             return thumb;
         }
 

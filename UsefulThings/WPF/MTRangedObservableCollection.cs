@@ -62,6 +62,19 @@ namespace UsefulThings.WPF
         }
 
         /// <summary>
+        /// Adds range of elements from List.
+        /// </summary>
+        /// <param name="list">List of elements to add.</param>
+        public void AddRange(IList<T> list)
+        {
+            // Adds items to underlying collection.
+            foreach (T item in list)
+                this.Items.Add(item);
+
+            NotifyRangeChange();
+        }
+
+        /// <summary>
         /// Inserts elements at given index.
         /// </summary>
         /// <param name="index">Index to add at.</param>
