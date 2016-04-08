@@ -27,6 +27,32 @@ namespace UsefulThings.WPF
     public static class Images
     {
         #region Bitmaps
+        /// <summary>
+        /// Overlays one image on top of another.
+        /// Both images MUST be the same size.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="overlay"></param>
+        /// <returns></returns>
+        public static BitmapSource Overlay(BitmapSource source, BitmapSource overlay)
+        {
+            if (source.Width != overlay.Width || source.Height != overlay.Width)
+                throw new InvalidDataException("Source and overlay must be the same dimensions.");
+
+            var drawing = new DrawingVisual();
+            var context = drawing.RenderOpen();
+            context.DrawImage(source, new System.Windows.Rect(0, 0, source.Width, source.Height));
+            context.DrawImage(overlay, new System.Windows.Rect(0, 0, overlay.Width, overlay.Height));
+
+            context.Close();
+            var overlayed = new RenderTargetBitmap(source.PixelWidth, source.PixelHeight, source.DpiX, source.DpiY, source.Format);
+            overlayed.Render(drawing);
+
+
+            return overlayed;
+        }
+
+
         #region Creation
         /// <summary>
         /// Creates a WriteableBitmap from an array of pixels.
