@@ -175,7 +175,7 @@ namespace UsefulThings
         /// Indexer. Works on item at wrappable index.
         /// </summary>
         /// <param name="index"></param>
-        /// <returns></returns>
+        /// <returns>Item at index</returns>
         public T this[int index]
         {
             get

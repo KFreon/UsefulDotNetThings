@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace UsefulThings.WPF
+namespace UsefulThings.WPF.TypeConverters
 {
     /// <summary>
     /// Checks if multiple integers are equal.

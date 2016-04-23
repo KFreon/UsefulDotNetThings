@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace UsefulThings.WPF
+namespace UsefulThings.WPF.TypeConverters
 {
     /// <summary>
     /// Used for when two checkboxes are mutually exclusive, but can both be false.

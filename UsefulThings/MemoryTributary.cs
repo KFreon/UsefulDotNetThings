@@ -12,7 +12,7 @@ namespace UsefulThings
     /// MemoryTributary is a re-implementation of MemoryTributary that uses a dynamic list of byte arrays as a backing store, instead of a single byte array, the allocation
     /// of which will fail for relatively small streams as it requires contiguous memory.
     /// </summary>
-    [Obsolete("Use the RecyclableMemoryManager instead.")]
+    [Obsolete("Probably use the RecyclableMemoryManager instead.")]
     public class MemoryTributary : Stream       /* http://msdn.microsoft.com/en-us/library/system.io.stream.aspx */
     {
         #region Constructors

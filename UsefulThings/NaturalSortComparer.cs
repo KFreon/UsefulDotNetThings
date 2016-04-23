@@ -13,7 +13,7 @@ namespace UsefulThings
     public class NaturalSortComparer : IComparer<string>
     {
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
-        private static extern int StrCmpLogicalW(string x, string y);
+        internal static extern int StrCmpLogicalW(string x, string y);
         /// <summary>
         /// Compares strings using Natural Sort i.e. 1, 5, 12, 15, instead of 12, 15, 1, 2
         /// </summary>

@@ -1,23 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-
-
 
 namespace UsefulThings.WPF
 {
@@ -31,9 +20,9 @@ namespace UsefulThings.WPF
         /// Overlays one image on top of another.
         /// Both images MUST be the same size.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="overlay"></param>
-        /// <returns></returns>
+        /// <param name="source">Base image i.e. the "bottom" one.</param>
+        /// <param name="overlay">Overlaying image i.e. the "top" one.</param>
+        /// <returns>New image with overlay on top of source.</returns>
         public static BitmapSource Overlay(BitmapSource source, BitmapSource overlay)
         {
             if (source.Width != overlay.Width || source.Height != overlay.Width)
@@ -47,7 +36,6 @@ namespace UsefulThings.WPF
             context.Close();
             var overlayed = new RenderTargetBitmap(source.PixelWidth, source.PixelHeight, source.DpiX, source.DpiY, source.Format);
             overlayed.Render(drawing);
-
 
             return overlayed;
         }
@@ -162,20 +150,8 @@ namespace UsefulThings.WPF
 
             encoder.Frames.Add(BitmapFrame.Create(source));
             encoder.Save(ms);
-            File.WriteAllBytes("R:\\first.png", ms.ToArray());
 
-
-            var t = CreateWPFBitmap(ms, decodeWidth, decodeHeight);
-
-            JpegBitmapEncoder encoder2 = new JpegBitmapEncoder();
-            encoder2.QualityLevel = 100;
-            MemoryStream ms2 = new MemoryStream();
-
-            encoder2.Frames.Add(BitmapFrame.Create(t));
-            encoder2.Save(ms2);
-            File.WriteAllBytes("R:\\second.jpg", ms2.ToArray());
-
-            return t;
+            return CreateWPFBitmap(ms, decodeWidth, decodeHeight, DisposeStream: true);
         }
         #endregion
 
@@ -190,7 +166,7 @@ namespace UsefulThings.WPF
         public static BitmapSource ResizeImage(BitmapSource img, int NewWidth, int NewHeight)
         {
             if (NewWidth <= 0 || NewHeight <= 0)
-                Debugger.Break();
+                throw new ArgumentOutOfRangeException($"{(NewWidth <= 0 ? nameof(NewWidth) : nameof(NewHeight))} must be greater than 0.");
 
             WriteableBitmap wb = new WriteableBitmap(img);
             return ManualResize(wb, NewWidth, NewHeight);
@@ -333,12 +309,12 @@ namespace UsefulThings.WPF
             return resized;
         }
 
-        public static byte ToByte(double value)
+        internal static byte ToByte(double value)
         {
             return Convert.ToByte(Clamp(value, 0, 255));
         }
 
-        public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
+        internal static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
         {
             if (value.CompareTo(min) < 0)
             {
@@ -372,132 +348,10 @@ namespace UsefulThings.WPF
         /// <param name="stream">Destination stream.</param>
         public static void SaveWPFBitmapToStreamAsJPG(BitmapImage img, Stream stream)
         {
-            BitmapEncoder encoder = new JpegBitmapEncoder();
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.QualityLevel = 96; // KFreon: Chosen arbitrarily.
             encoder.Frames.Add(BitmapFrame.Create(img, null, null, null));
             encoder.Save(stream);
-        }
-        #endregion
-    }
-
-
-    /// <summary>
-    /// Provides functions to work with WPF Documents
-    /// </summary>
-    public static class Documents
-    {
-        #region Fixed Documents
-        /// <summary>
-        /// Creates a FixedPage from string.
-        /// </summary>
-        /// <param name="text">Text of page.</param>
-        /// <returns>FixedPage from text.</returns>
-        public static FixedPage CreateFixedPage(string text)
-        {
-            FixedPage page = new FixedPage();
-            TextBlock block = new TextBlock();
-            block.Inlines.Add(text);
-            page.Children.Add(block);
-            return page;
-        }
-
-
-        /// <summary>
-        /// Builds a PageContent object from file. 
-        /// PageContent goes into FixedDocument.
-        /// </summary>
-        /// <param name="filename">Path of file to read from.</param>
-        /// <param name="err">Error container.</param>
-        /// <returns>PageContent oject from file.</returns>
-        public static PageContent GeneratePageFromFile(string filename, out string err)
-        {
-            string lines = null;
-            PageContent content = new PageContent();
-
-            // KFreon: Check for errors and log them if necessary
-            if ((err = General.ReadTextFromFile(filename, out lines)) == null)
-                content = GeneratePageFromText(lines);
-
-            return content;
-        }
-
-
-        /// <summary>
-        /// Builds a PageContent object from string.
-        /// PageContent goes into FixedDocument.
-        /// </summary>
-        /// <param name="text">Text for page.</param>
-        /// <returns>PageContent from text.</returns>
-        public static PageContent GeneratePageFromText(string text)
-        {
-            FixedPage page = CreateFixedPage(text);
-            PageContent content = new PageContent();
-            content.Child = page;
-            return content;
-        }
-
-
-        /// <summary>
-        /// Builds FixedDocument from file.
-        /// </summary>
-        /// <param name="filename">Path of file to use.</param>
-        /// <param name="err">Error container.</param>
-        /// <returns>FixedDocument of file.</returns>
-        public static FixedDocument GenerateFixedDocumentFromFile(string filename, out string err)
-        {
-            FixedDocument doc = new FixedDocument();
-            string text = null;
-
-            // KFreon: Set error if necessary
-            if ((err = General.ReadTextFromFile(filename, out text)) == null)
-                doc = GenerateFixedDocumentFromText(text);
-
-            return doc;
-        }
-
-
-        /// <summary>
-        /// Builds FixedDocument from string.
-        /// </summary>
-        /// <param name="text">Text to use.</param>
-        /// <returns>FixedDocument of text.</returns>
-        public static FixedDocument GenerateFixedDocumentFromText(string text)
-        {
-            FixedDocument document = new FixedDocument();
-            PageContent content = GeneratePageFromText(text);
-            document.Pages.Add(content);
-            return document;
-        }
-        #endregion
-
-        #region Flow Documents
-        /// <summary>
-        /// Builds a FlowDocument from file.
-        /// </summary>
-        /// <param name="filename">Path to file.</param>
-        /// <param name="err">Error container.</param>
-        /// <returns>FlowDocument of file.</returns>
-        public static FlowDocument GenerateFlowDocumentFromFile(string filename, out string err)
-        {
-            string lines = null;
-
-            FlowDocument doc = new FlowDocument();
-            if ((err = General.ReadTextFromFile(filename, out lines)) == null)
-                doc = GenerateFlowDocumentFromText(lines);
-
-            return doc;
-        }
-
-
-        /// <summary>
-        /// Builds FlowDocument from text.
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns>FlowDocument of text.</returns>
-        public static FlowDocument GenerateFlowDocumentFromText(string text)
-        {
-            Paragraph par = new Paragraph();
-            par.Inlines.Add(text);
-            return new FlowDocument(par);
         }
         #endregion
     }

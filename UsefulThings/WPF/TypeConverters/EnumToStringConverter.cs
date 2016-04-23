@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace UsefulThings.WPF
+namespace UsefulThings.WPF.TypeConverters
 {
     public class EnumToStringConverter : IValueConverter
     {

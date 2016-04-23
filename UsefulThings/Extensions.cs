@@ -39,7 +39,6 @@ namespace UsefulThings
         }
 
 
-
         #region Arrays
         /// <summary>
         /// Extracts a sub array from another array with a specified number of elements.
@@ -121,13 +120,6 @@ namespace UsefulThings
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
                 return br.ReadUInt32();
-        }
-
-        
-        public static void WriteInt64ToStream(this Stream stream, long value)
-        {
-            using (BinaryWriter br = new BinaryWriter(stream, Encoding.Default, true))
-                br.Write(value);
         }
 
         
@@ -242,6 +234,18 @@ namespace UsefulThings
 
         #region Writing
         /// <summary>
+        /// Writes a long (int64) to stream at its current position.
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="value">Int64 to write to stream.</param>
+        public static void WriteInt64ToStream(this Stream stream, long value)
+        {
+            using (BinaryWriter br = new BinaryWriter(stream, Encoding.Default, true))
+                br.Write(value);
+        }
+
+
+        /// <summary>
         /// FROM GIBBED.
         /// Writes an int to stream at the current position.
         /// </summary>
@@ -275,6 +279,17 @@ namespace UsefulThings
 
 
         #region All Collections e.g. List, Dictionary
+        /// <summary>
+        /// Sorts list using Natural Compare i.e. 1 is before 12, etc
+        /// </summary>
+        /// <param name="list"></param>
+        public static void NaturalSort(this List<string> list)
+        {
+            NaturalSortComparer comparer = new NaturalSortComparer();
+            list.Sort(comparer);
+        }
+
+
         /// <summary>
         /// Returns index of minimum value based on comparer.
         /// </summary>

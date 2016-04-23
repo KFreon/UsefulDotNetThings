@@ -15,7 +15,7 @@ using Microsoft.Win32;
 namespace UsefulThings
 {
     /// <summary>
-    /// KFreon: General C# helpers
+    /// General C# helpers.
     /// </summary>
     public static class General
     {
@@ -54,7 +54,7 @@ namespace UsefulThings
         /// <returns>Returns scale or 1 if not found.</returns>
         public static double GetDPIScalingFactorFROM_REGISTRY()
         {
-            var currentDPI = (int)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop\\WindowMetrics", "AppliedDPI", 96);
+            var currentDPI = (int)(Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop\\WindowMetrics", "AppliedDPI", 96) ?? 96);
             return currentDPI / 96.0;
         }
 

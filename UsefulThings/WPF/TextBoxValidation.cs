@@ -10,7 +10,7 @@ using System.Windows.Controls;
 namespace UsefulThings.WPF
 {
     /// <summary>
-    /// Deals with simple path validation.
+    /// Deals with simple path or number validation.
     /// </summary>
     public class TextBoxValidation : ValidationRule
     {
@@ -29,7 +29,7 @@ namespace UsefulThings.WPF
             ValidationResult result = ValidationResult.ValidResult;
 
             if (IsNumber)
-                {
+            {
                 // KFreon: Should be a number so try to parse number, and check bounds
                     int num = -1;
                     if (!Int32.TryParse(val, out num))
@@ -42,9 +42,9 @@ namespace UsefulThings.WPF
                     else if (num < Min)
                         result = new ValidationResult(false, "Must be larger than " + Min);
                 }
-                }
-                else
-                {
+            }
+            else
+            {
                 if (val.Length < 3) 
                     return new ValidationResult(false, "Need more characters"); // KFreon: Just needs to be red. No message
                 
@@ -52,7 +52,7 @@ namespace UsefulThings.WPF
                     return new ValidationResult(false, "Path should be <letter>:\\"); 
                         
                 if (RequireExistence)
-                    {
+                {
                         // KFreon: Check if path exists
                         if (val.isFile() && !File.Exists(val))
                         result = new ValidationResult(false, "Specified file doesn't exist!");

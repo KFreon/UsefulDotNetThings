@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace UsefulThings.WPF
+namespace UsefulThings.WPF.TypeConverters
 {
     /// <summary>
     /// Converts nullable item to visibility and back. If item is null, visibility is collapsed, otherwise visible.

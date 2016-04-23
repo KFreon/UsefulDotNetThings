@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UsefulThings.WPF;
 
-namespace UsefulThings.WPF
+namespace UsefulThings.WPF.TypeConverters
 {
     /// <summary>
     /// Adaptation of ObservableCollection to allow ranged operations.
