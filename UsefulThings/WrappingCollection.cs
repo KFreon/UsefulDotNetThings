@@ -74,6 +74,14 @@ namespace UsefulThings
             UnderlyingCollection.Add(item);
         }
 
+        /// <summary>
+        /// Adds range of items to list.
+        /// </summary>
+        /// <param name="collection"></param>
+        public void AddRange(IEnumerable<T> collection)
+        {
+            UnderlyingCollection.AddRange(collection);
+        }
 
         /// <summary>
         /// Clears list.

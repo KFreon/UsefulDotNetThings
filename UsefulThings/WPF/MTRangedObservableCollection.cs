@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace UsefulThings.WPF
 
         }
 
-
         /// <summary>
         /// Creates a multi-threaded ObservableCollection with range modification capabilities.
         /// Allows changes from other threads, and provides AddRange functionality.
@@ -44,7 +44,7 @@ namespace UsefulThings.WPF
         public MTRangedObservableCollection(List<T> list)
             : base(list)
         {
-
+            
         }
 
 
@@ -55,8 +55,9 @@ namespace UsefulThings.WPF
         public void AddRange(IEnumerable<T> enumerable)
         {
             // Adds items to underlying collection.
-            foreach (T item in enumerable)
-                this.Items.Add(item);
+            lock (locker)
+                foreach (T item in enumerable)
+                    Items.Add(item);
 
             NotifyRangeChange();
         }
@@ -68,8 +69,9 @@ namespace UsefulThings.WPF
         public void AddRange(IList<T> list)
         {
             // Adds items to underlying collection.
-            foreach (T item in list)
-                this.Items.Add(item);
+            lock (locker)
+                foreach (T item in list)
+                    this.Items.Add(item);
 
             NotifyRangeChange();
         }
@@ -81,8 +83,9 @@ namespace UsefulThings.WPF
         /// <param name="enumerable">Elements to add.</param>
         public void InsertRange(int index, IEnumerable<T> enumerable)
         {
-            foreach (T item in enumerable)
-                this.Items.Insert(index, item);
+            lock (locker)
+                foreach (T item in enumerable)
+                    this.Items.Insert(index, item);
 
             NotifyRangeChange();
         }
@@ -105,8 +108,11 @@ namespace UsefulThings.WPF
         /// <param name="enumerable"></param>
         public void Reset(IEnumerable<T> enumerable)
         {
-            this.Items.Clear();
-            AddRange(enumerable);
+            lock (locker)
+            {
+                this.Items.Clear();
+                AddRange(enumerable);
+            }
         }
     }
 }

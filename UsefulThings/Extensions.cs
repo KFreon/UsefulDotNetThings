@@ -80,7 +80,7 @@ namespace UsefulThings
         /// <param name="Length">Number of bytes to read.</param>
         /// <param name="bufferSize">Size of buffer to use while copying.</param>
         /// <returns>Number of bytes read.</returns>
-        public static int ReadFrom(this Stream TargetStream, Stream SourceStream, int Length, int bufferSize = 4096)
+        public static int ReadFrom(this Stream TargetStream, Stream SourceStream, long Length, int bufferSize = 4096)
         {
             byte[] buffer = new byte[bufferSize];
             int read;
@@ -105,10 +105,21 @@ namespace UsefulThings
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <returns>Integer read from stream.</returns>
-        public static int ReadInt32FromStream(this Stream stream)
+        public static int ReadInt32(this Stream stream)
         {
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
                 return br.ReadInt32();
+        }
+
+        /// <summary>
+        /// Reads an int from stream at the current position and advances 4 bytes.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <returns>Unsigned integer read from stream.</returns>
+        public static uint ReadUInt32(this Stream stream)
+        {
+            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                return br.ReadUInt32();
         }
 
         /// <summary>
@@ -140,10 +151,14 @@ namespace UsefulThings
         /// <param name="stream">Stream to read from.</param>
         /// <param name="Length">Number of bytes to read.</param>
         /// <returns>Bytes read from stream.</returns>
-        public static byte[] ReadBytesFromStream(this Stream stream, int Length)
+        public static byte[] ReadBytes(this Stream stream, int Length)
         {
-            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
-                return br.ReadBytes(Length);
+            /*using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                return br.ReadBytes(Length);*/
+
+            byte[] bytes = new byte[Length];
+            stream.Read(bytes, 0, Length);
+            return bytes;
         }
 
 
@@ -153,7 +168,7 @@ namespace UsefulThings
         /// <param name="stream">Stream to read from.</param>
         /// <param name="HasLengthWritten">True = Attempt to read string length from stream first.</param>
         /// <returns>String read from stream.</returns>
-        public static string ReadStringFromStream(this Stream stream, bool HasLengthWritten = false)
+        public static string ReadString(this Stream stream, bool HasLengthWritten = false)
         {
             if (stream == null || !stream.CanRead)
                 throw new IOException("Stream cannot be read.");
@@ -162,7 +177,7 @@ namespace UsefulThings
             List<char> chars = new List<char>();
             if (HasLengthWritten)
             {
-                length = stream.ReadInt32FromStream();
+                length = stream.ReadInt32();
                 for (int i = 0; i < length; i++)
                     chars.Add((char)stream.ReadByte());
             }
@@ -234,11 +249,24 @@ namespace UsefulThings
 
         #region Writing
         /// <summary>
+        /// Writes byte array to current position in stream.
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="data">Data to write to stream.</param>
+        public static void WriteBytes(this Stream stream, byte[] data)
+        {
+            if (!stream.CanWrite)
+                throw new IOException("Stream is read only.");
+
+            stream.Write(data, 0, data.Length);
+        }
+
+        /// <summary>
         /// Writes a long (int64) to stream at its current position.
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="value">Int64 to write to stream.</param>
-        public static void WriteInt64ToStream(this Stream stream, long value)
+        public static void WriteInt64(this Stream stream, long value)
         {
             using (BinaryWriter br = new BinaryWriter(stream, Encoding.Default, true))
                 br.Write(value);
@@ -251,12 +279,38 @@ namespace UsefulThings
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="value">Integer to write.</param>
-        public static void WriteInt32ToStream(this Stream stream, int value)
+        public static void WriteInt32(this Stream stream, int value)
         {
             using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Default, true))
                 bw.Write(value);
         }
         
+
+        /// <summary>
+        /// FROM GIBBED.
+        /// Writes uint to stream at current position.
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="value">uint to write.</param>
+        public static void WriteUInt32(this Stream stream, uint value)
+        {
+            using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Default, true))
+                bw.Write(value);
+        }
+
+        /// <summary>
+        /// FROM GIBBED.
+        /// Writes a float to stream at the current position.
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="value">Float to write to stream.</param>
+        public static void WriteFloat32(this Stream stream, float value)
+        {
+            if (stream?.CanWrite != true)
+                throw new IOException("Stream is null or read only.");
+
+            stream.WriteBytes(BitConverter.GetBytes(value));
+        }
         
         /// <summary>
         /// Writes string to stream. Terminated by a null char, and optionally writes string length at start of string. (Pascal strings?)
@@ -264,16 +318,17 @@ namespace UsefulThings
         /// <param name="stream">Stream to write to.</param>
         /// <param name="str">String to write.</param>
         /// <param name="WriteLength">True = Writes str length before writing string.</param>
-        public static void WriteStringToStream(this Stream stream, string str, bool WriteLength = false)
+        public static void WriteString(this Stream stream, string str, bool WriteLength = false)
         {
             if (WriteLength)
-                stream.WriteInt32ToStream(str.Length);
+                stream.WriteInt32(str.Length);
                 
             foreach (char c in str)
                 stream.WriteByte((byte)c);
                 
             stream.WriteByte((byte)'\0');
         }
+
         #endregion Writing
         #endregion Stream IO
 
@@ -705,6 +760,47 @@ namespace UsefulThings
         public static void BeginAdjustableAnimation(this ContentElement element, DependencyProperty dp, GridLengthAnimation anim)
         {
             element.BeginAdjustableAnimation(dp, anim, anim.To);
+        }
+
+
+        /// <summary>
+        /// Randomly shuffles a list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets all text from a document.
+        /// </summary>
+        /// <param name="document">FlowDocument to extract text from.</param>
+        /// <returns>All text as a string.</returns>
+        public static string GetText(this FlowDocument document)
+        {
+            return new TextRange(document.ContentStart, document.ContentEnd).Text;
+        }
+
+
+        /// <summary>
+        /// Gets drag/drop data as string[].
+        /// </summary>
+        /// <param name="e">Argument from Drop Handler.</param>
+        /// <returns>Contents of drop.</returns>
+        public static string[] GetDataAsStringArray(this DragEventArgs e)
+        {
+            return (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
         }
         #endregion Misc
     }

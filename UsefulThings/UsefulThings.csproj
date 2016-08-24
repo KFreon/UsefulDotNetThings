@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UsefulThings</RootNamespace>
     <AssemblyName>UsefulThings</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -44,6 +44,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -58,6 +59,7 @@
     <Compile Include="MemoryTributary.cs" />
     <Compile Include="NaturalSortComparer.cs" />
     <Compile Include="RecyclableMemoryManager.cs" />
+    <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="WinForms\BackBone.cs" />
     <Compile Include="WinForms\Gooey.cs" />
     <Compile Include="WinForms\Transitions\IManagedType.cs" />
@@ -96,7 +98,9 @@
     </Compile>
     <Compile Include="WinForms\TextUpdater.cs" />
     <Compile Include="WinForms\Imaging.cs" />
+    <Compile Include="WPF\General.cs" />
     <Compile Include="WPF\Images.cs" />
+    <Compile Include="WPF\TreeViewNodeSelectionBehaviour.cs" />
     <Compile Include="WPF\TypeConverters\BoolToVisibilityConverter.cs" />
     <Compile Include="WPF\TypeConverters\ByteSizeToStringConverter.cs" />
     <Compile Include="WPF\CommandHandler.cs" />
@@ -113,8 +117,7 @@
     <Compile Include="WPF\MTRangedObservableCollection.cs" />
     <Compile Include="WPF\TypeConverters\MultiIntConverter.cs" />
     <Compile Include="WPF\TypeConverters\MutuallyExclusiveCheckersConverter.cs" />
-    <Compile Include="WPF\TypeConverters\RangedObservableCollection.cs" />
-    <Compile Include="WPF\SeekableVirtualTreeView.cs" />
+    <Compile Include="WPF\RangedObservableCollection.cs" />
     <Compile Include="WPF\TypeConverters\StringToIntConverter.cs" />
     <Compile Include="WPF\TypeConverters\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />

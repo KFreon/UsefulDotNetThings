@@ -45,7 +45,6 @@ namespace UsefulThings
                 return retval;
             }
         }
-        
 
         /// <summary>
         /// Gets DPI scaling factor for main monitor from registry keys. 
@@ -60,7 +59,8 @@ namespace UsefulThings
 
 
         /// <summary>
-        /// Gets DPI Scaling factor for monitor app is currently on.
+        /// Gets DPI Scaling factor for monitor app is currently on. 
+        /// NOT actual DPI, the scaling factor relative to standard 96 DPI.
         /// </summary>
         /// <param name="current">Main window to get DPI for.</param>
         /// <returns>DPI scaling factor.</returns>
@@ -69,6 +69,20 @@ namespace UsefulThings
             PresentationSource source = PresentationSource.FromVisual(current);
             Matrix m = source.CompositionTarget.TransformToDevice;
             return m.M11;
+        }
+
+        /// <summary>
+        /// Returns actual DPI of given visual object. Application DPI is constant across it's visuals.
+        /// </summary>
+        /// <param name="anyVisual">Any visual from the Application UI to test.</param>
+        /// <returns>DPI of Application.</returns>
+        public static int GetAbsoluteDPI(Visual anyVisual)
+        {
+            PresentationSource source = PresentationSource.FromVisual(anyVisual);
+            if (source != null)
+                return (int)(96.0 * source.CompositionTarget.TransformToDevice.M11);
+
+            return 96;
         }
 
 

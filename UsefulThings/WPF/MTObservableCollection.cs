@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -15,6 +16,8 @@ namespace UsefulThings.WPF
     /// <typeparam name="T">Type of content.</typeparam>
     public class MTObservableCollection<T> : ObservableCollection<T>
     {
+        protected readonly object locker = new object();
+
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -71,6 +74,25 @@ namespace UsefulThings.WPF
             : base()
         {
 
+        }
+
+        /// <summary>
+        /// Multi-threaded Add.
+        /// </summary>
+        /// <param name="item">Item to add.</param>
+        public new void Add(T item)
+        {
+            lock (locker)
+                base.Add(item);
+        }
+
+        /// <summary>
+        /// Multi-threaded Clear.
+        /// </summary>
+        public new void Clear()
+        {
+            lock (locker)
+                base.Clear();
         }
     }
 }

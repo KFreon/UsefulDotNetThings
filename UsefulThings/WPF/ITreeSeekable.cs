@@ -12,7 +12,20 @@ namespace UsefulThings.WPF
     /// </summary>
     public interface ITreeSeekable
     {
+        /// <summary>
+        /// Indicates whether item is open/expanded.
+        /// </summary>
         bool IsExpanded { get; set; }
-        IEnumerator ChildEnumerator { get; set; }
+
+        /// <summary>
+        /// Indicates whether item is selected or not.
+        /// </summary>
+        bool IsSelected { get; set; }
+
+
+        /// <summary>
+        /// Parent folder to allow for subfolder selection.
+        /// </summary>
+        ITreeSeekable Parent { get; set; }
     }
 }
