@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.IO;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace UsefulThings
 {
@@ -19,31 +20,31 @@ namespace UsefulThings
     /// </summary>
     public static class General
     {
-        /// <summary>
-        /// Does bit conversion from streams
-        /// </summary>
-        public static class StreamBitConverter
+        #region DPI
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetCursorPos(ref Win32Point pt);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct Win32Point
         {
-            /// <summary>
-            /// Reads a UInt32 from a stream at given offset.
-            /// </summary>
-            /// <param name="stream">Stream to read from.</param>
-            /// <param name="offset">Offset to start reading from in stream.</param>
-            /// <returns>Number read from stream.</returns>
-            public static UInt32 ToUInt32(Stream stream, int offset)
-            {
-                // KFreon: Seek to specified offset
-                byte[] fourBytes = new byte[4];
-                stream.Seek(offset, SeekOrigin.Begin);
+            public Int32 X;
+            public Int32 Y;
+        };
 
-                // KFreon: Read 4 bytes from stream at offset and convert to UInt32
-                stream.Read(fourBytes, 0, 4);
-                UInt32 retval = BitConverter.ToUInt32(fourBytes, 0);
+        /// <summary>
+        /// Gets mouse pointer location relative to top left of monitor, scaling for DPI as required.
+        /// </summary>
+        /// <param name="relative">Window on monitor.</param>
+        /// <returns>Mouse location scaled for DPI.</returns>
+        public static Point GetDPIAwareMouseLocation(Window relative)
+        {
+            Win32Point w32Mouse = new Win32Point();
+            GetCursorPos(ref w32Mouse);
 
-                // KFreon: Clear array and reset stream position
-                fourBytes = null;
-                return retval;
-            }
+            var scale = UsefulThings.General.GetDPIScalingFactorFOR_CURRENT_MONITOR(relative);
+            Point location = new Point(w32Mouse.X / scale, w32Mouse.Y / scale);
+            return location;
         }
 
         /// <summary>
@@ -84,7 +85,36 @@ namespace UsefulThings
 
             return 96;
         }
+        #endregion DPI
 
+
+
+        /// <summary>
+        /// Does bit conversion from streams
+        /// </summary>
+        public static class StreamBitConverter
+        {
+            /// <summary>
+            /// Reads a UInt32 from a stream at given offset.
+            /// </summary>
+            /// <param name="stream">Stream to read from.</param>
+            /// <param name="offset">Offset to start reading from in stream.</param>
+            /// <returns>Number read from stream.</returns>
+            public static UInt32 ToUInt32(Stream stream, int offset)
+            {
+                // KFreon: Seek to specified offset
+                byte[] fourBytes = new byte[4];
+                stream.Seek(offset, SeekOrigin.Begin);
+
+                // KFreon: Read 4 bytes from stream at offset and convert to UInt32
+                stream.Read(fourBytes, 0, 4);
+                UInt32 retval = BitConverter.ToUInt32(fourBytes, 0);
+
+                // KFreon: Clear array and reset stream position
+                fourBytes = null;
+                return retval;
+            }
+        }
 
         /// <summary>
         /// Changes a filename in a full filepath string.
@@ -416,7 +446,7 @@ namespace UsefulThings
                 catch (Exception e)
                 {
                     Debugger.Break();
-                    Console.WriteLine();
+                    Console.WriteLine(e);
                 }
             }
             return null;

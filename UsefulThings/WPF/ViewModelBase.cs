@@ -22,6 +22,9 @@ namespace UsefulThings.WPF
         }
 
         #region Property Changed Notification
+        /// <summary>
+        /// Event for property change notification.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

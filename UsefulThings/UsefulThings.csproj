@@ -60,6 +60,7 @@
     <Compile Include="NaturalSortComparer.cs" />
     <Compile Include="RecyclableMemoryManager.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
+    <Compile Include="VirtualFileDataObject.cs" />
     <Compile Include="WinForms\BackBone.cs" />
     <Compile Include="WinForms\Gooey.cs" />
     <Compile Include="WinForms\Transitions\IManagedType.cs" />
@@ -98,6 +99,7 @@
     </Compile>
     <Compile Include="WinForms\TextUpdater.cs" />
     <Compile Include="WinForms\Imaging.cs" />
+    <Compile Include="WPF\DragDropHandler.cs" />
     <Compile Include="WPF\General.cs" />
     <Compile Include="WPF\Images.cs" />
     <Compile Include="WPF\TreeViewNodeSelectionBehaviour.cs" />

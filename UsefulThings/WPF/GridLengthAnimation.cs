@@ -12,6 +12,7 @@ namespace UsefulThings.WPF
     /// <summary>
     /// Animates Grid properties. Not mine.
     /// </summary>
+    #pragma warning disable CS1591
     public class GridLengthAnimation : AnimationTimeline
     {
         static GridLengthAnimation()

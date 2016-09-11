@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 namespace UsefulThings.WPF
 {
     /// <summary>
-    /// Provides functions to work with WPF Images
+    /// Provides functions to work with WPF Images.
     /// </summary>
     public static class Images
     {
@@ -186,7 +186,13 @@ namespace UsefulThings.WPF
             return bmp;
         }
 
-        private static double BiCubicKernel(double x)
+        /// <summary>
+        /// Witchcraft I got off the internet that makes manual resizing work.
+        /// I apologise to whomever I got this off, I've forgotten who and where.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        static double BiCubicKernel(double x)
         {
             if (x < 0)
             {
@@ -209,7 +215,7 @@ namespace UsefulThings.WPF
 
 
         // NOT MINE. Got it from a website I can't remember. Similar to the WriteableBitmapEx code.
-        private static BitmapSource ManualResize(WriteableBitmap source, int width, int height)
+        static BitmapSource ManualResize(WriteableBitmap source, int width, int height)
         {
             int sourceWidth = source.PixelWidth;
             int sourceHeight = source.PixelHeight;

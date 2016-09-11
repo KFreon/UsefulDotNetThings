@@ -99,7 +99,6 @@ namespace UsefulThings
             return numRead;
         }
 
-
         /// <summary>
         /// Reads an int from stream at the current position and advances 4 bytes.
         /// </summary>

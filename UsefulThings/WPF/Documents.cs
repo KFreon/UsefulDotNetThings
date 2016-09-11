@@ -55,7 +55,7 @@ namespace UsefulThings.WPF
             PageContent content = new PageContent();
 
             // KFreon: Check for errors and log them if necessary
-            if ((err = General.ReadTextFromFile(filename, out lines)) == null)
+            if ((err = UsefulThings.General.ReadTextFromFile(filename, out lines)) == null)
                 content = GeneratePageFromText(lines);
 
             return content;
@@ -89,7 +89,7 @@ namespace UsefulThings.WPF
             string text = null;
 
             // KFreon: Set error if necessary
-            if ((err = General.ReadTextFromFile(filename, out text)) == null)
+            if ((err = UsefulThings.General.ReadTextFromFile(filename, out text)) == null)
                 doc = GenerateFixedDocumentFromText(text);
 
             return doc;
@@ -122,7 +122,7 @@ namespace UsefulThings.WPF
             string lines = null;
 
             FlowDocument doc = new FlowDocument();
-            if ((err = General.ReadTextFromFile(filename, out lines)) == null)
+            if ((err = UsefulThings.General.ReadTextFromFile(filename, out lines)) == null)
                 doc = GenerateFlowDocumentFromText(lines);
 
             return doc;

@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>UsefulCSharpThings</id>
-    <version>1.5.6.0</version>
+    <version>1.6.0.0</version>
     <title>Useful C# Things</title>
     <authors>KFreon</authors>
     <owners>KFreon</owners>
     <projectUrl>https://github.com/KFreon/Useful-C-Sharp-Collection</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Collection of useful C#, WinForms, and WPF functions and extensions.</description>
-    <releaseNotes>Fixed winforms image resources leak.</releaseNotes>
+    <releaseNotes>Fixed Winforms imaging resource leak, Fixed and added functionality to MT ObservableCollections. NOTE Upgraded to .NET 4.6.2 and the WPF TypeConverters changed namespaces.</releaseNotes>
     <copyright>Copyright KFreon 2015</copyright>
     <tags>C#, WPF</tags>
   </metadata>

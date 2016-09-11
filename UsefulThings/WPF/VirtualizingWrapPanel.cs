@@ -14,6 +14,7 @@ namespace UsefulThings.WPF
     /// From: https://uhimaniavwp.codeplex.com/
     /// Seems to work perfectly.
     /// </summary>
+    #pragma warning disable CS1591 // Disable warnings about missing XML comments for public things. Don't care about them.
     public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
     {
         #region ItemSize

@@ -16,9 +16,19 @@ namespace UsefulThings.WPF
     /// <typeparam name="T">Type of content.</typeparam>
     public class MTObservableCollection<T> : ObservableCollection<T>
     {
+        /// <summary>
+        /// Lock/sync object used when doing multi-threaded things.
+        /// </summary>
         protected readonly object locker = new object();
 
+        /// <summary>
+        /// Event handling things - not mine.
+        /// </summary>
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        /// <summary>
+        /// Event handling things - not mine.
+        /// </summary>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             NotifyCollectionChangedEventHandler CollectionChanged = this.CollectionChanged;

@@ -14,11 +14,32 @@ namespace UsefulThings.WPF
     /// </summary>
     public class TextBoxValidation : ValidationRule
     {
-        public bool RequireExistence { get; set; }  // KFreon: If True, checks if entered path actually exists
+        /// <summary>
+        /// True = Check if path exists.
+        /// </summary>
+        public bool RequireExistence { get; set; }
+
+        /// <summary>
+        /// True = content is a number, and enables range validation.
+        /// </summary>
         public bool IsNumber { get; set; }
+
+        /// <summary>
+        /// Min value for validation.
+        /// </summary>
         public int Min { get; set; }
+
+        /// <summary>
+        /// Max value for validation.
+        /// </summary>
         public int Max { get; set; }
 
+        /// <summary>
+        /// Validates input based on provided options.
+        /// </summary>
+        /// <param name="value">Value in textbox.</param>
+        /// <param name="cultureInfo">Current Culture.</param>
+        /// <returns>Something...</returns>
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
             if (String.IsNullOrEmpty(value as string))

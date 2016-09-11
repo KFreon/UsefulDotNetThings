@@ -14,7 +14,9 @@ namespace UsefulThings.WPF
     /// <summary>
     /// This behaviour ensures that a selected node (from code-behind) is brought into view.
     /// It requires a single property in the back end for the tree's currently selected item. Can't just bind IsSelected to every item it seems.
+    /// Beautiful. Sorry I can't remember where it came from.
     /// </summary>
+    #pragma warning disable CS1591 // Disable warnings about missing XML comments for public things. Don't care about them.
     public class TreeViewNodeSelectionBehaviour : Behavior<TreeView>
     {
         public ITreeSeekable SelectedItem

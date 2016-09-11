@@ -12,7 +12,10 @@ using System.Windows.Shapes;
 
 namespace UsefulThings.WPF
 {
-    public static class Misc
+    /// <summary>
+    /// Contains general things for WPF.
+    /// </summary>
+    public static class General
     {
         /// <summary>
         /// Finds visual child of given element. Optionally matches name of FrameWorkElement.

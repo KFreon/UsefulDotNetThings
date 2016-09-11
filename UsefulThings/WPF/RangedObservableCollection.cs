@@ -11,7 +11,7 @@ namespace UsefulThings.WPF
     /// <summary>
     /// Adaptation of ObservableCollection to allow ranged operations.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type of content.</typeparam>
     public class RangedObservableCollection<T> : ObservableCollection<T>, IRangedCollection<T>
     {
         /// <summary>
