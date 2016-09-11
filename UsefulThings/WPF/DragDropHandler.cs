@@ -19,7 +19,7 @@ namespace UsefulThings.WPF
         Window subWindow = null;
         Action<DataContext, string[]> DropAction = null;
         Predicate<string[]> DropValidator = null;
-        Func<DataContext, Dictionary<string, byte[]>> DataGetter = null;
+        Func<DataContext, Dictionary<string, Func<byte[]>>> DataGetter = null;
 
         /// <summary>
         /// Creates handler for easily dealing with Drop/Drag operations.
@@ -28,7 +28,7 @@ namespace UsefulThings.WPF
         /// <param name="baseWindow">Original window to base DPI calculations on.</param>
         /// <param name="dropValidator">Validation predicate for determining whether the target will accept the data.</param>
         /// <param name="dataGetter">Function to retrieve data to drop.</param>
-        public DragDropHandler(Window baseWindow, Action<DataContext, string[]> dropAction, Predicate<string[]> dropValidator, Func<DataContext, Dictionary<string, byte[]>> dataGetter)
+        public DragDropHandler(Window baseWindow, Action<DataContext, string[]> dropAction, Predicate<string[]> dropValidator, Func<DataContext, Dictionary<string, Func<byte[]>>> dataGetter)
         {
             BaseWindow = baseWindow;
             DropAction = dropAction;
@@ -85,7 +85,11 @@ namespace UsefulThings.WPF
                 VirtualFileDataObject.FileDescriptor[] files = new VirtualFileDataObject.FileDescriptor[saveInfo.Keys.Count];
                 int count = 0;
                 foreach (var info in saveInfo)
-                    files[count] = new VirtualFileDataObject.FileDescriptor { Name = info.Key, Length = info.Value.Length, StreamContents = stream => stream.Write(info.Value, 0, info.Value.Length) };
+                    files[count++] = new VirtualFileDataObject.FileDescriptor { Name = info.Key, StreamContents = stream =>
+                    {
+                        byte[] data = info.Value();
+                        stream.Write(data, 0, data.Length);
+                    }};
 
 
                 VirtualFileDataObject obj = new VirtualFileDataObject(() => GiveFeedback(BaseWindow), files);
