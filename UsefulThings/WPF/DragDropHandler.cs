@@ -12,27 +12,34 @@ namespace UsefulThings.WPF
     /// <summary>
     /// Provides easier access to common drop and drag operations.
     /// </summary>
-    public class DragDropHandler
+    /// <typeparam name="DataContext">Type of data being dragged to/from.</typeparam>
+    public class DragDropHandler<DataContext> where DataContext : class
     {
+        Window BaseWindow = null;
         Window subWindow = null;
-        Action<object, DragEventArgs> DropAction = null;
+        Action<DataContext, string[]> DropAction = null;
         Predicate<string[]> DropValidator = null;
+        Func<DataContext, Dictionary<string, byte[]>> DataGetter = null;
 
         /// <summary>
         /// Creates handler for easily dealing with Drop/Drag operations.
         /// </summary>
         /// <param name="dropAction">Action to perform when dropped.</param>
+        /// <param name="baseWindow">Original window to base DPI calculations on.</param>
         /// <param name="dropValidator">Validation predicate for determining whether the target will accept the data.</param>
-        public DragDropHandler(Action<object, DragEventArgs> dropAction, Predicate<string[]> dropValidator)
+        /// <param name="dataGetter">Function to retrieve data to drop.</param>
+        public DragDropHandler(Window baseWindow, Action<DataContext, string[]> dropAction, Predicate<string[]> dropValidator, Func<DataContext, Dictionary<string, byte[]>> dataGetter)
         {
+            BaseWindow = baseWindow;
             DropAction = dropAction;
             DropValidator = dropValidator;
+            DataGetter = dataGetter;
         }
 
         /// <summary>
         /// Provides visual feedback when dragging and dropping.
         /// </summary>
-        /// <param name="relative"></param>
+        /// <param name="relative">Window to provide DPI measurement base.</param>
         public void GiveFeedback(Window relative)
         {
             // update the position of the visual feedback item
@@ -46,24 +53,26 @@ namespace UsefulThings.WPF
         /// <summary>
         /// Performs the Drop action.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void Drop(object sender, DragEventArgs e)
+        /// <typeparam name="Container">UI Container containing data, e.g. DockPanel, StackPanel, etc</typeparam>
+        /// <param name="sender">UI Container receiving data.</param>
+        /// <param name="e">Data container.</param>
+        public void Drop<Container>(object sender, DragEventArgs e) where Container : FrameworkElement
         {
-            DropAction(sender, e);
+            string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop));  // Can't be more than one due to DragEnter and DragOver events
+
+            DataContext context = (DataContext)(((Container)sender).DataContext);
+            DropAction(context, files);
         }
 
         /// <summary>
         /// Performs the given action when mouse is moving with a the left button pressed.
         /// </summary>
-        /// <typeparam name="T">Type of UI element container being dragged.</typeparam>
-        /// <typeparam name="DataContext">Type of data the UI container represents.</typeparam>
+        /// <typeparam name="Container">UI Container being dragged. e.g. DockPanel, StackPanel, Image, etc.</typeparam>
         /// <param name="sender">UI container.</param>
         /// <param name="e">Mouse event captured</param>
-        /// <param name="GetFiles">Function to provide drag file information from source.</param>
-        public void MouseMove<T, DataContext>(object sender, MouseEventArgs e, Func<DataContext, Dictionary<string, byte[]>> GetFiles) where T : FrameworkElement where DataContext : class
+        public void MouseMove<Container>(object sender, MouseEventArgs e) where Container : FrameworkElement
         {
-            T item = sender as T;
+            Container item = sender as Container;
             if (item != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 var context = item.DataContext as DataContext;
@@ -72,20 +81,24 @@ namespace UsefulThings.WPF
 
                 CreateDragDropWindow(item);
 
-                var saveInfo = GetFiles(context);
+                var saveInfo = DataGetter(context);
                 VirtualFileDataObject.FileDescriptor[] files = new VirtualFileDataObject.FileDescriptor[saveInfo.Keys.Count];
                 int count = 0;
                 foreach (var info in saveInfo)
                     files[count] = new VirtualFileDataObject.FileDescriptor { Name = info.Key, Length = info.Value.Length, StreamContents = stream => stream.Write(info.Value, 0, info.Value.Length) };
 
 
-                VirtualFileDataObject obj = new VirtualFileDataObject(() => GiveFeedback(subWindow), files);
+                VirtualFileDataObject obj = new VirtualFileDataObject(() => GiveFeedback(BaseWindow), files);
                 VirtualFileDataObject.DoDragDrop(item, obj, DragDropEffects.Copy);
                 subWindow.Close();
             }
         }
 
-        void DoItemDragEnter(DragEventArgs e)
+        /// <summary>
+        /// Performs the DragEnter/Over checking of whether the dragged data is supported.
+        /// </summary>
+        /// <param name="e">Dragged data container.</param>
+        public void DragEnter_Over(DragEventArgs e)
         {
             e.Effects = DragDropEffects.None;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -117,7 +130,7 @@ namespace UsefulThings.WPF
             r.Fill = new VisualBrush(dragElement);
             subWindow.Content = r;
 
-            var w32Mouse = UsefulThings.General.GetDPIAwareMouseLocation(subWindow);
+            var w32Mouse = UsefulThings.General.GetDPIAwareMouseLocation(BaseWindow);
 
             subWindow.Left = w32Mouse.X;
             subWindow.Top = w32Mouse.Y;
