@@ -53,26 +53,27 @@ namespace UsefulThings.WPF
         /// <summary>
         /// Performs the Drop action.
         /// </summary>
-        /// <typeparam name="Container">UI Container containing data, e.g. DockPanel, StackPanel, etc</typeparam>
         /// <param name="sender">UI Container receiving data.</param>
         /// <param name="e">Data container.</param>
-        public void Drop<Container>(object sender, DragEventArgs e) where Container : FrameworkElement
+        public void Drop(object sender, DragEventArgs e)
         {
             string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop));  // Can't be more than one due to DragEnter and DragOver events
+            DataContext context = null;
 
-            DataContext context = (DataContext)(((Container)sender).DataContext);
+            if (sender != null)
+                context = (DataContext)(((FrameworkElement)sender).DataContext);
+
             DropAction(context, files);
         }
 
         /// <summary>
         /// Performs the given action when mouse is moving with a the left button pressed.
         /// </summary>
-        /// <typeparam name="Container">UI Container being dragged. e.g. DockPanel, StackPanel, Image, etc.</typeparam>
         /// <param name="sender">UI container.</param>
         /// <param name="e">Mouse event captured</param>
-        public void MouseMove<Container>(object sender, MouseEventArgs e) where Container : FrameworkElement
+        public void MouseMove(object sender, MouseEventArgs e)
         {
-            Container item = sender as Container;
+            var item = sender as FrameworkElement;
             if (item != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 var context = item.DataContext as DataContext;
@@ -102,7 +103,7 @@ namespace UsefulThings.WPF
         /// Performs the DragEnter/Over checking of whether the dragged data is supported.
         /// </summary>
         /// <param name="e">Dragged data container.</param>
-        public void DragEnter_Over(DragEventArgs e)
+        public void DragOver(DragEventArgs e)
         {
             e.Effects = DragDropEffects.None;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

@@ -21,7 +21,7 @@ namespace UsefulThings.WPF
         public MTRangedObservableCollection()
             : base()
         {
-
+            
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using Microsoft.IO;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace UsefulThings
 {
@@ -20,6 +21,52 @@ namespace UsefulThings
     /// </summary>
     public static class General
     {
+        /// <summary>
+        /// Creates string representation of object in format:
+        /// --- CLASS NAME ---
+        /// Property = value
+        /// ...
+        /// --- END CLASS NAME ---
+        /// </summary>
+        /// <param name="obj">Object to get property description of.</param>
+        /// <param name="IsSubClass">True = Adds whitespace before and after, and uses less ---.</param>
+        /// <returns>String of object.</returns>
+        public static string StringifyObject(object obj, bool IsSubClass = false)
+        {
+            StringBuilder sb = new StringBuilder();
+            var classname = TypeDescriptor.GetClassName(obj);
+            string tags = IsSubClass ? "--" : "---";
+
+            if (IsSubClass)
+                sb.AppendLine();
+
+            sb.AppendLine($"{tags} {classname} {tags}");
+            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
+                sb.AppendLine($"{descriptor.Name} = {descriptor.GetValue(obj)}");
+            sb.AppendLine($"{tags} END {classname} {tags}");
+            sb.AppendLine();
+
+            if (IsSubClass)
+                sb.AppendLine();
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Gets Descriptions on Enum members.
+        /// </summary>
+        /// <param name="theEnum">Enum to get descriptions from.</param>
+        /// <returns>Description of enum member.</returns>
+        public static string GetEnumDescription(Enum theEnum)
+        {
+            FieldInfo info = theEnum.GetType().GetField(theEnum.ToString());
+            object[] attribs = info.GetCustomAttributes(false);
+            if (attribs.Length == 0)
+                return theEnum.ToString();
+            else
+                return (attribs[0] as DescriptionAttribute)?.Description;
+        }
+
         #region DPI
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

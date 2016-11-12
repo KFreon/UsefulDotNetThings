@@ -360,5 +360,20 @@ namespace UsefulThings.WPF
             encoder.Save(stream);
         }
         #endregion
+
+
+        /// <summary>
+        /// Converts an old GDI Palette to the new WPF BitmapPalette
+        /// </summary>
+        /// <param name="GDIPalette">Old palette to convert.</param>
+        /// <returns>New WPF Palette.</returns>
+        public static BitmapPalette ConvertGDIPaletteToWPF(System.Drawing.Imaging.ColorPalette GDIPalette)
+        {
+            List<Color> Colours = new List<Color>();
+            foreach(var colour in GDIPalette.Entries)
+                Colours.Add(Color.FromArgb(colour.A, colour.R, colour.G, colour.B));
+
+            return Colours.Count > 0 ? new BitmapPalette(Colours) : BitmapPalettes.Halftone256Transparent;
+        }
     }
 }

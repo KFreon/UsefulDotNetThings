@@ -38,6 +38,25 @@ namespace UsefulThings
             InvalidPathingChars = vals.ToArray(vals.Count);
         }
 
+        /// <summary>
+        /// Performs Distinct on a particular property. Credit: http://stackoverflow.com/questions/489258/linqs-distinct-on-a-particular-property
+        /// </summary>
+        /// <typeparam name="TSource">Type of items.</typeparam>
+        /// <typeparam name="TKey">Parameter to filter on.</typeparam>
+        /// <param name="source">Enumerable to make distinct.</param>
+        /// <param name="keySelector">Selector to chose property to make distinct.</param>
+        /// <returns>Enumerable distinct on keySelector.</returns>
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> seenKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
 
         #region Arrays
         /// <summary>
