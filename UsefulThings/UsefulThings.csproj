@@ -57,6 +57,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="General.cs" />
     <Compile Include="MemoryTributary.cs" />
+    <Compile Include="MyBitConverter.cs" />
     <Compile Include="NaturalSortComparer.cs" />
     <Compile Include="RecyclableMemoryManager.cs" />
     <Compile Include="ThreadSafeRandom.cs" />

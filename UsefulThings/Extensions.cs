@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -718,16 +719,13 @@ namespace UsefulThings
 
         /// <summary>
         /// Returns pixels of image as RGBA channels in a stream. (R, G, B, A). 1 byte each.
+        /// Allows writing.
         /// </summary>
         /// <param name="bmp">Image to extract pixels from.</param>
         /// <returns>RGBA channels as stream.</returns>
         public static MemoryStream GetPixelsAsStream(this BitmapSource bmp)
         {
-            byte[] pixels = bmp.GetPixels();
-            MemoryStream pixelData = new MemoryStream(pixels.Length);
-            pixelData.Write(pixels, 0, pixels.Length);
-
-            return pixelData;
+            return new MemoryStream(bmp.GetPixels(), true);
         }
 
 
@@ -739,9 +737,31 @@ namespace UsefulThings
         public static byte[] GetPixels(this BitmapSource bmp)
         {
             // KFreon: Read pixel data from image.
+            bool hasAlpha = bmp.Format.ToString().Contains("a", StringComparison.OrdinalIgnoreCase);
+            int size = (int)((hasAlpha ? 4 : 3) * bmp.PixelWidth * bmp.PixelHeight);
+            byte[] pixels = new byte[size];
+            int stride = (int)bmp.PixelWidth * (bmp.Format.BitsPerPixel / 8);
+            bmp.CopyPixels(pixels, stride, 0);
+            return pixels;
+        }
+
+        /// <summary>
+        /// Gets pixels of image as byte[] formatted as BGRA32.
+        /// </summary>
+        /// <param name="bmp">Bitmap to extract pixels from. Can be any supported pixel format.</param>
+        /// <returns>Pixels as BGRA32.</returns>
+        public static byte[] GetPixelsAsBGRA32(this BitmapSource bmp)
+        {
+            // KFreon: Read pixel data from image.
             int size = (int)(4 * bmp.PixelWidth * bmp.PixelHeight);
             byte[] pixels = new byte[size];
-            int stride = (int)bmp.PixelWidth * 4;
+            BitmapSource source = bmp;
+
+            // Convert if required.
+            if (bmp.Format != PixelFormats.Bgra32)
+                bmp = new FormatConvertedBitmap(bmp, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent, 0);
+
+            int stride = bmp.PixelWidth * (bmp.Format.BitsPerPixel / 8);
             bmp.CopyPixels(pixels, stride, 0);
             return pixels;
         }

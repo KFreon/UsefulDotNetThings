@@ -52,7 +52,7 @@ namespace UsefulThings.WPF
         public static WriteableBitmap CreateWriteableBitmap(Array pixels, int width, int height)
         {
             WriteableBitmap wb = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
-            wb.WritePixels(new Int32Rect(0, 0, width, height), pixels, 4 * width, 0);
+            wb.WritePixels(new Int32Rect(0, 0, width, height), pixels, wb.BackBufferStride, 0);
             return wb;
         }
 
