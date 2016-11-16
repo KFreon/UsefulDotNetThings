@@ -13,16 +13,27 @@ namespace UsefulThings
     public static class MyBitConverter
     {
         /// <summary>
-        /// Indicates the endianess of the current machine.
+        /// Denotes the position of the most significant bit (MSB).
         /// </summary>
-        public static bool IsMachineLittleEndian = BitConverter.IsLittleEndian;
+        public enum Endianness
+        {
+            /// <summary>
+            /// Default for most systems for the last decade. MSB is last.
+            /// </summary>
+            LittleEndian,
+
+            /// <summary>
+            /// Common for network operations. MSB is first.
+            /// </summary>
+            BigEndian,
+        }
 
         /// <summary>
-        /// Allows BitConverter operations to be interpreted as Big Endian.
-        /// True = interpret as Little Endian (default)
-        /// False = interpret as Big Endian (Network Byte Order)
+        /// Indicates the endianess of the current machine.
         /// </summary>
-        public static bool AreOperationsLittleEndian { get; set; } = BitConverter.IsLittleEndian;
+        public static bool IsLittleEndian { get; } = BitConverter.IsLittleEndian;
+
+        public static Endianness SystemEndianness = BitConverter.IsLittleEndian ? Endianness.LittleEndian : Endianness.BigEndian;
 
         /// <summary>
         /// Converts the specified double-precision floating point number to a 64-bit signed integer.
@@ -67,10 +78,11 @@ namespace UsefulThings
         /// Returns the specified double-precision floating point value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(double value)
+        /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(double value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -79,10 +91,11 @@ namespace UsefulThings
         /// Returns the specified 16 bit signed value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(short value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(short value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -91,10 +104,11 @@ namespace UsefulThings
         /// Returns the specified 32 bit signed value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(int value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(int value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -103,10 +117,11 @@ namespace UsefulThings
         /// Returns the specified 64 bit signed value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(long value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(long value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -115,10 +130,11 @@ namespace UsefulThings
         /// Returns the specified single-precision floating point value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(Single value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(Single value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness!= SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -127,10 +143,11 @@ namespace UsefulThings
         /// Returns the specified 16 bit unsigned value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(ushort value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(ushort value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -139,10 +156,11 @@ namespace UsefulThings
         /// Returns the specified 32 bit unsigned value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(uint value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(uint value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -151,10 +169,11 @@ namespace UsefulThings
         /// Returns the specified 64 bit unsigned value as a byte array.
         /// </summary>
         /// <param name="value">The number to convert.</param>
-        public static byte[] GetBytes(ulong value)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static byte[] GetBytes(ulong value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -186,9 +205,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static double ToDouble(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static double ToDouble(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<double>(source, startIndex);
                 return BitConverter.ToDouble(bytes, 0);
@@ -203,9 +223,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static short ToInt16(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static short ToInt16(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<short>(source, startIndex);
                 return BitConverter.ToInt16(bytes, 0);
@@ -220,9 +241,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static int ToInt32(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static int ToInt32(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<int>(source, startIndex);
                 return BitConverter.ToInt32(bytes, 0);
@@ -236,9 +258,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static long ToInt64(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static long ToInt64(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<long>(source, startIndex);
                 return BitConverter.ToInt64(bytes, 0);
@@ -252,9 +275,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static float ToSingle(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static float ToSingle(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<float>(source, startIndex);
                 return BitConverter.ToSingle(bytes, 0);
@@ -268,9 +292,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static string ToString(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static string ToString(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<string>(source, startIndex);
                 return BitConverter.ToString(bytes, 0);
@@ -285,9 +310,10 @@ namespace UsefulThings
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
         /// <param name="length">Number of bytes to convert to string.</param>
-        public static string ToString(byte[] source, int startIndex, int length)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static string ToString(byte[] source, int startIndex, int length, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<string>(source, startIndex);
                 return BitConverter.ToString(bytes, 0, length);
@@ -300,9 +326,10 @@ namespace UsefulThings
         /// Converts the numeric value of each element of a specified array of bytes to its equivalent hexadecimal string representation.
         /// </summary>
         /// <param name="source">A byte array.</param>
-        public static string ToString(byte[] source)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static string ToString(byte[] source, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<string>(source, 0);
                 return BitConverter.ToString(bytes);
@@ -316,9 +343,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static ushort ToUInt16(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static ushort ToUInt16(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<short>(source, startIndex);
                 return BitConverter.ToUInt16(bytes, 0);
@@ -332,9 +360,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static uint ToUInt32(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static uint ToUInt32(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<int>(source, startIndex);
                 return BitConverter.ToUInt32(bytes, 0);
@@ -348,9 +377,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="source">A byte array.</param>
         /// <param name="startIndex">The index of the byte within value.</param>
-        public static ulong ToUInt64(byte[] source, int startIndex)
+        /// /// <param name="endianness">Endianness to interpret as.</param>
+        public static ulong ToUInt64(byte[] source, int startIndex, Endianness endianness = Endianness.LittleEndian)
         {
-            if (!AreOperationsLittleEndian)
+            if (endianness != SystemEndianness)
             {
                 var bytes = GetAndReverseBytes<long>(source, startIndex);
                 return BitConverter.ToUInt64(bytes, 0);

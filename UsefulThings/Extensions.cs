@@ -172,9 +172,6 @@ namespace UsefulThings
         /// <returns>Bytes read from stream.</returns>
         public static byte[] ReadBytes(this Stream stream, int Length)
         {
-            /*using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
-                return br.ReadBytes(Length);*/
-
             byte[] bytes = new byte[Length];
             stream.Read(bytes, 0, Length);
             return bytes;
