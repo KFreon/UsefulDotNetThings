@@ -756,7 +756,10 @@ namespace UsefulThings
 
             // Convert if required.
             if (bmp.Format != PixelFormats.Bgra32)
+            {
+                Debug.WriteLine($"Getting pixels as BGRA32 required conversion from: {bmp.Format}.");
                 bmp = new FormatConvertedBitmap(bmp, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent, 0);
+            }
 
             int stride = bmp.PixelWidth * (bmp.Format.BitsPerPixel / 8);
             bmp.CopyPixels(pixels, stride, 0);

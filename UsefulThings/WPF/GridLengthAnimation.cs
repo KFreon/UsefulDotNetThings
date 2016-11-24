@@ -88,13 +88,22 @@ namespace UsefulThings.WPF
             GridUnitType toUnitType = ((GridLength)GetValue(GridLengthAnimation.ToProperty)).GridUnitType;
             double fromVal = ((GridLength)GetValue(GridLengthAnimation.FromProperty)).Value;
             double toVal = ((GridLength)GetValue(GridLengthAnimation.ToProperty)).Value;
+            IEasingFunction easer = (IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty);
 
             if (fromVal > toVal)
             {
-                return new GridLength((1 - ((IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty)).Ease(animationClock.CurrentProgress.Value)) * (fromVal - toVal) + toVal, fromUnitType);
+                if (easer == null)
+                    return new GridLength((1 - animationClock.CurrentProgress.Value) * (fromVal - toVal) + toVal, fromUnitType);
+                else
+                    return new GridLength((1 - easer.Ease(animationClock.CurrentProgress.Value)) * (fromVal - toVal) + toVal, fromUnitType);
             }
             else
-                return new GridLength(((IEasingFunction)GetValue(GridLengthAnimation.EasingFunctionProperty)).Ease(animationClock.CurrentProgress.Value) * (toVal - fromVal) + fromVal, toUnitType);
+            {
+                if (easer == null)
+                    return new GridLength(animationClock.CurrentProgress.Value * (toVal - fromVal) + fromVal, toUnitType);
+                else
+                    return new GridLength(easer.Ease(animationClock.CurrentProgress.Value) * (toVal - fromVal) + fromVal, toUnitType);
+            }
         }
     }
 }

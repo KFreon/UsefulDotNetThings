@@ -11,8 +11,13 @@ namespace UsefulThings.WPF.TypeConverters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null)
+                return "0b";
+
+            dynamic number = value;
+
             // KFreon: Yeah...an entire class file for this. A little frustration for WPF.
-            double size = (double)((long)value);
+            double size = (double)number;
             return UsefulThings.General.GetFileSizeAsString(size);
         }
 

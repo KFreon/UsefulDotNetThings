@@ -129,6 +129,7 @@
     <Compile Include="WPF\TypeConverters\VisibilitySourceNullConverter.cs" />
     <Compile Include="WPF\Documents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WPF\WindowBlur.cs" />
     <Compile Include="WrappingCollection.cs" />
   </ItemGroup>
   <ItemGroup>

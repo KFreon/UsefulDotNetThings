@@ -96,8 +96,8 @@ namespace UsefulThings.WPF
         /// <returns>BitmapImage object.</returns>
         public static BitmapImage CreateWPFBitmap(byte[] source, int decodeWidth = 0, int decodeHeight = 0)
         {
-            MemoryStream ms = new MemoryStream(source);
-            return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
+            using (MemoryStream ms = new MemoryStream(source))  
+                return CreateWPFBitmap(ms, decodeWidth, decodeHeight);
         }
 
 
@@ -137,6 +137,18 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
+        /// Creates WPF BitmapSource from a GDI Bitmap.
+        /// Bitmap MUST STAY ALIVE for the life of this BitmapSource.
+        /// </summary>
+        /// <param name="GDIBitmap">Bitmap to convert.</param>
+        /// <returns>BitmapSource of GDIBitmap</returns>
+        public static BitmapSource CreateWPFBitmap(System.Drawing.Bitmap GDIBitmap)
+        {
+            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(GDIBitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+        }
+
+
+        /// <summary>
         /// Creates a WPF bitmap from another BitmapSource.
         /// </summary>
         /// <param name="source">Image source to create from.</param>
@@ -154,37 +166,6 @@ namespace UsefulThings.WPF
             return CreateWPFBitmap(ms, decodeWidth, decodeHeight, DisposeStream: true);
         }
         #endregion
-
-
-        /// <summary>
-        /// Resizes image to different dimensions.
-        /// </summary>
-        /// <param name="img">Image to resize.</param>
-        /// <param name="NewWidth">Width of resized image.</param>
-        /// <param name="NewHeight">Height of resized image.</param>
-        /// <returns>Resized image.</returns>
-        public static BitmapSource ResizeImage(BitmapSource img, int NewWidth, int NewHeight)
-        {
-            if (NewWidth <= 0 || NewHeight <= 0)
-                throw new ArgumentOutOfRangeException($"{(NewWidth <= 0 ? nameof(NewWidth) : nameof(NewHeight))} must be greater than 0.");
-
-            WriteableBitmap wb = new WriteableBitmap(img);
-            return ManualResize(wb, NewWidth, NewHeight);
-        }
-
-        /// <summary>
-        /// Scales image by specified scalar.
-        /// </summary>
-        /// <param name="img">Image to scale.</param>
-        /// <param name="scale">Magnitude of scaling i.e. 2 would double size 0.5 would halve.</param>
-        /// <returns>Scaled image.</returns>
-        public static BitmapSource ScaleImage(BitmapSource img, double scale)
-        {
-            // KFreon: Obvious scaling method doesn't seem to work at all...so manual scaling method.
-            WriteableBitmap wb = new WriteableBitmap(img);
-            BitmapSource bmp = ManualResize(wb, (int)(scale * img.PixelWidth), (int)(scale * img.PixelHeight));
-            return bmp;
-        }
 
         /// <summary>
         /// Witchcraft I got off the internet that makes manual resizing work.
@@ -215,6 +196,7 @@ namespace UsefulThings.WPF
 
 
         // NOT MINE. Got it from a website I can't remember. Similar to the WriteableBitmapEx code.
+        [Obsolete("Shouldn't be required. Just load into BitmapImage with decodeWidth/Height parameters.")]
         static BitmapSource ManualResize(WriteableBitmap source, int width, int height)
         {
             int sourceWidth = source.PixelWidth;
