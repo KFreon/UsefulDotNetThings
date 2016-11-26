@@ -103,6 +103,7 @@
     <Compile Include="WPF\DragDropHandler.cs" />
     <Compile Include="WPF\General.cs" />
     <Compile Include="WPF\Images.cs" />
+    <Compile Include="WPF\PanAndZoomBorder.cs" />
     <Compile Include="WPF\TreeViewNodeSelectionBehaviour.cs" />
     <Compile Include="WPF\TypeConverters\BoolToVisibilityConverter.cs" />
     <Compile Include="WPF\TypeConverters\ByteSizeToStringConverter.cs" />

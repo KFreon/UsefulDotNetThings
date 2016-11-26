@@ -498,6 +498,44 @@ namespace UsefulThings
             }
             return null;
         }
+
+
+        /// <summary>
+        /// Tests given file path for existence. If exists, adjusts filename until the new filename doesn't exist.
+        /// </summary>
+        /// <param name="baseName">Original desired name.</param>
+        /// <returns>Filename based on original that doesn't already exist.</returns>
+        public static string FindValidNewFileName(string baseName)
+        {
+            if (!baseName.isFile())
+                throw new ArgumentOutOfRangeException($"{nameof(baseName)} must be a testable file path, not a directory path.");
+
+            int count = 1;
+            string ext = Path.GetExtension(baseName);
+            string pathWithoutExtension = GetFullPathWithoutExtension(baseName);
+            string tempName = pathWithoutExtension;
+            while(File.Exists(tempName + ext))
+            {
+                tempName = pathWithoutExtension;
+                tempName += "_" + count;
+                count++;
+            }
+
+            return tempName + ext;
+        }
+
+        /// <summary>
+        /// Gets a full file path (not just the name) without the file extension.
+        /// </summary>
+        /// <param name="fullPath">Full path to remove extension from.</param>
+        /// <returns>File path without extension.</returns>
+        public static string GetFullPathWithoutExtension(string fullPath)
+        {
+            if (!fullPath.isFile())
+                throw new ArgumentOutOfRangeException($"{nameof(fullPath)} must be a testable file path, not a directory path.");
+
+            return fullPath.Substring(0, fullPath.LastIndexOf('.'));
+        }
         #endregion File IO
     }
 }
