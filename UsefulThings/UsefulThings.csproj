@@ -122,6 +122,7 @@
     <Compile Include="WPF\TypeConverters\MultiIntConverter.cs" />
     <Compile Include="WPF\TypeConverters\MutuallyExclusiveCheckersConverter.cs" />
     <Compile Include="WPF\RangedObservableCollection.cs" />
+    <Compile Include="WPF\TypeConverters\PercentageConverter.cs" />
     <Compile Include="WPF\TypeConverters\StringToIntConverter.cs" />
     <Compile Include="WPF\TypeConverters\StringToUriConverter.cs" />
     <Compile Include="WPF\TextBoxValidation.cs" />

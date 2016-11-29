@@ -48,6 +48,21 @@ namespace UsefulThings.WPF
         /// <param name="pixels">Pixel data</param>
         /// <param name="width">Width of image</param>
         /// <param name="height">Height of image</param>
+        /// <param name="format">Defines how pixels are layed out.</param>
+        /// <returns>WriteableBitmap containing pixels</returns>
+        public static WriteableBitmap CreateWriteableBitmap(Array pixels, int width, int height, PixelFormat format)
+        {
+            WriteableBitmap wb = new WriteableBitmap(width, height, 96, 96, format, BitmapPalettes.Halftone256Transparent);
+            wb.WritePixels(new Int32Rect(0, 0, width, height), pixels, wb.BackBufferStride, 0);
+            return wb;
+        }
+
+        /// <summary>
+        /// Creates a WriteableBitmap from an array of pixels with the default BGRA32 pixel format.
+        /// </summary>
+        /// <param name="pixels">Pixel data</param>
+        /// <param name="width">Width of image</param>
+        /// <param name="height">Height of image</param>
         /// <returns>WriteableBitmap containing pixels</returns>
         public static WriteableBitmap CreateWriteableBitmap(Array pixels, int width, int height)
         {

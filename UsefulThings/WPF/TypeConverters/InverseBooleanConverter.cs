@@ -12,16 +12,23 @@ namespace UsefulThings.WPF.TypeConverters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            // KFreon: Returns inverse of given boolean
-            if (targetType != typeof(bool))
-                throw new InvalidCastException("The target must be a boolean");
-
-            return !(bool)value;
+            return InvertBool(value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotSupportedException();
+            return InvertBool(value);
+        }
+
+        bool InvertBool(object value)
+        {
+            // In the case of nullable bool
+            if (value == null)
+                return false;
+
+            // KFreon: Returns inverse of given boolean
+            dynamic boolean = value;
+            return !boolean;  // This will fail if not a boolean.
         }
     }
 }

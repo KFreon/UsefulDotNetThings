@@ -841,5 +841,38 @@ namespace UsefulThings
             return (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
         }
         #endregion Misc
+
+
+        /// <summary>
+        /// Tests if <paramref name="item"/> is contained within <paramref name="enumerable"/>.
+        /// </summary>
+        /// <param name="enumerable">Enumerable to check.</param>
+        /// <param name="item">Item to search for.</param>
+        /// <param name="comparisonType"></param>
+        /// <returns></returns>
+        public static bool Contains(this IEnumerable<string> enumerable, string item, StringComparison comparisonType)
+        {
+            return enumerable.Contains(item, new StringCaselessComparer(comparisonType));
+        }
+
+        class StringCaselessComparer : IEqualityComparer<string>
+        {
+            static StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
+
+            public StringCaselessComparer(StringComparison comparisonType)
+            {
+                ComparisonType = comparisonType;
+            }
+
+            public bool Equals(string x, string y)
+            {
+                return String.Equals(x, y, ComparisonType);
+            }
+
+            public int GetHashCode(string obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
