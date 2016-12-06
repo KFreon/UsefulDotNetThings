@@ -77,6 +77,8 @@ namespace UsefulThings.WPF
                 context = (DroppedDataContext)(((FrameworkElement)sender).DataContext);
 
             DropAction(context, files);
+
+            e.Handled = true;
         }
 
         /// <summary>
