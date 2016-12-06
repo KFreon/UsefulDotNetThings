@@ -22,5 +22,25 @@ namespace UsefulThings.WPF
                 .Cast<object>()
                 .Select(e => new { Value = e, DisplayName = e.ToString() });
         }
+
+        /// <summary>
+        /// Get value back out of a casted object value.
+        /// Can't get the value normally as Object doesn't have a Value Property, thus must cast back, but has to be done in the same assembly.
+        /// </summary>
+        /// <param name="value">Anonymous value to convert back.</param>
+        /// <returns>Value of anonymous type.</returns>
+        public static object GetValueBack(object value)
+        {
+            var dummy = new { Value = new object(), DisplayName = "" };
+            dummy = CastTo(value, dummy);
+            return dummy.Value;
+        }
+
+
+        
+        static T CastTo<T>(Object value, T TargetType)
+        {
+            return (T)value;
+        }
     }
 }

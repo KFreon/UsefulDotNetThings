@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -17,6 +18,45 @@ namespace UsefulThings.WPF
     /// </summary>
     public static class General
     {
+        /// <summary>
+        /// Performs the Mouse Drag Move on a Borderless window.
+        /// Works with multimonitor and DPI Scaling to allow dragging a window incl to and from maximised.
+        /// </summary>
+        /// <param name="window">Borderless window to move.</param>
+        /// <param name="e">Mouse events from Window_MouseDown event.</param>
+        public static void DoBorderlessWindowDragMove(Window window, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && window.WindowState == WindowState.Maximized)
+            {
+                /// WORKING IN NON SCALED UNTIL THE END
+                // Set position of window back up to mouse, since restoring the window goes back to its previous location.
+                // Current cursor horizontal ratio location
+                double DPIScale = UsefulThings.General.GetDPIScalingFactorFOR_CURRENT_MONITOR(window);
+                Debug.WriteLine($"scale: {DPIScale}");
+
+                var currentCursor = window.PointToScreen(e.GetPosition(window));
+                var screens = System.Windows.Forms.Screen.AllScreens;
+                var currentScreen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point((int)currentCursor.X, (int)currentCursor.Y));
+                var cursorDistFromLocalOrigin = Math.Abs(Math.Abs(currentCursor.X) - Math.Abs(currentScreen.WorkingArea.X));
+                double localRatioOfCursorToScreen = cursorDistFromLocalOrigin / currentScreen.WorkingArea.Width;
+                double newLocalLeft = cursorDistFromLocalOrigin - ((window.RestoreBounds.Width * DPIScale) * localRatioOfCursorToScreen);
+                double newX = currentScreen.WorkingArea.X + newLocalLeft;
+
+                window.WindowState = WindowState.Normal;
+                window.Top = currentScreen.WorkingArea.Y / DPIScale + 1;
+                window.Left = newX / DPIScale;
+
+                window.DragMove();
+            }
+            else if (e.ChangedButton == MouseButton.Left)
+            {
+                if (e.ClickCount == 2)
+                    window.WindowState = window.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+                else
+                    window.DragMove();
+            }
+        }
+
         /// <summary>
         /// Finds visual child of given element. Optionally matches name of FrameWorkElement.
         /// </summary>
