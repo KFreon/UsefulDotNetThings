@@ -115,8 +115,7 @@ namespace UsefulThings.WPF
                 // TODO When zooming out, make sure it fits back on the screen from wherever it was.
 
                 // Don't allow moving if not zoomed at all.
-                var st = GetScaleTransform();
-                if (st.ScaleX == 1 && st.ScaleY == 1)
+                if (!CanPan())
                     return;
 
                 var tt = GetTranslateTransform();
@@ -241,18 +240,26 @@ namespace UsefulThings.WPF
 
         private void LeftMouseDownLinked(object sender, MouseEventArgs e)
         {
-            e.Handled = true;
             if (Links.Count == 0)
                 return;
 
             if (child != null)
             {
+                if (CanPan())
+                    e.Handled = true;
+
                 foreach (var link in Links)
                 {
                     var tt = link.GetTranslateTransform();
                     link.origin = new Point(tt.X, tt.Y);   
                 }
             }
+        }
+
+        bool CanPan()
+        {
+            var st = GetScaleTransform();
+            return !(st.ScaleX == 1 && st.ScaleY == 1);
         }
     }
 }
