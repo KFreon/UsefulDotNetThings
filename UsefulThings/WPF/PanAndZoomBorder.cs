@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,15 +20,15 @@ namespace UsefulThings.WPF
         private Point origin;
         private Point start;
 
-        private TranslateTransform GetTranslateTransform(UIElement element)
+        private TranslateTransform GetTranslateTransform()
         {
-            return (TranslateTransform)((TransformGroup)element.RenderTransform)
+            return (TranslateTransform)((TransformGroup)child.RenderTransform)
               .Children.First(tr => tr is TranslateTransform);
         }
 
-        private ScaleTransform GetScaleTransform(UIElement element)
+        private ScaleTransform GetScaleTransform()
         {
-            return (ScaleTransform)((TransformGroup)element.RenderTransform)
+            return (ScaleTransform)((TransformGroup)child.RenderTransform)
               .Children.First(tr => tr is ScaleTransform);
         }
 
@@ -58,8 +59,10 @@ namespace UsefulThings.WPF
                 child.RenderTransformOrigin = new Point(0.0, 0.0);
                 this.MouseWheel += child_MouseWheel;
                 this.MouseLeftButtonDown += child_MouseLeftButtonDown;
+                this.MouseLeftButtonDown += LeftMouseDownLinked;  // For linked boxes
                 this.MouseLeftButtonUp += child_MouseLeftButtonUp;
                 this.MouseMove += child_MouseMove;
+                this.MouseMove += MouseMoveLinked;  // For linked boxes
                 this.MouseRightButtonDown += child_MouseRightButtonDown;
             }
         }
@@ -69,12 +72,12 @@ namespace UsefulThings.WPF
             if (child != null)
             {
                 // reset zoom
-                var st = GetScaleTransform(child);
+                var st = GetScaleTransform();
                 st.ScaleX = 1.0;
                 st.ScaleY = 1.0;
 
                 // reset pan
-                var tt = GetTranslateTransform(child);
+                var tt = GetTranslateTransform();
                 tt.X = 0.0;
                 tt.Y = 0.0;
             }
@@ -85,29 +88,9 @@ namespace UsefulThings.WPF
         {
             if (child != null)
             {
-                var st = GetScaleTransform(child);
+                var st = GetScaleTransform();
                 
-                // Original - start of zooming to cursor? TODO
-                /*var tt = GetTranslateTransform(child);
-
-                double zoom = e.Delta > 0 ? 0.2 : -0.2;
-                double xScale = st.ScaleX + zoom;
-                double YScale = st.ScaleY + zoom;
-
-
-                Point relative = e.GetPosition(child);
-                double abosuluteX;
-                double abosuluteY;
-
-                abosuluteX = relative.X * st.ScaleX + tt.X;
-                abosuluteY = relative.Y * st.ScaleY + tt.Y;
-
-                st.ScaleX = xScale;
-                st.ScaleY = YScale;
-
-                tt.X = abosuluteX - relative.X * st.ScaleX;
-                tt.Y = abosuluteY - relative.Y * st.ScaleY;*/
-
+                // Start of zooming to cursor? TODO
                 double zoom = e.Delta > 0 ? 0.2 : -0.2;
                 double xScale = st.ScaleX + zoom;
                 double YScale = st.ScaleY + zoom;
@@ -132,16 +115,17 @@ namespace UsefulThings.WPF
                 // TODO When zooming out, make sure it fits back on the screen from wherever it was.
 
                 // Don't allow moving if not zoomed at all.
-                var st = GetScaleTransform(child);
+                var st = GetScaleTransform();
                 if (st.ScaleX == 1 && st.ScaleY == 1)
                     return;
 
-                var tt = GetTranslateTransform(child);
+                var tt = GetTranslateTransform();
                 start = e.GetPosition(this);
                 origin = new Point(tt.X, tt.Y);
                 this.Cursor = Cursors.ScrollAll;
                 child.CaptureMouse();
-                e.Handled = true;
+
+                // Handled goes to linked mouse down
             }
         }
 
@@ -159,16 +143,114 @@ namespace UsefulThings.WPF
             this.Reset();
         }
 
+        List<PanAndZoomBorder> Links = new List<PanAndZoomBorder>();
+
         private void child_MouseMove(object sender, MouseEventArgs e)
         {
             if (child != null)
             {
+                if (child.IsMouseCaptured || (sender != this)) // Sender != this, means linked box is trying to move it.
+                {
+                    Vector v = start - e.GetPosition(this);
+                    child_MouseMoveLinked(v);
+                }
+            }
+        }
+
+        private void child_MouseMoveLinked(Vector relative)
+        {
+            var tt = GetTranslateTransform();
+            tt.X = origin.X - relative.X;
+            tt.Y = origin.Y - relative.Y;
+        }
+
+        /// <summary>
+        /// Links the transforms of a border to this one so they zoom and pan in tandem. 
+        /// </summary>
+        /// <param name="borderToLink">Border to link to this one.</param>
+        public void Link(PanAndZoomBorder borderToLink)
+        {
+            if (Links.Contains(borderToLink) || borderToLink.Links.Contains(this))
+                return;
+
+            Links.Add(borderToLink);
+            borderToLink.Links.Add(this);
+
+            // Set borderToLink to same transform as this one
+            var thisScale = GetScaleTransform();
+            var thisTranslate = GetTranslateTransform();
+
+            borderToLink.GetTranslateTransform().X = thisTranslate.X;
+            borderToLink.GetTranslateTransform().Y = thisTranslate.Y;
+
+            borderToLink.GetScaleTransform().ScaleX = thisScale.ScaleX;
+            borderToLink.GetScaleTransform().ScaleY = thisScale.ScaleY;
+
+
+            // Link changes on both borders to each other.
+            this.MouseWheel += borderToLink.child_MouseWheel;
+            this.MouseLeftButtonDown += borderToLink.child_MouseLeftButtonDown;
+            this.MouseLeftButtonUp += borderToLink.child_MouseLeftButtonUp;
+            this.MouseRightButtonDown += borderToLink.child_MouseRightButtonDown;
+
+
+            borderToLink.MouseWheel += this.child_MouseWheel;
+            borderToLink.MouseLeftButtonDown += this.child_MouseLeftButtonDown;
+            borderToLink.MouseLeftButtonUp += this.child_MouseLeftButtonUp;
+            borderToLink.MouseRightButtonDown += this.child_MouseRightButtonDown;
+        }
+
+
+        /// <summary>
+        /// Unlinks a border from this one to move independently.
+        /// </summary>
+        /// <param name="linkedBorder">Border to remove link from.</param>
+        public void Unlink(PanAndZoomBorder linkedBorder)
+        {
+            Links.Remove(linkedBorder);
+            linkedBorder.Links.Remove(this);
+
+            // Link changes on both borders to each other.
+            this.MouseWheel -= linkedBorder.child_MouseWheel;
+            this.MouseLeftButtonDown -= linkedBorder.child_MouseLeftButtonDown;
+            this.MouseLeftButtonUp -= linkedBorder.child_MouseLeftButtonUp;
+            this.MouseRightButtonDown -= linkedBorder.child_MouseRightButtonDown;
+
+            linkedBorder.MouseWheel -= this.child_MouseWheel;
+            linkedBorder.MouseLeftButtonDown -= this.child_MouseLeftButtonDown;
+            linkedBorder.MouseLeftButtonUp -=  this.child_MouseLeftButtonUp;
+            linkedBorder.MouseRightButtonDown -= this.child_MouseRightButtonDown;
+        }
+
+        private void MouseMoveLinked(object sender, MouseEventArgs e) 
+        {
+            if (Links.Count == 0)
+                return;
+
+            if (child != null)
+            {
                 if (child.IsMouseCaptured)
                 {
-                    var tt = GetTranslateTransform(child);
                     Vector v = start - e.GetPosition(this);
-                    tt.X = origin.X - v.X;
-                    tt.Y = origin.Y - v.Y;
+
+                    foreach (var link in Links)
+                        link.child_MouseMoveLinked(v);
+                }
+            }
+        }
+
+        private void LeftMouseDownLinked(object sender, MouseEventArgs e)
+        {
+            e.Handled = true;
+            if (Links.Count == 0)
+                return;
+
+            if (child != null)
+            {
+                foreach (var link in Links)
+                {
+                    var tt = link.GetTranslateTransform();
+                    link.origin = new Point(tt.X, tt.Y);   
                 }
             }
         }
