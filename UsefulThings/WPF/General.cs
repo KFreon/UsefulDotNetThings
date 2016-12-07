@@ -23,12 +23,12 @@ namespace UsefulThings.WPF
         /// Works with multimonitor and DPI Scaling to allow dragging a window incl to and from maximised.
         /// </summary>
         /// <param name="window">Borderless window to move.</param>
-        /// <param name="e">Mouse events from Window_MouseDown event.</param>
+        /// <param name="e">Mouse events from Window_MouseLeftButtonDown event.</param>
         public static void DoBorderlessWindowDragMove(Window window, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left && window.WindowState == WindowState.Maximized)
             {
-                /// WORKING IN NON SCALED UNTIL THE END
+                // WORKING IN NON SCALED UNTIL THE END
                 // Set position of window back up to mouse, since restoring the window goes back to its previous location.
                 // Current cursor horizontal ratio location
                 double DPIScale = UsefulThings.General.GetDPIScalingFactorFOR_CURRENT_MONITOR(window);

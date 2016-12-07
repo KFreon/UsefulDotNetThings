@@ -122,7 +122,7 @@ namespace UsefulThings.WPF
                 start = e.GetPosition(this);
                 origin = new Point(tt.X, tt.Y);
                 this.Cursor = Cursors.ScrollAll;
-                child.CaptureMouse();
+                bool captured = child.CaptureMouse();
 
                 // Handled goes to linked mouse down
             }
@@ -240,13 +240,13 @@ namespace UsefulThings.WPF
 
         private void LeftMouseDownLinked(object sender, MouseEventArgs e)
         {
-            if (Links.Count == 0)
-                return;
-
             if (child != null)
             {
                 if (CanPan())
                     e.Handled = true;
+
+                if (Links.Count == 0)
+                    return;
 
                 foreach (var link in Links)
                 {
