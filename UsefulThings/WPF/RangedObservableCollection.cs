@@ -60,6 +60,19 @@ namespace UsefulThings.WPF
 
 
         /// <summary>
+        /// Remove range of elements.
+        /// </summary>
+        /// <param name="enumerable">Elements to remove.</param>
+        public void RemoveRange(IEnumerable<T> enumerable)
+        {
+            foreach (T item in enumerable)
+                this.Items.Remove(item);
+
+            NotifyRangeChange();
+        }
+
+
+        /// <summary>
         /// Inserts elements at given index.
         /// </summary>
         /// <param name="index">Index to add at.</param>

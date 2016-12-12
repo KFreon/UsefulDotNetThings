@@ -114,5 +114,19 @@ namespace UsefulThings.WPF
                 AddRange(enumerable);
             }
         }
+
+
+        /// <summary>
+        /// Removes range of items.
+        /// </summary>
+        /// <param name="enumerable">Items to remove.</param>
+        public void RemoveRange(IEnumerable<T> enumerable)
+        {
+            lock (locker)
+                foreach (T item in enumerable)
+                    this.Items.Remove(item);
+
+            NotifyRangeChange();
+        }
     }
 }

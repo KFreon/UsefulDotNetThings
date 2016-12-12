@@ -22,6 +22,13 @@ namespace UsefulThings.WPF
         /// <param name="enumerable">Contents to add.</param>
         void AddRange(IEnumerable<T> enumerable);
 
+
+        /// <summary>
+        /// Removes a range of elements from a list.
+        /// </summary>
+        /// <param name="enumerable">Elements to remove.</param>
+        void RemoveRange(IEnumerable<T> enumerable);
+
         /// <summary>
         /// Inserts a range of elements into a list at the specified index.
         /// </summary>
