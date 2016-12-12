@@ -19,6 +19,7 @@ namespace UsefulThings.WPF
         private UIElement child = null;
         private Point origin;
         private Point start;
+        private static Point DefaultRTO = new Point(0.5, 0.5);
 
         private TranslateTransform GetTranslateTransform()
         {
@@ -56,7 +57,7 @@ namespace UsefulThings.WPF
                 TranslateTransform tt = new TranslateTransform();
                 group.Children.Add(tt);
                 child.RenderTransform = group;
-                child.RenderTransformOrigin = new Point(0.0, 0.0);
+                child.RenderTransformOrigin = DefaultRTO;
                 this.MouseWheel += child_MouseWheel;
                 this.MouseLeftButtonDown += child_MouseLeftButtonDown;
                 this.MouseLeftButtonDown += LeftMouseDownLinked;  // For linked boxes
@@ -75,6 +76,7 @@ namespace UsefulThings.WPF
                 var st = GetScaleTransform();
                 st.ScaleX = 1.0;
                 st.ScaleY = 1.0;
+                child.RenderTransformOrigin = DefaultRTO;
 
                 // reset pan
                 var tt = GetTranslateTransform();
@@ -86,14 +88,38 @@ namespace UsefulThings.WPF
 
         private void child_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (child != null)
+            if (child != null) 
             {
                 var st = GetScaleTransform();
                 
-                // Start of zooming to cursor? TODO
                 double zoom = e.Delta > 0 ? 0.2 : -0.2;
                 double xScale = st.ScaleX + zoom;
                 double YScale = st.ScaleY + zoom;
+
+
+                bool isMouseZoom = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+
+                if (sender == this)
+                {
+                    if (!isMouseZoom)
+                        child.RenderTransformOrigin = DefaultRTO;
+                    else
+                    {
+                        // Move transform origin to mouse cursor - percentage thing.
+                        var mouse = e.GetPosition(child);
+                        child.RenderTransformOrigin = new Point(mouse.X / child.RenderSize.Width, mouse.Y / child.RenderSize.Height);
+                    }
+                }
+
+                // Update links
+                if (Links.Count > 0)
+                {
+                    foreach (var link in Links)
+                    {
+                        if (link.child != null)
+                            link.child.RenderTransformOrigin = child.RenderTransformOrigin;
+                    }
+                }
 
                 // Prevent zooming out too far.
                 if (xScale < 1)
@@ -111,7 +137,6 @@ namespace UsefulThings.WPF
         {
             if (child != null)
             {
-                // TODO Restrict moving outside the Border
                 // TODO When zooming out, make sure it fits back on the screen from wherever it was.
 
                 // Don't allow moving if not zoomed at all.
