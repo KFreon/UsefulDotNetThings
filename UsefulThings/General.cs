@@ -492,8 +492,7 @@ namespace UsefulThings
                 }
                 catch (Exception e)
                 {
-                    Debugger.Break();
-                    Console.WriteLine(e);
+                    Trace.WriteLine($"Failed to get external data: {e.Message}");
                 }
             }
             return null;
