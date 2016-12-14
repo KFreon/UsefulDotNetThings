@@ -513,6 +513,15 @@ namespace UsefulThings
             int count = 1;
             string ext = Path.GetExtension(baseName);
             string pathWithoutExtension = GetFullPathWithoutExtension(baseName);
+
+            // Detect if a similar path was provided i.e. <path>_#.ext - Remove the _# and start incrementation at #.
+            char last = pathWithoutExtension.Last();
+            if (pathWithoutExtension[pathWithoutExtension.Length - 2] == '_' && last.isDigit())
+            {
+                count = int.Parse(last + "");
+                pathWithoutExtension = pathWithoutExtension.Substring(0, pathWithoutExtension.Length - 2);
+            }
+
             string tempName = pathWithoutExtension;
             while(File.Exists(tempName + ext))
             {
