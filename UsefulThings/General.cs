@@ -174,23 +174,6 @@ namespace UsefulThings
             return fullPath.Replace(Path.GetFileNameWithoutExtension(fullPath), newFilenameWithoutExt);
         }
 
-
-        /// <summary>
-        /// Ensures the first character of a string is in Upper Case
-        /// </summary>
-        /// <param name="s">String to convert first to upper case.</param>
-        /// <returns>New string with upper case start</returns>
-        public static string UpperCaseFirst(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            char[] a = s.ToCharArray();
-            a[0] = char.ToUpper(a[0]);
-            return new string(a);
-        }
-
         /// <summary>
         /// Determines if number is a power of 2. 
         /// </summary>
@@ -545,5 +528,62 @@ namespace UsefulThings
             return fullPath.Substring(0, fullPath.LastIndexOf('.'));
         }
         #endregion File IO
+
+
+        static string[] CapitalExcluded = new string[] { "in", "the", "at" };
+        /// <summary>
+        /// Capitalises all words in a string unless they're joining words (in, the, at)
+        /// </summary>
+        /// <param name="str">String to capitalise.</param>
+        /// <returns>Capitalised string.</returns>
+        public static string CapitaliseString(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            // Idea here is that we split up all words, capitalise all starting chars except the words in the CapitalExcluded list, unless those words are the first word.
+            string[] words = str.Split(' ');
+            bool first = true;
+            foreach (var word in words)
+            {
+                // Don't capitalise certain words unless they're first
+                if (!first && CapitalExcluded.Contains(word, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                sb.Append(CapitaliseWord(word));
+                sb.Append(' ');
+            }
+
+            return sb.ToString();
+        }
+
+        static string CapitaliseWord(string word)
+        {
+            if (String.IsNullOrEmpty(word))
+                return "";
+
+            char first = word[0];
+
+            // Check case
+            char caps = char.ToUpper(first);
+            if (caps == first)
+                return word;
+            else
+                return caps + word.Substring(1);
+        }
+
+        static void CapitaliseWord(string word, StringBuilder destination)
+        {
+            if (String.IsNullOrEmpty(word))
+                return;
+
+            char first = word[0];
+
+            // Check case
+            char caps = char.ToUpper(first);
+            if (caps == first)
+                destination.Append(word);
+            else
+                destination.Append(caps + word.Substring(1));
+        }
     }
 }
