@@ -51,18 +51,31 @@ namespace UsefulThings.WPF
             public int AnimationId;
         }
 
-
         /// <summary>
         /// Enables blurring of a semi-transparent window background.
         /// </summary>
         /// <param name="window">The Window you want the background blurred in.</param>
         public static void EnableBlur(System.Windows.Window window)
         {
+            SetAccentPolicy(window, AccentState.ACCENT_ENABLE_BLURBEHIND);
+        }
+
+        /// <summary>
+        /// Disables blurring of a semi-transparent window background.
+        /// </summary>
+        /// <param name="window">The Window you want the background blurred in.</param>
+        public static void DisableBlur(System.Windows.Window window)
+        {
+            SetAccentPolicy(window, AccentState.ACCENT_DISABLED);
+        }
+
+        static void SetAccentPolicy(System.Windows.Window window, AccentState state)
+        {
             var windowHelper = new WindowInteropHelper(window);
 
             var accent = new AccentPolicy();
             var accentStructSize = Marshal.SizeOf(accent);
-            accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+            accent.AccentState = state;
 
             var accentPtr = Marshal.AllocHGlobal(accentStructSize);
             Marshal.StructureToPtr(accent, accentPtr, false);

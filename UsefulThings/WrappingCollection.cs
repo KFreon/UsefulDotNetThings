@@ -205,9 +205,12 @@ namespace UsefulThings
         {
             if (UnderlyingCollection.Count != 0)
             {
-                int retval = index % UnderlyingCollection.Count;
+                if (UnderlyingCollection.Count == 1)
+                    return 0;
+
+                int retval = index % UnderlyingCollection.Count;  // For some reason -1%5 for example is -1.
                 if (index < 0)
-                    retval = UnderlyingCollection.Count + index % UnderlyingCollection.Count;
+                    retval = UnderlyingCollection.Count + (index % UnderlyingCollection.Count);
 
                 return retval;
             }

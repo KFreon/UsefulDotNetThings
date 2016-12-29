@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace UsefulThings.WPF
+namespace UsefulThings.WPF.ValidationRules
 {
     /// <summary>
     /// Deals with simple path or number validation.

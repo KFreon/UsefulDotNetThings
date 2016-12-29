@@ -35,8 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.2.0\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.2.1\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -125,7 +124,8 @@
     <Compile Include="WPF\TypeConverters\PercentageConverter.cs" />
     <Compile Include="WPF\TypeConverters\StringToIntConverter.cs" />
     <Compile Include="WPF\TypeConverters\StringToUriConverter.cs" />
-    <Compile Include="WPF\TextBoxValidation.cs" />
+    <Compile Include="WPF\ValidationRules\TextBoxPathValidation.cs" />
+    <Compile Include="WPF\ValidationRules\TextBoxValidation.cs" />
     <Compile Include="WPF\ViewModelBase.cs" />
     <Compile Include="WPF\VirtualizingWrapPanel.cs" />
     <Compile Include="WPF\TypeConverters\VisibilitySourceNullConverter.cs" />

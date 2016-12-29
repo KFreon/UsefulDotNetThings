@@ -24,21 +24,6 @@ namespace UsefulThings
     /// </summary>
     public static class Extensions
     {
-        static readonly char[] InvalidPathingChars;  // Characters disallowed in paths.
-
-        /// <summary>
-        /// Static constructor.
-        /// </summary>
-        static Extensions()
-        {
-            // KFreon: Setup some constants
-            List<char> vals = new List<char>();
-            vals.AddRange(Path.GetInvalidFileNameChars());
-            vals.AddRange(Path.GetInvalidPathChars());
-
-            InvalidPathingChars = vals.ToArray(vals.Count);
-        }
-
         /// <summary>
         /// Performs Distinct on a particular property. Credit: http://stackoverflow.com/questions/489258/linqs-distinct-on-a-particular-property
         /// </summary>
@@ -539,7 +524,7 @@ namespace UsefulThings
         public static string GetPathWithoutInvalids(this string str)
         {
             StringBuilder newstr = new StringBuilder(str);
-            foreach (char c in InvalidPathingChars)
+            foreach (char c in General.InvalidPathingChars)
                 newstr.Replace(c + "", "");
 
             return newstr.ToString();

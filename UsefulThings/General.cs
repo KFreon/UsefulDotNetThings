@@ -21,6 +21,18 @@ namespace UsefulThings
     /// </summary>
     public static class General
     {
+        internal static readonly char[] InvalidPathingChars;  // Characters disallowed in paths.
+
+        static General()
+        {
+            // KFreon: Setup some constants
+            List<char> vals = new List<char>();
+            vals.AddRange(Path.GetInvalidFileNameChars());
+            vals.AddRange(Path.GetInvalidPathChars());
+
+            InvalidPathingChars = vals.ToArray(vals.Count);
+        }
+
         /// <summary>
         /// Creates string representation of object in format:
         /// --- CLASS NAME ---
