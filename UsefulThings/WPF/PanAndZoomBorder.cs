@@ -16,6 +16,17 @@ namespace UsefulThings.WPF
     /// </summary>
     public class PanAndZoomBorder : Border
     {
+        /// <summary>
+        /// Indicates whether element is zoomed in or not.
+        /// </summary>
+        public bool IsZoomed
+        {
+            get
+            {
+                var scaler = GetScaleTransform();
+                return scaler.ScaleX != 1 || scaler.ScaleY != 1;
+            }
+        }
         private UIElement child = null;
         private Point origin;
         private Point start;
@@ -25,6 +36,7 @@ namespace UsefulThings.WPF
         {
             return (TranslateTransform)((TransformGroup)child.RenderTransform)
               .Children.First(tr => tr is TranslateTransform);
+
         }
 
         private ScaleTransform GetScaleTransform()
