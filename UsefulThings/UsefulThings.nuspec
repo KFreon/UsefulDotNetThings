@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/KFreon/CSharpImageLibrary</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Fixed WrappingCollection bugs, allowed WindowBlur to be disabled.</releaseNotes>
+    <releaseNotes>Added property to indicate zoomed status on PanAndZoomBorder.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>C# WPF WinForms</tags>
   </metadata>
