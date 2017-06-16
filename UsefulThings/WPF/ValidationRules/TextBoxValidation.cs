@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -49,6 +50,10 @@ namespace UsefulThings.WPF.ValidationRules
 
             ValidationResult result = ValidationResult.ValidResult;
 
+            if (RequireExistence)
+                IsNumber = false;
+
+
             if (IsNumber)
             {
                 // KFreon: Should be a number so try to parse number, and check bounds
@@ -69,13 +74,13 @@ namespace UsefulThings.WPF.ValidationRules
                 if (val.Length < 3) 
                     return new ValidationResult(false, "Need more characters"); // KFreon: Just needs to be red. No message
                 
-                if (!Regex.IsMatch(val, @"^([a-zA-Z]:|\e)\e"))
-                    return new ValidationResult(false, "Path should be <letter>:\\"); 
+                if (!Regex.IsMatch(val, @"^[a-zA-Z]:\\"))
+                    return new ValidationResult(false, @"Path should be <letter>:\"); 
                         
                 if (RequireExistence)
                 {
-                        // KFreon: Check if path exists
-                        if (val.isFile() && !File.Exists(val))
+                    // KFreon: Check if path exists
+                    if (val.isFile() && !File.Exists(val))
                         result = new ValidationResult(false, "Specified file doesn't exist!");
                     else if (!Directory.Exists(val))
                         result = new ValidationResult(false, "Specified directory doesn't exist!");

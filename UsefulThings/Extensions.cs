@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -370,6 +371,90 @@ namespace UsefulThings
                 index++;
             }
             return minIndex;
+        }
+
+        public static void SIMDMinMax(this int[] input, out int min, out int max)
+        {
+            min = 0;
+            max = 0;
+        }
+
+        public static void SIMDMinMax(this ushort[] input, out ushort min, out ushort max)
+        {
+            min = 0;
+            max = 0;
+        }
+
+        public static void SIMDMinMax(this double[] input, out double min, out double max)
+        {
+            //if (!System.Numerics.Vector.IsHardwareAccelerated)
+              //  throw new InvalidOperationException("SIMD is not supported. Ensure x64 build (not 'Prefer 32 bit') and 'Optimise Code' is selected.");
+
+            int simdLength = Vector<double>.Count;
+            int i = 0;
+            var vmin = new Vector<double>(double.MaxValue);
+            var vmax = new Vector<double>(double.MinValue);
+
+            // Get min/max sub-arrays
+            for (i = 0; i <= input.Length - simdLength; i += simdLength)
+            {
+                var va = new Vector<double>(input, i);
+                vmin = System.Numerics.Vector.Min(va, vmin);
+                vmax = System.Numerics.Vector.Max(va, vmax);
+            }
+
+            // Find min/max of sub-arrays
+            min = double.MaxValue;
+            max = double.MinValue;
+            for (int j = 0; j < simdLength; j++)
+            {
+                min = Math.Min(min, vmin[j]);
+                max = Math.Max(max, vmax[j]);
+            }
+
+
+            // Do the extra bits if it's not a multiple of Vector<T>.Count
+            for (; i < input.Length; i++)
+            {
+                min = Math.Min(min, input[i]);
+                max = Math.Max(max, input[i]);
+            }
+        }
+
+        public static void SIMDMinMax(this byte[] input, out byte min, out byte max)
+        {
+            //if (!System.Numerics.Vector.IsHardwareAccelerated)
+            //  throw new InvalidOperationException("SIMD is not supported. Ensure x64 build (not 'Prefer 32 bit') and 'Optimise Code' is selected.");
+
+            int simdLength = Vector<byte>.Count;
+            int i = 0;
+            var vmin = new Vector<byte>(byte.MaxValue);
+            var vmax = new Vector<byte>(byte.MinValue);
+
+            // Get min/max sub-arrays
+            for (i = 0; i <= input.Length - simdLength; i += simdLength)
+            {
+                var va = new Vector<byte>(input, i);
+                vmin = System.Numerics.Vector.Min(va, vmin);
+                vmax = System.Numerics.Vector.Max(va, vmax);
+            }
+
+            // Find min/max of sub-arrays
+            min = byte.MaxValue;
+            max = byte.MinValue;
+            for (int j = 0; j < simdLength; j++)
+            {
+                min = Math.Min(min, vmin[j]);
+                max = Math.Max(max, vmax[j]);
+            }
+
+
+            // Do the extra bits if it's not a multiple of Vector<T>.Count
+            for (; i < input.Length; i++)
+            {
+                min = Math.Min(min, input[i]);
+                max = Math.Max(max, input[i]);
+            }
         }
 
 

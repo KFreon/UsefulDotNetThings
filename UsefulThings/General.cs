@@ -33,6 +33,23 @@ namespace UsefulThings
             InvalidPathingChars = vals.ToArray(vals.Count);
         }
 
+
+
+        /// <summary>
+        /// Counts the number of bits set in a uint.
+        /// From here https://stackoverflow.com/questions/109023/how-to-count-the-number-of-set-bits-in-a-32-bit-integer
+        /// </summary>
+        /// <param name="i">Number to determine set bits in.</param>
+        /// <returns>Number of bits set to 1.</returns>
+        public static int CountSetBits(uint i)
+        {
+            i = i - ((i >> 1) & 0x5555_5555);
+            i = (i & 0x3333_3333) + ((i >> 2) & 0x3333_3333);
+            return (int)((((i + (i >> 4)) & 0x0F0F_0F0F) * 0x0101_0101) >> 24);
+        }
+
+
+
         /// <summary>
         /// Creates string representation of object in format:
         /// --- CLASS NAME ---
@@ -53,8 +70,14 @@ namespace UsefulThings
                 sb.AppendLine();
 
             sb.AppendLine($"{tags} {classname} {tags}");
+            sb.AppendLine((IsSubClass ? "    " : "") + "PROPERTIES");
             foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
-                sb.AppendLine($"{descriptor.Name} = {descriptor.GetValue(obj)}");
+                sb.AppendLine((IsSubClass ? "    " : "") + $"{descriptor.Name} = {descriptor.GetValue(obj)}");
+
+            sb.AppendLine((IsSubClass ? "    " : "") + "FIELDS");
+            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
+                sb.AppendLine((IsSubClass ? "    " : "") + $"{descriptor.Name} = {descriptor.GetValue(obj)}");
+
             sb.AppendLine($"{tags} END {classname} {tags}");
             sb.AppendLine();
 
@@ -503,6 +526,9 @@ namespace UsefulThings
         {
             if (!baseName.isFile())
                 throw new ArgumentOutOfRangeException($"{nameof(baseName)} must be a testable file path, not a directory path.");
+
+            if (!File.Exists(baseName))
+                return baseName;
 
             int count = 1;
             string ext = Path.GetExtension(baseName);
