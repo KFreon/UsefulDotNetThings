@@ -1,3 +1,3 @@
 cd /d %CD%
 
-nuget pack UsefulThings.csproj -symbols -prop Configuration=Release
+"D:\Stuff\Other\Useful things\Code Repository\C#\nuget.exe" pack UsefulThings.csproj -symbols -prop Configuration=Release
