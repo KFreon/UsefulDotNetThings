@@ -189,3 +189,7 @@ _Pvt_Extensions/
 ModelManifest.xml
 *.nupkg
 /UsefulThings/nuget.exe
+/.vs
+/.vs/ProjectSettings.json
+/.vs
+/.vs/slnx.sqlite

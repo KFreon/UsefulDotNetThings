@@ -94,6 +94,9 @@ namespace UsefulThings
         /// <returns>Description of enum member.</returns>
         public static string GetEnumDescription(Enum theEnum)
         {
+            if (theEnum == null)
+                return null;
+
             FieldInfo info = theEnum.GetType().GetField(theEnum.ToString());
             object[] attribs = info.GetCustomAttributes(false);
             if (attribs.Length == 0)
