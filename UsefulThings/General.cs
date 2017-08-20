@@ -58,31 +58,26 @@ namespace UsefulThings
         /// --- END CLASS NAME ---
         /// </summary>
         /// <param name="obj">Object to get property description of.</param>
-        /// <param name="IsSubClass">True = Adds whitespace before and after, and uses less ---.</param>
+        /// <param name="level">Used for recursion, and indicates the depth of the current class in property tree.</param>
+        /// <param name="propName">Name of current property being stringified.</param>
         /// <returns>String of object.</returns>
-        public static string StringifyObject(object obj, bool IsSubClass = false)
+        public static string StringifyObject(object obj, int level = 0, string propName = null)
         {
+            var propertyList = TypeDescriptor.GetProperties(obj);
             StringBuilder sb = new StringBuilder();
             var classname = TypeDescriptor.GetClassName(obj);
-            string tags = IsSubClass ? "--" : "---";
+            string tags = new string(Enumerable.Repeat('-', level * 3).ToArray());
+            string spacing = new string(Enumerable.Repeat(' ', level * 3).ToArray());
 
-            if (IsSubClass)
-                sb.AppendLine();
+            if (propertyList.Count == 0)
+                return spacing + $"{propName} = {obj}";
 
             sb.AppendLine($"{tags} {classname} {tags}");
-            sb.AppendLine((IsSubClass ? "    " : "") + "PROPERTIES");
-            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
-                sb.AppendLine((IsSubClass ? "    " : "") + $"{descriptor.Name} = {descriptor.GetValue(obj)}");
-
-            sb.AppendLine((IsSubClass ? "    " : "") + "FIELDS");
-            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
-                sb.AppendLine((IsSubClass ? "    " : "") + $"{descriptor.Name} = {descriptor.GetValue(obj)}");
+            foreach (PropertyDescriptor descriptor in propertyList)
+                sb.AppendLine(spacing + StringifyObject(descriptor.GetValue(obj), level + 1, descriptor.Name));
 
             sb.AppendLine($"{tags} END {classname} {tags}");
-            sb.AppendLine();
 
-            if (IsSubClass)
-                sb.AppendLine();
 
             return sb.ToString();
         }
