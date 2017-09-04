@@ -129,6 +129,7 @@
     <Compile Include="WPF\TypeConverters\StringToIntConverter.cs" />
     <Compile Include="WPF\TypeConverters\StringToUriConverter.cs" />
     <Compile Include="WPF\ValidationRules\TextBoxValidation.cs" />
+    <Compile Include="WPF\ValidationRules\ValidationRuleBase.cs" />
     <Compile Include="WPF\ViewModelBase.cs" />
     <Compile Include="WPF\VirtualizingWrapPanel.cs" />
     <Compile Include="WPF\TypeConverters\VisibilitySourceNullConverter.cs" />

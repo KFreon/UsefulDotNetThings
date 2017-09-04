@@ -15,6 +15,9 @@ namespace UsefulThings.WPF.TypeConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+                return null;
+
             Enum theEnum = (Enum)value;
             string description = UsefulThings.General.GetEnumDescription(theEnum);
             return description;
