@@ -108,7 +108,6 @@
     <Compile Include="WPF\Images.cs" />
     <Compile Include="WPF\PanAndZoomBorder.cs" />
     <Compile Include="WPF\TextBoxFocusIndicatorBehaviour.cs" />
-    <Compile Include="WPF\TextBoxValidationBehaviour.cs" />
     <Compile Include="WPF\TextBoxWatermarkBehaviour.cs" />
     <Compile Include="WPF\TreeViewNodeSelectionBehaviour.cs" />
     <Compile Include="WPF\TypeConverters\BoolToVisibilityConverter.cs" />
