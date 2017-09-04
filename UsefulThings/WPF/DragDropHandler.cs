@@ -88,8 +88,7 @@ namespace UsefulThings.WPF
         /// <param name="e">Mouse event captured</param>
         public void MouseMove(object sender, MouseEventArgs e)
         {
-            var item = sender as FrameworkElement;
-            if (item != null && e.LeftButton == MouseButtonState.Pressed)
+            if (sender is FrameworkElement item && e.LeftButton == MouseButtonState.Pressed)
             {
                 var context = item.DataContext as DroppedDataContext;
                 if (context == null)
@@ -101,11 +100,15 @@ namespace UsefulThings.WPF
                 VirtualFileDataObject.FileDescriptor[] files = new VirtualFileDataObject.FileDescriptor[saveInfo.Keys.Count];
                 int count = 0;
                 foreach (var info in saveInfo)
-                    files[count++] = new VirtualFileDataObject.FileDescriptor { Name = info.Key, StreamContents = stream =>
+                    files[count++] = new VirtualFileDataObject.FileDescriptor
                     {
-                        byte[] data = info.Value();
-                        stream.Write(data, 0, data.Length);
-                    }};
+                        Name = info.Key,
+                        StreamContents = stream =>
+                            {
+                            byte[] data = info.Value();
+                            stream.Write(data, 0, data.Length);
+                            }
+                    };
 
 
                 VirtualFileDataObject obj = new VirtualFileDataObject(() => GiveFeedback(BaseWindow), files);
@@ -133,21 +136,24 @@ namespace UsefulThings.WPF
 
         private void CreateDragDropWindow(Visual dragElement)
         {
-            subWindow = new Window();
-            subWindow.WindowStyle = WindowStyle.None;
-            subWindow.AllowsTransparency = true;
-            subWindow.AllowDrop = false;
-            subWindow.Background = null;
-            subWindow.IsHitTestVisible = false;
-            subWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            subWindow.Topmost = true;
-            subWindow.ShowInTaskbar = false;
-            subWindow.Opacity = 0.5;
-
-            System.Windows.Shapes.Rectangle r = new System.Windows.Shapes.Rectangle();
-            r.Width = ((FrameworkElement)dragElement).ActualWidth;
-            r.Height = ((FrameworkElement)dragElement).ActualHeight;
-            r.Fill = new VisualBrush(dragElement);
+            subWindow = new Window()
+            {
+                WindowStyle = WindowStyle.None,
+                AllowsTransparency = true,
+                AllowDrop = false,
+                Background = null,
+                IsHitTestVisible = false,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                Topmost = true,
+                ShowInTaskbar = false,
+                Opacity = 0.5
+            };
+            System.Windows.Shapes.Rectangle r = new System.Windows.Shapes.Rectangle()
+            {
+                Width = ((FrameworkElement)dragElement).ActualWidth,
+                Height = ((FrameworkElement)dragElement).ActualHeight,
+                Fill = new VisualBrush(dragElement)
+            };
             subWindow.Content = r;
 
             var w32Mouse = UsefulThings.General.GetDPIAwareMouseLocation(BaseWindow);
