@@ -1,154 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{656D0F0C-C4AF-4209-9919-B18A8DE6EC43}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UsefulThings</RootNamespace>
-    <AssemblyName>UsefulThings</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>net471</TargetFramework>
+    <Copyright>KFreon</Copyright>
+    <Description>Collection of useful functions and objects.</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\UsefulThings.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\UsefulThings.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.2.2\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-    </Reference>
+    <None Remove="Build Nuget.bat" />
+    <None Remove="UsefulThings.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Expression.Blend.Sdk" Version="1.0.2" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.2.2" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.3.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="General.cs" />
-    <Compile Include="MemoryTributary.cs" />
-    <Compile Include="MyBitConverter.cs" />
-    <Compile Include="NaturalSortComparer.cs" />
-    <Compile Include="RecyclableMemoryManager.cs" />
-    <Compile Include="ThreadSafeRandom.cs" />
-    <Compile Include="VirtualFileDataObject.cs" />
-    <Compile Include="WinForms\BackBone.cs" />
-    <Compile Include="WinForms\Gooey.cs" />
-    <Compile Include="WinForms\Transitions\IManagedType.cs" />
-    <Compile Include="WinForms\Transitions\ITransitionType.cs" />
-    <Compile Include="WinForms\Transitions\ManagedType_Color.cs" />
-    <Compile Include="WinForms\Transitions\ManagedType_Double.cs" />
-    <Compile Include="WinForms\Transitions\ManagedType_Float.cs" />
-    <Compile Include="WinForms\Transitions\ManagedType_Int.cs" />
-    <Compile Include="WinForms\Transitions\ManagedType_String.cs" />
-    <Compile Include="WinForms\Transitions\Transition.cs" />
-    <Compile Include="WinForms\Transitions\TransitionChain.cs" />
-    <Compile Include="WinForms\Transitions\TransitionElement.cs" />
-    <Compile Include="WinForms\Transitions\TransitionManager.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_Acceleration.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_Bounce.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_CriticalDamping.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_Deceleration.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_EaseInEaseOut.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_Flash.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_Linear.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_ThrowAndCatch.cs" />
-    <Compile Include="WinForms\Transitions\TransitionType_UserDefined.cs" />
-    <Compile Include="WinForms\Transitions\Utility.cs" />
-    <Compile Include="WinForms\UsefulForms\KFreonMessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\UsefulForms\KFreonMessageBox.Designer.cs">
-      <DependentUpon>KFreonMessageBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\ProgressUpdater.cs" />
-    <Compile Include="WinForms\UsefulForms\SelectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\UsefulForms\SelectionForm.Designer.cs">
-      <DependentUpon>SelectionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\TextUpdater.cs" />
-    <Compile Include="WinForms\Imaging.cs" />
-    <Compile Include="WPF\DragDropHandler.cs" />
-    <Compile Include="WPF\General.cs" />
-    <Compile Include="WPF\Images.cs" />
-    <Compile Include="WPF\PanAndZoomBorder.cs" />
-    <Compile Include="WPF\TextBoxFocusIndicatorBehaviour.cs" />
-    <Compile Include="WPF\TextBoxWatermarkBehaviour.cs" />
-    <Compile Include="WPF\TreeViewNodeSelectionBehaviour.cs" />
-    <Compile Include="WPF\TypeConverters\BoolToVisibilityConverter.cs" />
-    <Compile Include="WPF\TypeConverters\ByteSizeToStringConverter.cs" />
-    <Compile Include="WPF\CommandHandler.cs" />
-    <Compile Include="WPF\TypeConverters\DebugConverter.cs" />
-    <Compile Include="WPF\TypeConverters\EnumDescriptionConverter.cs" />
-    <Compile Include="WPF\EnumToCombo_Extension.cs" />
-    <Compile Include="WPF\TypeConverters\EnumToStringConverter.cs" />
-    <Compile Include="WPF\GridLengthAnimation.cs" />
-    <Compile Include="WPF\TypeConverters\IntsEqualConverter.cs" />
-    <Compile Include="WPF\TypeConverters\InverseBooleanConverter.cs" />
-    <Compile Include="WPF\IRangedCollection.cs" />
-    <Compile Include="WPF\ITreeSeekable.cs" />
-    <Compile Include="WPF\MTObservableCollection.cs" />
-    <Compile Include="WPF\MTRangedObservableCollection.cs" />
-    <Compile Include="WPF\TypeConverters\MultiIntConverter.cs" />
-    <Compile Include="WPF\TypeConverters\MutuallyExclusiveCheckersConverter.cs" />
-    <Compile Include="WPF\RangedObservableCollection.cs" />
-    <Compile Include="WPF\TypeConverters\PercentageConverter.cs" />
-    <Compile Include="WPF\TypeConverters\StringToIntConverter.cs" />
-    <Compile Include="WPF\TypeConverters\StringToUriConverter.cs" />
-    <Compile Include="WPF\ValidationRules\TextBoxValidation.cs" />
-    <Compile Include="WPF\ValidationRules\ValidationRuleBase.cs" />
-    <Compile Include="WPF\ViewModelBase.cs" />
-    <Compile Include="WPF\VirtualizingWrapPanel.cs" />
-    <Compile Include="WPF\TypeConverters\VisibilitySourceNullConverter.cs" />
-    <Compile Include="WPF\Documents.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WPF\WindowBlur.cs" />
-    <Compile Include="WrappingCollection.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
