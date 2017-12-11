@@ -1,4 +1,4 @@
-# Useful-C-Sharp-Collection
+# Useful Dot Net Things
 
 ##Includes:
 - Winforms specific functions that help deal with the peculiarities of winforms, or just functions that operate on winforms objects.
