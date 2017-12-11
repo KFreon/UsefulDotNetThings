@@ -14,7 +14,7 @@ namespace UsefulThings.WPF.TypeConverters
 
             // KFreon: Yeah...an entire class file for this. A little frustration for WPF.
             double size = (double)number;
-            return UsefulDotNetThings.General.IO.GetFileSizeAsString(size);
+            return UsefulThings.General.GetFileSizeAsString(size);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

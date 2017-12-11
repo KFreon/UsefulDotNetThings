@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Controls;
-using UsefulDotNetThings;
 
 namespace UsefulThings.WPF.ValidationRules
 {
@@ -72,7 +76,7 @@ namespace UsefulThings.WPF.ValidationRules
                 if (RequireExistence)
                 {
                     // KFreon: Check if path exists
-                    if (val.IsFile() && !File.Exists(val))
+                    if (val.isFile() && !File.Exists(val))
                         result = new ValidationResult(false, "Specified file doesn't exist!");
                     else if (!Directory.Exists(val))
                         result = new ValidationResult(false, "Specified directory doesn't exist!");

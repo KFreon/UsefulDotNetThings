@@ -51,10 +51,11 @@ namespace UsefulThings.WPF
         /// <returns>PageContent oject from file.</returns>
         public static PageContent GeneratePageFromFile(string filename, out string err)
         {
+            string lines = null;
             PageContent content = new PageContent();
 
             // KFreon: Check for errors and log them if necessary
-            if ((err = UsefulDotNetThings.General.IO.ReadTextFromFile(filename, out string lines)) == null)
+            if ((err = UsefulThings.General.ReadTextFromFile(filename, out lines)) == null)
                 content = GeneratePageFromText(lines);
 
             return content;
@@ -70,10 +71,8 @@ namespace UsefulThings.WPF
         public static PageContent GeneratePageFromText(string text)
         {
             FixedPage page = CreateFixedPage(text);
-            PageContent content = new PageContent
-            {
-                Child = page
-            };
+            PageContent content = new PageContent();
+            content.Child = page;
             return content;
         }
 
@@ -87,9 +86,10 @@ namespace UsefulThings.WPF
         public static FixedDocument GenerateFixedDocumentFromFile(string filename, out string err)
         {
             FixedDocument doc = new FixedDocument();
+            string text = null;
 
             // KFreon: Set error if necessary
-            if ((err = UsefulDotNetThings.General.IO.ReadTextFromFile(filename, out string text)) == null)
+            if ((err = UsefulThings.General.ReadTextFromFile(filename, out text)) == null)
                 doc = GenerateFixedDocumentFromText(text);
 
             return doc;
@@ -119,8 +119,10 @@ namespace UsefulThings.WPF
         /// <returns>FlowDocument of file.</returns>
         public static FlowDocument GenerateFlowDocumentFromFile(string filename, out string err)
         {
+            string lines = null;
+
             FlowDocument doc = new FlowDocument();
-            if ((err = UsefulDotNetThings.General.IO.ReadTextFromFile(filename, out string lines)) == null)
+            if ((err = UsefulThings.General.ReadTextFromFile(filename, out lines)) == null)
                 doc = GenerateFlowDocumentFromText(lines);
 
             return doc;

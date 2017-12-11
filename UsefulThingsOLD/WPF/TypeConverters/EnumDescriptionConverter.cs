@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace UsefulThings.WPF.TypeConverters
@@ -13,7 +19,7 @@ namespace UsefulThings.WPF.TypeConverters
                 return null;
 
             Enum theEnum = (Enum)value;
-            string description = UsefulDotNetThings.General.Misc.GetEnumDescription(theEnum);
+            string description = UsefulThings.General.GetEnumDescription(theEnum);
             return description;
         }
 
