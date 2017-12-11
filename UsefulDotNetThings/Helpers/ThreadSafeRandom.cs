@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace UsefulThings
+namespace UsefulDotNetThings.Helpers
 {
     /// <summary>
     /// Provides access to a threadsafe random. 

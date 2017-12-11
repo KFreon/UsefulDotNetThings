@@ -17,6 +17,9 @@
     <PackageReference Include="System.Numerics.Vectors" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UsefulDotNetThings\UsefulDotNetThings.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

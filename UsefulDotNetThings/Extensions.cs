@@ -1,30 +1,40 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using UsefulThings.WPF;
+using UsefulDotNetThings.General;
+using UsefulDotNetThings.Helpers;
 
-namespace UsefulThings
+namespace UsefulDotNetThings
 {
     /// <summary>
-    /// Extension methods for various things, both WPF and WinForms
+    /// Extension methods for various things.
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Reads a UInt32 from a stream at given offset.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="offset">Offset to start reading from in stream.</param>
+        /// <returns>Number read from stream.</returns>
+        public static UInt32 ToUInt32(this Stream stream, int offset)
+        {
+            // KFreon: Seek to specified offset
+            byte[] fourBytes = new byte[4];
+            stream.Seek(offset, SeekOrigin.Begin);
+
+            // KFreon: Read 4 bytes from stream at offset and convert to UInt32
+            stream.Read(fourBytes, 0, 4);
+            UInt32 retval = BitConverter.ToUInt32(fourBytes, 0);
+            return retval;
+        }
+
         /// <summary>
         /// Performs Distinct on a particular property. Credit: http://stackoverflow.com/questions/489258/linqs-distinct-on-a-particular-property
         /// </summary>
@@ -139,7 +149,7 @@ namespace UsefulThings
                 return br.ReadUInt32();
         }
 
-        
+
         /// <summary>
         /// Reads a long from stream at the current position.
         /// </summary>
@@ -287,7 +297,7 @@ namespace UsefulThings
             using (BinaryWriter bw = new BinaryWriter(stream, Encoding.Default, true))
                 bw.Write(value);
         }
-        
+
 
         /// <summary>
         /// FROM GIBBED.
@@ -314,7 +324,7 @@ namespace UsefulThings
 
             stream.WriteBytes(BitConverter.GetBytes(value));
         }
-        
+
         /// <summary>
         /// Writes string to stream. Terminated by a null char, and optionally writes string length at start of string. (Pascal strings?)
         /// </summary>
@@ -325,10 +335,10 @@ namespace UsefulThings
         {
             if (WriteLength)
                 stream.WriteInt32(str.Length);
-                
+
             foreach (char c in str)
                 stream.WriteByte((byte)c);
-                
+
             stream.WriteByte((byte)'\0');
         }
 
@@ -388,7 +398,7 @@ namespace UsefulThings
         public static void SIMDMinMax(this double[] input, out double min, out double max)
         {
             //if (!System.Numerics.Vector.IsHardwareAccelerated)
-              //  throw new InvalidOperationException("SIMD is not supported. Ensure x64 build (not 'Prefer 32 bit') and 'Optimise Code' is selected.");
+            //  throw new InvalidOperationException("SIMD is not supported. Ensure x64 build (not 'Prefer 32 bit') and 'Optimise Code' is selected.");
 
             int simdLength = Vector<double>.Count;
             int i = 0;
@@ -525,7 +535,7 @@ namespace UsefulThings
             foreach (var item in additions)
                 collection.Add(item);
         }
-        
+
         /// <summary>
         /// Removes element from collection at index.
         /// </summary>
@@ -586,7 +596,7 @@ namespace UsefulThings
         {
             return str.Split(splitStrings, options);
         }
-        
+
 
         /// <summary>
         /// Compares strings with culture and case sensitivity.
@@ -609,7 +619,7 @@ namespace UsefulThings
         public static string GetPathWithoutInvalids(this string str)
         {
             StringBuilder newstr = new StringBuilder(str);
-            foreach (char c in General.InvalidPathingChars)
+            foreach (char c in IO.InvalidPathingChars)
                 newstr.Replace(c + "", "");
 
             return newstr.ToString();
@@ -629,7 +639,7 @@ namespace UsefulThings
             try
             {
                 // Strip directory separators before starting or getdirname will say that C:\users is the parent of c:\users\
-                string workingString = str.Trim(Path.DirectorySeparatorChar);                
+                string workingString = str.Trim(Path.DirectorySeparatorChar);
                 retval = Path.GetDirectoryName(workingString);
 
                 for (int i = 1; i < depth; i++)
@@ -649,7 +659,7 @@ namespace UsefulThings
         /// </summary>
         /// <param name="str">String to check.</param>
         /// <returns>True if is a directory, false if not.</returns>
-        public static bool isDirectory(this string str)
+        public static bool IsDirectory(this string str)
         {
             // KFreon: Check if things exist first
             if (str == null || !File.Exists(str) && !Directory.Exists(str))
@@ -669,9 +679,9 @@ namespace UsefulThings
         /// </summary>
         /// <param name="str">String to check.</param>
         /// <returns>True if a file, false if not</returns>
-        public static bool isFile(this string str)
+        public static bool IsFile(this string str)
         {
-            return !str.isDirectory();
+            return !str.IsDirectory();
         }
         #endregion Strings
 
@@ -682,21 +692,21 @@ namespace UsefulThings
         /// </summary>
         /// <param name="str">String to check.</param>
         /// <returns>True if string is a number.</returns>
-        public static bool isDigit(this string str)
+        public static bool IsDigit(this string str)
         {
             int res = -1;
             return Int32.TryParse(str, out res);
         }
-        
+
         /// <summary>
         /// Determines if character is a number.
         /// </summary>
         /// <param name="c">Character to check.</param>
         /// <returns>True if c is a number.</returns>
-        public static bool isDigit(this char c)
-            {
-            return ("" + c).isDigit();
-            }
+        public static bool IsDigit(this char c)
+        {
+            return ("" + c).IsDigit();
+        }
 
 
         /// <summary>
@@ -704,10 +714,10 @@ namespace UsefulThings
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static bool isLetter(this char c)
-            {
-            return !c.isDigit();
-        }      
+        public static bool IsLetter(this char c)
+        {
+            return !c.IsDigit();
+        }
 
 
         /// <summary>
@@ -715,163 +725,16 @@ namespace UsefulThings
         /// </summary>
         /// <param name="str">String to check.</param>
         /// <returns>True if str is a letter.</returns>
-        public static bool isLetter(this string str)
-                {
+        public static bool IsLetter(this string str)
+        {
             if (str.Length == 1)
-                return !str.isDigit();
+                return !str.IsDigit();
 
             return false;
-                    }
+        }
         #endregion Digit or letter determination
-        
-
-        #region WPF Documents
-        /// <summary>
-        /// Adds text to a FixedPage.
-        /// </summary>
-        /// <param name="page">Page to add text to.</param>
-        /// <param name="text">Text to add.</param>
-        public static void AddTextToPage(this FixedPage page, string text)
-        {
-            TextBlock block = new TextBlock();
-            block.Inlines.Add(text);
-            page.Children.Add(block);
-        }
-
-
-        /// <summary>
-        /// Add page to a FixedDocument from string.
-        /// </summary>
-        /// <param name="document">Document to add to.</param>
-        /// <param name="text">Text to add as page.</param>
-        public static void AddPageFromText(this FixedDocument document, string text)
-        {
-            PageContent page = WPF.Documents.GeneratePageFromText(text);
-            document.Pages.Add(page);
-        }
-
-        
-        /// <summary>
-        /// Add page to a FixedDocument from a file.
-        /// </summary>
-        /// <param name="document">Document to add to.</param>
-        /// <param name="filename">Filename to load from.</param>
-        /// <returns>Null if successful, error as string otherwise.</returns>
-        public static string AddPageFromFile(this FixedDocument document, string filename)
-        {
-            string retval = null;
-            PageContent page = WPF.Documents.GeneratePageFromFile(filename, out retval);
-            document.Pages.Add(page);
-            return retval;
-        }
-        #endregion WPF Documents
-
 
         #region Misc
-        /// <summary>
-        /// A simple WPF threading extension method, to invoke a delegate
-        /// on the correct thread if it is not currently on the correct thread
-        /// Which can be used with DispatcherObject types
-        /// </summary>
-        /// <param name="disp">The Dispatcher object on which to do the Invoke</param>
-        /// <param name="dotIt">The delegate to run</param>
-        /// <param name="priority">The DispatcherPriority</param>
-        public static void InvokeIfRequired(this Dispatcher disp,
-            Action dotIt, DispatcherPriority priority)
-        {
-            if (disp.Thread != Thread.CurrentThread)
-                disp.Invoke(priority, dotIt);
-            else
-                dotIt();
-        }
-
-        /// <summary>
-        /// Returns pixels of image as RGBA channels in a stream. (R, G, B, A). 1 byte each.
-        /// Allows writing.
-        /// </summary>
-        /// <param name="bmp">Image to extract pixels from.</param>
-        /// <returns>RGBA channels as stream.</returns>
-        public static MemoryStream GetPixelsAsStream(this BitmapSource bmp)
-        {
-            return new MemoryStream(bmp.GetPixels(), true);
-        }
-
-
-        /// <summary>
-        /// Gets pixels of image as byte[].
-        /// </summary>
-        /// <param name="bmp">Image to extract pixels from.</param>
-        /// <returns>Pixels of image.</returns>
-        public static byte[] GetPixels(this BitmapSource bmp)
-        {
-            // KFreon: Read pixel data from image.
-            bool hasAlpha = bmp.Format.ToString().Contains("a", StringComparison.OrdinalIgnoreCase);
-            int size = (int)((hasAlpha ? 4 : 3) * bmp.PixelWidth * bmp.PixelHeight);
-            byte[] pixels = new byte[size];
-            int stride = (int)bmp.PixelWidth * (bmp.Format.BitsPerPixel / 8);
-            bmp.CopyPixels(pixels, stride, 0);
-            return pixels;
-        }
-
-        /// <summary>
-        /// Gets pixels of image as byte[] formatted as BGRA32.
-        /// </summary>
-        /// <param name="bmp">Bitmap to extract pixels from. Can be any supported pixel format.</param>
-        /// <returns>Pixels as BGRA32.</returns>
-        public static byte[] GetPixelsAsBGRA32(this BitmapSource bmp)
-        {
-            // KFreon: Read pixel data from image.
-            int size = (int)(4 * bmp.PixelWidth * bmp.PixelHeight);
-            byte[] pixels = new byte[size];
-            BitmapSource source = bmp;
-
-            // Convert if required.
-            if (bmp.Format != PixelFormats.Bgra32)
-            {
-                Debug.WriteLine($"Getting pixels as BGRA32 required conversion from: {bmp.Format}.");
-                bmp = new FormatConvertedBitmap(bmp, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent, 0);
-            }
-
-            int stride = bmp.PixelWidth * (bmp.Format.BitsPerPixel / 8);
-            bmp.CopyPixels(pixels, stride, 0);
-            return pixels;
-        }
-
-
-        /// <summary>
-        /// Begins an animation that automatically sets final value to be held. Used with FillType.Stop rather than default FillType.Hold.
-        /// </summary>
-        /// <param name="element">Content Element to animate.</param>
-        /// <param name="anim">Animation to use on element.</param>
-        /// <param name="dp">Property of element to animate using anim.</param>
-        /// <param name="To">Final value of element's dp.</param>
-        public static void BeginAdjustableAnimation(this ContentElement element, DependencyProperty dp, GridLengthAnimation anim, object To)
-        {
-            if (dp.IsValidType(To))
-            {
-                element.SetValue(dp, To);
-                element.BeginAnimation(dp, anim);
-            }
-            else
-            {
-                throw new Exception("To object value passed is of the wrong Type. Given: " + To.GetType() + "  Expected: " + dp.PropertyType);
-            }
-        }
-
-
-        /// <summary>
-        /// Begins adjustable animation for a GridlengthAnimation. 
-        /// Holds animation end value without Holding it. i.e. Allows it to change after animation without resetting it. Should be possible in WPF...maybe it is.
-        /// </summary>
-        /// <param name="element">Element to start animation on.</param>
-        /// <param name="dp">Property to animate.</param>
-        /// <param name="anim">Animation to perform. GridLengthAnimation only for now.</param>
-        public static void BeginAdjustableAnimation(this ContentElement element, DependencyProperty dp, GridLengthAnimation anim)
-        {
-            element.BeginAdjustableAnimation(dp, anim, anim.To);
-        }
-
-
         /// <summary>
         /// Randomly shuffles a list.
         /// </summary>
@@ -888,28 +751,6 @@ namespace UsefulThings
                 list[k] = list[n];
                 list[n] = value;
             }
-        }
-
-
-        /// <summary>
-        /// Gets all text from a document.
-        /// </summary>
-        /// <param name="document">FlowDocument to extract text from.</param>
-        /// <returns>All text as a string.</returns>
-        public static string GetText(this FlowDocument document)
-        {
-            return new TextRange(document.ContentStart, document.ContentEnd).Text;
-        }
-
-
-        /// <summary>
-        /// Gets drag/drop data as string[].
-        /// </summary>
-        /// <param name="e">Argument from Drop Handler.</param>
-        /// <returns>Contents of drop.</returns>
-        public static string[] GetDataAsStringArray(this DragEventArgs e)
-        {
-            return (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
         }
         #endregion Misc
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace UsefulThings
+namespace UsefulDotNetThings
 {
     /// <summary>
     /// This Collection wraps its index such that if length = 2, and the call is list[6], the collection would return the first element. 
@@ -14,7 +10,7 @@ namespace UsefulThings
     public class WrappingCollection<T> : ICollection<T>, IList<T>
     {
         List<T> UnderlyingCollection = null;
-        
+
         /// <summary>
         /// Number of elements in collection.
         /// </summary>
@@ -112,7 +108,7 @@ namespace UsefulThings
             UnderlyingCollection.CopyTo(array, arrayIndex);
         }
 
-        
+
         /// <summary>
         /// Removes item from list.
         /// </summary>
@@ -123,7 +119,7 @@ namespace UsefulThings
             return UnderlyingCollection.Remove(item);
         }
 
-        
+
         /// <summary>
         /// Gets enumerator for list.
         /// </summary>

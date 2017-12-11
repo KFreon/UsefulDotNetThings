@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UsefulThings
+namespace UsefulDotNetThings
 {
     /// <summary>
     /// Performs bit operations like BitConverter, however allowing interpreting bytes as Big Endian.
     /// Uses the MS BitConverter, also all descriptions come from: https://msdn.microsoft.com/en-us/library/system.bitconverter(v=vs.110).aspx
     /// </summary>
-    public static class MyBitConverter
+    public static class EndianBitConverter
     {
         /// <summary>
         /// Denotes the position of the most significant bit (MSB).
@@ -134,7 +130,7 @@ namespace UsefulThings
         public static byte[] GetBytes(Single value, Endianness endianness = Endianness.LittleEndian)
         {
             var bytes = BitConverter.GetBytes(value);
-            if (endianness!= SystemEndianness)
+            if (endianness != SystemEndianness)
                 Array.Reverse(bytes);
             return bytes;
         }
@@ -215,7 +211,7 @@ namespace UsefulThings
             }
             else
                 return BitConverter.ToDouble(source, startIndex);
-            
+
         }
 
         /// <summary>

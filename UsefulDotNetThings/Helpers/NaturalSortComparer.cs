@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UsefulThings
+namespace UsefulDotNetThings.Helpers
 {
     /// <summary>
     /// Compares strings using Natural Sort i.e. 1, 5, 12, 15, instead of 12, 15, 1, 2
