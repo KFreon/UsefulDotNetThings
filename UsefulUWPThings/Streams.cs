@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 
@@ -18,7 +19,7 @@ namespace UsefulUWPThings
             return stream;
         }
 
-        public static async Task<byte[]> StreamToByteArray(InMemoryRandomAccessStream stream)
+        public static async Task<byte[]> StreamToByteArray(IRandomAccessStream stream)
         {
             byte[] bytes = new byte[stream.Size];
 
